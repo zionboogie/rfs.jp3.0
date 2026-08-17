@@ -1,0 +1,9 @@
+:root {
+	--color-primary: #1e40af;
+}
+
+body {
+	margin: 0;
+	padding: 2rem;
+	background-color: #eff6ff;
+}
