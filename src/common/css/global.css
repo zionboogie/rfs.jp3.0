@@ -1,9 +1,62 @@
-:root {
-	--color-primary: #1e40af;
+/*
+	global.css
+	サイト共通のユーティリティ / レイアウト補助クラス
+	※ デザイントークンや要素デフォルトは base.css を参照
+*/
+
+/* ----------------------------------------
+セクション
+---------------------------------------- */
+/* 上下にセクション余白を付与 */
+.section {
+	padding-block: var(--section-padding);
 }
 
-body {
-	margin: 0;
-	padding: 2rem;
-	background-color: #eff6ff;
+/* ----------------------------------------
+コンテナ
+---------------------------------------- */
+/* 中央寄せのコンテンツ幅（左右余白込みで最大幅を制限） */
+.container {
+	width: min(
+		calc(100% - (var(--container-padding) * 2)),
+		var(--container-width)
+	);
+	margin-inline: auto;
+}
+
+/* ----------------------------------------
+グリッド
+---------------------------------------- */
+.grid {
+	display: grid;
+	gap: var(--space-lg);
+}
+
+/* 2カラム */
+.grid-2 {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* 3カラム */
+.grid-3 {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* SP（767px以下）では1カラムに畳む */
+@media (max-width: 767px) {
+	.grid-2,
+	.grid-3 {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ----------------------------------------
+背景色
+---------------------------------------- */
+.bg-primary {
+	background-color: var(--color-primary);
+}
+
+.bg-background {
+	background-color: var(--color-background);
 }

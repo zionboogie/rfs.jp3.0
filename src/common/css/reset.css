@@ -1,0 +1,34 @@
+/*
+	reset.css
+	ブラウザ標準スタイルの差をそろえる（見た目のデザインは書かない）
+*/
+
+/* 幅計算を直感的にする（padding を含めて width に収める） */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* 余白の初期値をリセット */
+* {
+	margin: 0;
+}
+
+/* メディア要素をブロック化し、親幅をはみ出さないようにする */
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+/* フォーム要素も本文と同じフォントを継承する */
+button,
+input,
+textarea,
+select {
+	font: inherit;
+}
