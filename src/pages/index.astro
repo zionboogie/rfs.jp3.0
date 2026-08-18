@@ -1,11 +1,152 @@
 ---
 import Layout from "../components/Layout.astro";
-import Button from "../components/Button.astro";
+import CourseTile from "../components/CourseTile.astro";
+import LearningStep from "../components/LearningStep.astro";
+
+const learningSteps = [
+	{
+		step: 1,
+		title: "まずはここから！Webサイトの見た目を作ろう（HTML/CSS）",
+		href: "/html/",
+		tags: ["HTML", "CSS"],
+	},
+	{
+		step: 2,
+		title: "動きをつけてみよう（JavaScript）",
+		href: "/javascript/",
+		tags: ["JavaScript"],
+	},
+	{
+		step: 3,
+		title: "本格的なシステムに挑戦（WordPress）",
+		href: "/wordpress/",
+		tags: ["WordPress"],
+	},
+];
+
+const languageCourses = [
+	{
+		title: "HTML入門",
+		description: "Webページの構造を作る基本言語。タグや要素の使い方から学びます。",
+		href: "/html/",
+		iconLabel: "HTML",
+		iconColor: "#e44d26",
+	},
+	{
+		title: "CSS入門",
+		description: "色・レイアウト・デザインを整えるスタイル言語の基礎を学びます。",
+		href: "/css/",
+		iconLabel: "CSS",
+		iconColor: "#264de4",
+	},
+	{
+		title: "JavaScript入門",
+		description: "Webページに動きを加えるプログラミング言語の入門コースです。",
+		href: "/javascript/",
+		iconLabel: "JS",
+		iconColor: "#f7df1e",
+		iconTextColor: "#1a1a1a",
+	},
+	{
+		title: "SQL入門",
+		description: "データベースからデータを取得・更新するための言語を学びます。",
+		href: "/sql/",
+		iconLabel: "SQL",
+		iconColor: "#00758f",
+	},
+	{
+		title: "PHP入門",
+		description: "サーバーサイドで動くWebアプリケーション開発の基礎を学びます。",
+		href: "/php/",
+		iconLabel: "PHP",
+		iconColor: "#777bb4",
+	},
+	{
+		title: "Python入門",
+		description: "読みやすい文法で、Web開発からデータ処理まで幅広く使える言語です。",
+		href: "/python/",
+		iconLabel: "PY",
+		iconColor: "#3776ab",
+	},
+];
+
+const webBasicsCourses = [
+	{
+		title: "Git/Githubを学ぼう",
+		description: "ソースコードのバージョン管理と共同開発の基本を学びます。",
+		href: "/git/",
+		iconLabel: "Git",
+		iconColor: "#f05032",
+	},
+	{
+		title: "WordPressを学ぼう",
+		description: "ブログやWebサイトを素早く作るCMSの使い方を学びます。",
+		href: "/wordpress/",
+		iconLabel: "WP",
+		iconColor: "#21759b",
+	},
+	{
+		title: "MySQLを学ぼう",
+		description: "Webアプリでよく使われるリレーショナルデータベースの基礎を学びます。",
+		href: "/mysql/",
+		iconLabel: "SQL",
+		iconColor: "#4479a1",
+	},
+	{
+		title: "Apacheを学ぼう",
+		description: "Webサーバーの役割と設定の基本を学び、公開の仕組みを理解します。",
+		href: "/apache/",
+		iconLabel: "HTTP",
+		iconColor: "#d22128",
+	},
+	{
+		title: "Cursorを学ぼう",
+		description: "AI支援エディタを使った効率的な開発の進め方を学びます。",
+		href: "/cursor/",
+		iconLabel: "AI",
+		iconColor: "#1a1a1a",
+	},
+];
 ---
 
-<Layout title="トップページ" description="サイトの説明文です。">
+<Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
 	<main>
-		<img src="/common/img/elephant_apng_zopfli.png" alt="photo1" transition:name="photo1" width="100" />
-		<Button text="ok" />
+		<section class="hero">
+			<div class="container">
+				<h1 class="hero__title">はじめてのWeb開発</h1>
+				<p class="hero__lead">迷ったら、この3ステップの順番で進めましょう</p>
+				<div class="step-guide">
+					<LearningStep {...learningSteps[0]} />
+					<span class="step-guide__arrow" aria-hidden="true">→</span>
+					<LearningStep {...learningSteps[1]} />
+					<span class="step-guide__arrow" aria-hidden="true">→</span>
+					<LearningStep {...learningSteps[2]} />
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<h2 class="section-heading">言語毎</h2>
+				<p class="section-lead">プログラミング言語の入門コースから始めましょう</p>
+				<div class="tile-grid">
+					{languageCourses.map((course) => (
+						<CourseTile {...course} />
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<h2 class="section-heading">Web開発基礎</h2>
+				<p class="section-lead">Web制作・開発に必要なツールと環境を学びましょう</p>
+				<div class="tile-grid">
+					{webBasicsCourses.map((course) => (
+						<CourseTile {...course} />
+					))}
+				</div>
+			</div>
+		</section>
 	</main>
 </Layout>

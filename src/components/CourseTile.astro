@@ -1,0 +1,30 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	href: string;
+	iconLabel: string;
+	iconColor?: string;
+	iconTextColor?: string;
+}
+
+const {
+	title,
+	description,
+	href,
+	iconLabel,
+	iconColor = "var(--color-primary)",
+	iconTextColor = "#fff",
+} = Astro.props;
+---
+
+<a href={href} class="tile-card">
+	<span
+		class="tile-card__icon"
+		style={`--tile-icon-color: ${iconColor}; --tile-icon-text-color: ${iconTextColor}`}
+	>
+		{iconLabel}
+	</span>
+	<h3 class="tile-card__title">{title}</h3>
+	<p class="tile-card__description">{description}</p>
+</a>

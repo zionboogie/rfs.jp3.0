@@ -1,0 +1,23 @@
+---
+interface Props {
+	step: number;
+	title: string;
+	href: string;
+	tags?: string[];
+}
+
+const { step, title, href, tags = [] } = Astro.props;
+---
+
+<a href={href} class="step-card">
+	<span class="step-card__badge">Step {step}</span>
+	<p class="step-card__title">{title}</p>
+	{tags.length > 0 && (
+		<ul class="step-card__tags">
+			{tags.map((tag) => (
+				<li>{tag}</li>
+			))}
+		</ul>
+	)}
+	<span class="step-card__cta">はじめる →</span>
+</a>
