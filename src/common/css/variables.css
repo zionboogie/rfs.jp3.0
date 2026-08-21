@@ -3,7 +3,10 @@
 	色
 	---------------------------------------- */
 	--color-primary: rgb(255 142 141); /* メインカラー */
+	--color-primary: #F2EFE7;
 	--color-text: rgb(33 5 5); /* 本文テキスト */
+	--color-intro: color-mix(in srgb, var(--color-text) 40%, var(--color-primary)); /* イントロ開始時の背景 */
+	--intro-duration: 0.55s; /* ロゴ鮮明化と背景のフェード（同時） */
 	--color-muted: rgb(100 90 90); /* 補助テキスト */
 	--color-border: rgb(230 220 220); /* 枠線 */
 	--color-background: rgb(255 255 255); /* ページ背景 */
@@ -32,6 +35,7 @@
 	--container-width: 1200px; /* コンテンツ最大幅 */
 	--container-padding: 24px; /* 左右の余白 */
 	--section-padding: var(--space-xl); /* セクション上下余白 */
+	--header-height: 5.5rem; /* 固定ヘッダーの目安高さ（コンテンツ退避用） */
 
 	/* ----------------------------------------
 	余白スケール
