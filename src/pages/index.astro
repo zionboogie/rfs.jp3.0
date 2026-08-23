@@ -2,6 +2,7 @@
 import Layout from "../components/Layout.astro";
 import AboutIntro from "../components/AboutIntro.astro";
 import CourseTile from "../components/CourseTile.astro";
+import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
 import { languageCourses, webBasicsCourses, aiCourses } from "../data/courses";
 import "../common/css/top.css";
 ---
@@ -9,6 +10,19 @@ import "../common/css/top.css";
 <Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
 	<main>
 		<AboutIntro />
+
+		<section class="top-rhythm" aria-label="rhythmfactory">
+			<div class="top-rhythm__inner container">
+				<a
+					class="top-rhythm__logo"
+					href="https://rhythmfactory.jp/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<RhythmFactoryLogo />
+				</a>
+			</div>
+		</section>
 
 		<section>
 			<!-- <div class="aiQuestion">
@@ -279,7 +293,9 @@ import "../common/css/top.css";
 		disposeSectionReveal?.();
 		disposeSectionReveal = null;
 
-		const targets = Array.from(document.querySelectorAll(".section-heading, .tile-grid")).filter((el) => el instanceof HTMLElement);
+		const targets = Array.from(
+			document.querySelectorAll(".section-heading, .tile-grid, .top-rhythm"),
+		).filter((el) => el instanceof HTMLElement);
 		if (targets.length === 0) return;
 
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {

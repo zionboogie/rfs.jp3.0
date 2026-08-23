@@ -4,6 +4,63 @@
 */
 
 /* ----------------------------------------
+FV下 rhythmfactory ロゴ
+---------------------------------------- */
+.top-rhythm {
+	padding-block: var(--space-xl);
+	overflow: hidden;
+}
+
+.top-rhythm__inner {
+	display: flex;
+	align-items: center;
+}
+
+.top-rhythm__logo {
+	display: block;
+	width: 100%;
+	line-height: 0;
+}
+
+.top-rhythm__svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	overflow: visible;
+}
+
+.top-rhythm__glyph {
+	opacity: 0;
+	filter: blur(10px);
+	transform: translate3d(0, 6px, 0);
+	transform-box: fill-box;
+	transform-origin: center;
+}
+
+.top-rhythm.is-inview .top-rhythm__glyph {
+	animation: top-rhythm-glyph-in 1.05s cubic-bezier(0.05, 0.85, 0.05, 1) forwards;
+	animation-delay: calc(var(--glyph-index) * 0.07s);
+}
+
+@keyframes top-rhythm-glyph-in {
+	to {
+		opacity: 1;
+		filter: blur(0);
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.top-rhythm__glyph,
+	.top-rhythm.is-inview .top-rhythm__glyph {
+		opacity: 1;
+		filter: none;
+		transform: none;
+		animation: none;
+	}
+}
+
+/* ----------------------------------------
 About イントロ（全画面フェードスライダー）
 ---------------------------------------- */
 .about-intro {
@@ -418,7 +475,9 @@ About イントロ（全画面フェードスライダー）
 	color: var(--color-muted);
 	text-align: center;
 }
-
+#programming-languages {
+	background-color: #E8ECEF;
+}
 #programming-languages .section-heading {
 	color: #fff;
 	text-shadow: 0 0px 1px rgb(0 0 0 / 100%);
@@ -447,11 +506,11 @@ About イントロ（全画面フェードスライダー）
 	opacity: 0;
 	transform: translate3d(-2.25rem, 0, 0);
 	transition:
-		opacity 1.65s cubic-bezier(0.05, 0.85, 0.05, 1),
-		transform 1.65s cubic-bezier(0.05, 0.85, 0.05, 1),
+		opacity 2.4s cubic-bezier(0.05, 0.85, 0.05, 1),
+		transform 2.4s cubic-bezier(0.05, 0.85, 0.05, 1),
 		border-color 0.2s,
 		box-shadow 0.2s;
-	transition-delay: calc(var(--tile-index, 0) * 0.1s);
+	transition-delay: calc(var(--tile-index, 0) * 0.2s);
 }
 
 .tile-grid.is-inview .tile-card {

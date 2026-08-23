@@ -67,6 +67,8 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 		if (!(header instanceof HTMLElement)) return;
 		if (header.dataset.animated === "true") {
 			document.body.classList.remove("is-intro");
+			header.classList.add("is-ready", "is-logo-ready");
+			header.classList.remove("is-intro");
 			return;
 		}
 
@@ -88,6 +90,10 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 						const intro = header.querySelector(".site-header__intro");
 						if (intro instanceof HTMLElement) intro.hidden = true;
 						document.body.classList.remove("is-intro-leaving");
+						// visibility が戻ってからロゴフェードを開始
+						requestAnimationFrame(() => {
+							header.classList.add("is-logo-ready");
+						});
 					}, INTRO_FADE_MS);
 				});
 			});
