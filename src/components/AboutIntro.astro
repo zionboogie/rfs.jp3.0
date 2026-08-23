@@ -54,9 +54,12 @@ const slides = aboutSlides;
 										)}
 										{slide.catchCopy.length > 0 && (
 											<p class="about-intro__catch">
-												{slide.catchCopy[0]}
-												<br />
-												{slide.catchCopy[1]}
+												{slide.catchCopy.map((line, lineIndex) => (
+													<>
+														{lineIndex > 0 && <br />}
+														<span class="about-intro__catch-line">{line}</span>
+													</>
+												))}
 											</p>
 										)}
 									</div>

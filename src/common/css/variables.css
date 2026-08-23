@@ -38,7 +38,7 @@
 	---------------------------------------- */
 	--container-width: 1200px; /* コンテンツ最大幅 */
 	--container-padding: 24px; /* 左右の余白 */
-	--section-padding: var(--space-xl); /* セクション上下余白 */
+	--section-padding: clamp(14rem, 28vh, 24rem); /* セクション上下余白（余裕を持たせる） */
 	--header-height: 5.5rem; /* 固定ヘッダーの目安高さ（コンテンツ退避用） */
 
 	/* ----------------------------------------

@@ -45,20 +45,20 @@ export const languageCourses: Course[] = [
 		iconLabel: "SQL",
 		iconColor: "#00758f",
 	},
-	{
-		title: "PHP入門",
-		description: "サーバーサイドで動くWebアプリケーション開発の基礎を学びます。",
-		href: "/php/",
-		iconLabel: "PHP",
-		iconColor: "#777bb4",
-	},
-	{
-		title: "Python入門",
-		description: "読みやすい文法で、Web開発からデータ処理まで幅広く使える言語です。",
-		href: "/python/",
-		iconLabel: "PY",
-		iconColor: "#3776ab",
-	},
+	// {
+	// 	title: "PHP入門",
+	// 	description: "サーバーサイドで動くWebアプリケーション開発の基礎を学びます。",
+	// 	href: "/php/",
+	// 	iconLabel: "PHP",
+	// 	iconColor: "#777bb4",
+	// },
+	// {
+	// 	title: "Python入門",
+	// 	description: "読みやすい文法で、Web開発からデータ処理まで幅広く使える言語です。",
+	// 	href: "/python/",
+	// 	iconLabel: "PY",
+	// 	iconColor: "#3776ab",
+	// },
 ];
 
 export const webBasicsCourses: Course[] = [
