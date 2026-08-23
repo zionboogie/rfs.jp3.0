@@ -1,45 +1,43 @@
 ---
 import Layout from "../components/Layout.astro";
+import AboutIntro from "../components/AboutIntro.astro";
 import CourseTile from "../components/CourseTile.astro";
-import LearningStep from "../components/LearningStep.astro";
 import { languageCourses, webBasicsCourses, aiCourses } from "../data/courses";
-
-const learningSteps = [
-	{
-		step: 1,
-		title: "まずはここから！Webサイトの見た目を作ろう（HTML/CSS）",
-		href: "/html/",
-		tags: ["HTML", "CSS"],
-	},
-	{
-		step: 2,
-		title: "動きをつけてみよう（JavaScript）",
-		href: "/javascript/",
-		tags: ["JavaScript"],
-	},
-	{
-		step: 3,
-		title: "本格的なシステムに挑戦（WordPress）",
-		href: "/wordpress/",
-		tags: ["WordPress"],
-	},
-];
 ---
 
 <Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
 	<main>
-		<section class="hero">
-			<div class="container">
-				<h1 class="hero__title">はじめてのWeb開発</h1>
-				<p class="hero__lead">迷ったら、この3ステップの順番で進めましょう</p>
-				<div class="step-guide">
-					<LearningStep {...learningSteps[0]} />
-					<span class="step-guide__arrow" aria-hidden="true">→</span>
-					<LearningStep {...learningSteps[1]} />
-					<span class="step-guide__arrow" aria-hidden="true">→</span>
-					<LearningStep {...learningSteps[2]} />
-				</div>
+		<AboutIntro />
+
+		<section>
+			<!-- <div class="aiQuestion">
+				<p class="aiQuestion__text">constとletの違いを、具体的なコード例を使って初心者にも分かるように説明してください。</p>
+
+				<button type="button" class="js-copy"> 質問をコピー </button>
 			</div>
+
+			<div class="aiQuestion">
+				<p class="aiQuestion__text">constを使うメリットを、初心者向けに具体例を使って説明してください。</p>
+
+				<button type="button" class="js-copy"> 質問をコピー </button>
+			</div> -->
+
+			<script>
+				document.querySelectorAll(".js-copy").forEach((button) => {
+					button.addEventListener("click", async () => {
+						const text = button.closest(".aiQuestion").querySelector(".aiQuestion__text").textContent.trim();
+
+						await navigator.clipboard.writeText(text);
+
+						const originalText = button.textContent;
+						button.textContent = "コピーしました";
+
+						setTimeout(() => {
+							button.textContent = originalText;
+						}, 2000);
+					});
+				});
+			</script>
 		</section>
 
 		<section class="section" id="programming-languages">
@@ -47,9 +45,7 @@ const learningSteps = [
 				<h2 class="section-heading">プログラミング言語</h2>
 				<p class="section-lead">プログラミング言語の入門コースから始めましょう</p>
 				<div class="tile-grid">
-					{languageCourses.map((course) => (
-						<CourseTile {...course} />
-					))}
+					{languageCourses.map((course) => <CourseTile {...course} />)}
 				</div>
 			</div>
 		</section>
@@ -59,9 +55,7 @@ const learningSteps = [
 				<h2 class="section-heading">Web開発の基礎</h2>
 				<p class="section-lead">Web制作・開発に必要なツールと環境を学びましょう</p>
 				<div class="tile-grid">
-					{webBasicsCourses.map((course) => (
-						<CourseTile {...course} />
-					))}
+					{webBasicsCourses.map((course) => <CourseTile {...course} />)}
 				</div>
 			</div>
 		</section>
@@ -71,9 +65,7 @@ const learningSteps = [
 				<h2 class="section-heading">AIを使う</h2>
 				<p class="section-lead">AIツールを活用して、開発を効率的に進めましょう</p>
 				<div class="tile-grid">
-					{aiCourses.map((course) => (
-						<CourseTile {...course} />
-					))}
+					{aiCourses.map((course) => <CourseTile {...course} />)}
 				</div>
 			</div>
 		</section>

@@ -1,10 +1,14 @@
 ---
 import { navMenus } from "../data/courses";
+import { aboutSlideAssetUrls } from "../data/aboutSlides";
 ---
 
-<header class="site-header is-intro">
+<header class="site-header is-intro" data-slide-assets={JSON.stringify(aboutSlideAssetUrls)}>
 	<div class="site-header__intro" aria-hidden="true">
-		<p class="site-logo site-logo--intro">smart</p>
+		<div class="site-header__intro-content">
+			<p class="site-logo site-logo--intro">smart</p>
+			<p class="site-header__intro-tagline">AIと一緒に、コードを書こう。</p>
+		</div>
 	</div>
 	<div class="site-header__inner container">
 		<a href="/" class="site-logo">smart</a>
@@ -13,8 +17,8 @@ import { navMenus } from "../data/courses";
 				{
 					navMenus.map((menu) => (
 						<li>
-							<a href={menu.href} data-menu-id={menu.id}>
-								{menu.id === "programming-languages" ? `☞${menu.label}` : menu.label}
+							<a href={menu.href}>
+								<span>{menu.id === "programming-languages" ? `☞${menu.label}` : menu.label}</span>
 							</a>
 						</li>
 					))
@@ -26,72 +30,70 @@ import { navMenus } from "../data/courses";
 			<input id="header-search-input" type="search" name="q" placeholder="キーワードで検索" />
 			<button type="submit">検索</button>
 		</form>
-		<button type="button" class="global-menu__close" data-menu-close>
-			<span class="global-menu__close-icon" aria-hidden="true">×</span>
-			閉じる
-		</button>
-	</div>
-
-	<div class="global-menu" id="global-menu" hidden>
-		<div class="global-menu__inner container">
-			<ul class="global-menu__categories">
-				{
-					navMenus.map((menu) => (
-						<li>
-							<a href={menu.href} data-menu-id={menu.id}>
-								{menu.label}
-							</a>
-						</li>
-					))
-				}
-			</ul>
-			{
-				navMenus.map((menu) => (
-					<div class="global-menu__panel" data-panel={menu.id} hidden>
-						<p class="global-menu__lead">{menu.lead}</p>
-						<ul class="global-menu__links">
-							{menu.items.map((item, index) => (
-								<li>
-									<a href={item.href}>
-										<span class="global-menu__index">{String(index + 1).padStart(2, "0")}</span>
-										<span class="global-menu__title">{item.title}</span>
-									</a>
-								</li>
-							))}
-						</ul>
-					</div>
-				))
-			}
-		</div>
 	</div>
 </header>
 
 <script>
 	const COMPACT_DELAY_MS = 1100;
 	const INTRO_FADE_MS = 450;
-	const MENU_CLOSE_DELAY_MS = 180;
+
+	function preloadImages(urls) {
+		return Promise.all(
+			urls.map(
+				(url) =>
+					new Promise((resolve) => {
+						const image = new Image();
+						image.onload = () => resolve();
+						image.onerror = () => resolve();
+						image.src = url;
+					}),
+			),
+		);
+	}
+
+	function getSlideAssetUrls(header) {
+		try {
+			const raw = header.dataset.slideAssets;
+			const parsed = raw ? JSON.parse(raw) : [];
+			return Array.isArray(parsed) ? parsed : [];
+		} catch {
+			return [];
+		}
+	}
 
 	function initHeaderAnimation() {
 		const header = document.querySelector(".site-header");
 		if (!(header instanceof HTMLElement)) return;
-		if (header.dataset.animated === "true") return;
+		if (header.dataset.animated === "true") {
+			document.body.classList.remove("is-intro");
+			return;
+		}
 
 		const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const slideAssetUrls = getSlideAssetUrls(header);
 
 		const finishIntro = () => {
 			header.classList.add("is-ready");
 			header.classList.remove("is-intro");
-			document.body.classList.remove("is-intro");
 			window.setTimeout(() => {
+				document.body.classList.remove("is-intro");
 				header.dataset.animated = "true";
 				const intro = header.querySelector(".site-header__intro");
 				if (intro instanceof HTMLElement) intro.hidden = true;
+				document.dispatchEvent(new CustomEvent("site-intro:complete"));
 			}, INTRO_FADE_MS);
 		};
 
+		const waitMinimumIntro = () =>
+			new Promise((resolve) => {
+				window.setTimeout(resolve, prefersReducedMotion ? 0 : COMPACT_DELAY_MS);
+			});
+
+		const waitAssets = () => preloadImages(slideAssetUrls);
+
 		if (prefersReducedMotion) {
 			header.classList.add("is-logo-clear");
-			finishIntro();
+			Promise.all([waitAssets(), waitMinimumIntro()]).then(finishIntro);
 			return;
 		}
 
@@ -103,7 +105,8 @@ import { navMenus } from "../data/courses";
 			});
 		});
 
-		window.setTimeout(finishIntro, COMPACT_DELAY_MS);
+		// ロゴ演出の最短時間 + スライド画像の先読み完了を待ってからイントロ終了
+		Promise.all([waitAssets(), waitMinimumIntro()]).then(finishIntro);
 	}
 
 	function initHeaderScroll() {
@@ -123,10 +126,6 @@ import { navMenus } from "../data/courses";
 			}
 
 			if (window.scrollY > HIDE_THRESHOLD_PX) {
-				if (header.classList.contains("is-menu-open")) {
-					const closeButton = header.querySelector("[data-menu-close]");
-					if (closeButton instanceof HTMLElement) closeButton.click();
-				}
 				header.classList.add("is-hidden");
 			}
 		};
@@ -134,90 +133,8 @@ import { navMenus } from "../data/courses";
 		window.addEventListener("scroll", onScroll, { passive: true });
 	}
 
-	function initGlobalMenu() {
-		const header = document.querySelector(".site-header");
-		const overlay = document.querySelector("#global-menu");
-		if (!(header instanceof HTMLElement) || !(overlay instanceof HTMLElement)) return;
-		if (header.dataset.menuReady === "true") return;
-		header.dataset.menuReady = "true";
-
-		const triggers = header.querySelectorAll<HTMLElement>("[data-menu-id]");
-		const panels = overlay.querySelectorAll<HTMLElement>("[data-panel]");
-		const categoryLinks = overlay.querySelectorAll<HTMLElement>(".global-menu__categories [data-menu-id]");
-		let closeTimer = 0;
-
-		const setActive = (menuId: string) => {
-			for (const trigger of triggers) {
-				trigger.classList.toggle("is-active", trigger.dataset.menuId === menuId);
-			}
-			for (const panel of panels) {
-				const isActive = panel.dataset.panel === menuId;
-				panel.hidden = !isActive;
-				panel.classList.toggle("is-active", isActive);
-			}
-			for (const link of categoryLinks) {
-				link.classList.toggle("is-active", link.dataset.menuId === menuId);
-			}
-		};
-
-		const openMenu = (menuId: string) => {
-			if (!header.classList.contains("is-ready")) return;
-			window.clearTimeout(closeTimer);
-			setActive(menuId);
-			overlay.hidden = false;
-			header.classList.add("is-menu-open");
-			document.body.classList.add("is-menu-open");
-		};
-
-		const closeMenu = () => {
-			overlay.hidden = true;
-			header.classList.remove("is-menu-open");
-			document.body.classList.remove("is-menu-open");
-			for (const trigger of triggers) trigger.classList.remove("is-active");
-		};
-
-		const scheduleClose = () => {
-			window.clearTimeout(closeTimer);
-			closeTimer = window.setTimeout(closeMenu, MENU_CLOSE_DELAY_MS);
-		};
-
-		for (const trigger of header.querySelectorAll<HTMLElement>(".global-nav [data-menu-id]")) {
-			trigger.addEventListener("mouseenter", () => {
-				const menuId = trigger.dataset.menuId;
-				if (menuId) openMenu(menuId);
-			});
-			trigger.addEventListener("focus", () => {
-				const menuId = trigger.dataset.menuId;
-				if (menuId) openMenu(menuId);
-			});
-		}
-
-		for (const link of categoryLinks) {
-			link.addEventListener("mouseenter", () => {
-				const menuId = link.dataset.menuId;
-				if (menuId) openMenu(menuId);
-			});
-		}
-
-		header.addEventListener("mouseleave", scheduleClose);
-		overlay.addEventListener("mouseenter", () => window.clearTimeout(closeTimer));
-
-		const closeButton = header.querySelector("[data-menu-close]");
-		if (closeButton instanceof HTMLElement) {
-			closeButton.addEventListener("click", () => {
-				window.clearTimeout(closeTimer);
-				closeMenu();
-			});
-		}
-
-		document.addEventListener("keydown", (event) => {
-			if (event.key === "Escape") closeMenu();
-		});
-	}
-
 	document.addEventListener("astro:page-load", () => {
 		initHeaderAnimation();
-		initGlobalMenu();
 		initHeaderScroll();
 	});
 </script>

@@ -11,15 +11,19 @@
 	--color-border: rgb(230 220 220); /* 枠線 */
 	--color-background: rgb(255 255 255); /* ページ背景 */
 	--color-link: var(--color-primary); /* リンク色（必要時に使用） */
+	--color-accent: #0068b7; /* セクション見出し・アクセント */
+	--color-wave-deep: #004a8f;
+	--color-wave-light: #0068b7;
+	--color-about-surface: #ececec;
 
 	/* ----------------------------------------
 	フォント
 	---------------------------------------- */
 	--font-sans:
+		"Zen Kaku Gothic Antique",
 		system-ui,
 		-apple-system,
 		BlinkMacSystemFont,
-		"Noto Sans JP",
 		sans-serif;
 	--font-size-h1: clamp(2rem, 4vw, 4rem);
 	--font-size-h2: clamp(1.75rem, 3vw, 3rem);

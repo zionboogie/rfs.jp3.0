@@ -1,0 +1,233 @@
+---
+import { aboutSlides, parseTitleTokens, plainTitle } from "../data/aboutSlides";
+
+const slides = aboutSlides;
+---
+
+<section class="about-intro" data-about-intro>
+	<div class="about-intro__stage">
+		{
+			slides.map((slide, index) => {
+				const { tokens: titleTokens, charCount } = slide.title
+					? parseTitleTokens(slide.title)
+					: { tokens: [], charCount: 0 };
+				const catchDelaySec =
+					charCount === 0 ? 0 : (charCount - 1) * 0.1 + 0.85 + 0.5;
+				return (
+					<div class:list={["about-intro__slide", { "is-active": index === 0 }]} data-slide={index}>
+						<div
+							class:list={["about-intro__photo", { [`about-intro__photo--tone-${index}`]: !slide.image }]}
+							style={slide.image ? `background-image: url(${slide.image})` : undefined}
+							aria-hidden="true"
+						/>
+						<div class="about-intro__panel">
+							<div class="about-intro__text">
+								{(slide.icon || slide.title || slide.catchCopy.length > 0) && (
+									<div
+										class="about-intro__copy"
+										style={`--title-length: ${charCount}; --catch-delay: ${catchDelaySec}s`}
+									>
+										{slide.icon && (
+											<img
+												class="about-intro__icon"
+												src={slide.icon}
+												alt=""
+												width="140"
+												height="140"
+											/>
+										)}
+										{slide.title && (
+											<h2 class="about-intro__title" aria-label={plainTitle(slide.title)}>
+												{titleTokens.map((token) =>
+													token.type === "br" ? (
+														<br />
+													) : (
+														<span
+															class="about-intro__char"
+															style={`--char-index: ${token.index}`}
+														>
+															{token.value === " " ? "\u00A0" : token.value}
+														</span>
+													),
+												)}
+											</h2>
+										)}
+										{slide.catchCopy.length > 0 && (
+											<p class="about-intro__catch">
+												{slide.catchCopy[0]}
+												<br />
+												{slide.catchCopy[1]}
+											</p>
+										)}
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+				);
+			})
+		}
+	</div>
+
+	<aside class="about-intro__nav" aria-hidden="true">
+		<span class="about-intro__explore">Explore!</span>
+		<ol class="about-intro__steps">
+			{
+				slides.map((slide, index) => (
+					<li class:list={[{ "is-active": index === 0 }]} data-step={index}>
+						{slide.number}
+					</li>
+				))
+			}
+		</ol>
+	</aside>
+</section>
+
+<script>
+	const PANEL_HOLD_MS = 1000;
+	const FADE_MS = 1600;
+	const CHAR_STEP_MS = 100;
+	const CHAR_FADE_MS = 850;
+	const CATCH_AFTER_TITLE_MS = 500;
+	const CATCH_FADE_MS = 1200;
+	const TEXT_HOLD_MS = 2000;
+	const TEXT_OUT_MS = 900;
+
+	function initAboutIntroAnimation() {
+		const section = document.querySelector("[data-about-intro]");
+		const header = document.querySelector(".site-header");
+		if (!(section instanceof HTMLElement)) return;
+		if (section.dataset.animated === "true") return;
+
+		const slides = [...section.querySelectorAll<HTMLElement>(".about-intro__slide")];
+		const steps = section.querySelectorAll<HTMLElement>(".about-intro__steps [data-step]");
+		let currentIndex = 0;
+		let isBusy = false;
+
+		const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+		const setStep = (index: number) => {
+			for (const step of steps) {
+				step.classList.toggle("is-active", Number(step.dataset.step) === index);
+			}
+		};
+
+		const getCatchDoneMs = (slide: HTMLElement) => {
+			const charCount = slide.querySelectorAll(".about-intro__char").length;
+			const hasCatch = Boolean(slide.querySelector(".about-intro__catch"));
+			if (charCount === 0) {
+				return hasCatch ? CATCH_FADE_MS : 0;
+			}
+			const titleDoneMs = (charCount - 1) * CHAR_STEP_MS + CHAR_FADE_MS;
+			if (!hasCatch) return titleDoneMs;
+			return titleDoneMs + CATCH_AFTER_TITLE_MS + CATCH_FADE_MS;
+		};
+
+		const startExpand = (slide: HTMLElement) => {
+			slide.classList.remove("is-expanding", "is-expanded");
+			void slide.offsetWidth;
+			slide.classList.add("is-expanding");
+		};
+
+		const playTextAndExpand = (slide: HTMLElement) => {
+			slide.classList.remove("is-text-ready", "is-text-out", "is-expanding", "is-expanded");
+			void slide.offsetWidth;
+			slide.classList.add("is-text-ready");
+
+			if (prefersReducedMotion) {
+				slide.classList.add("is-expanded");
+				window.setTimeout(goNext, 3000);
+				return;
+			}
+
+			const catchDoneMs = getCatchDoneMs(slide);
+			window.setTimeout(() => {
+				if (!slide.classList.contains("is-active")) return;
+				slide.classList.add("is-text-out");
+				window.setTimeout(() => {
+					if (!slide.classList.contains("is-active")) return;
+					startExpand(slide);
+				}, TEXT_OUT_MS);
+			}, catchDoneMs + TEXT_HOLD_MS);
+		};
+
+		const goNext = () => {
+			if (isBusy || slides.length <= 1) return;
+			isBusy = true;
+
+			const current = slides[currentIndex];
+			const nextIndex = (currentIndex + 1) % slides.length;
+			const next = slides[nextIndex];
+
+			next.classList.remove(
+				"is-expanding",
+				"is-expanded",
+				"is-leaving",
+				"is-active",
+				"is-text-ready",
+				"is-text-out",
+			);
+			next.classList.add("is-under");
+
+			current.classList.add("is-leaving");
+			current.classList.remove("is-active");
+			setStep(nextIndex);
+
+			window.setTimeout(() => {
+				current.classList.remove(
+					"is-leaving",
+					"is-expanding",
+					"is-expanded",
+					"is-text-ready",
+					"is-text-out",
+				);
+				next.classList.remove("is-under");
+				next.classList.add("is-active");
+				currentIndex = nextIndex;
+				isBusy = false;
+				playTextAndExpand(next);
+			}, FADE_MS);
+		};
+
+		const onPanelAnimationEnd = (event: AnimationEvent) => {
+			if (event.animationName !== "about-panel-expand") return;
+			const panel = event.currentTarget;
+			if (!(panel instanceof HTMLElement)) return;
+			const slide = panel.closest(".about-intro__slide");
+			if (!(slide instanceof HTMLElement)) return;
+			if (!slide.classList.contains("is-active")) return;
+
+			slide.classList.remove("is-expanding");
+			slide.classList.add("is-expanded");
+
+			window.setTimeout(goNext, PANEL_HOLD_MS);
+		};
+
+		for (const slide of slides) {
+			const panel = slide.querySelector(".about-intro__panel");
+			if (panel instanceof HTMLElement) {
+				panel.addEventListener("animationend", onPanelAnimationEnd);
+			}
+		}
+
+		const show = () => {
+			if (section.dataset.animated === "true") return;
+			section.dataset.animated = "true";
+			window.requestAnimationFrame(() => {
+				section.classList.add("is-visible");
+				const first = slides[0];
+				if (!first) return;
+				playTextAndExpand(first);
+			});
+		};
+
+		if (header?.dataset.animated === "true") {
+			show();
+			return;
+		}
+
+		document.addEventListener("site-intro:complete", show, { once: true });
+	}
+
+	document.addEventListener("astro:page-load", initAboutIntroAnimation);
+</script>
