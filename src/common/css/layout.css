@@ -188,7 +188,7 @@ body.is-intro-leaving .site-header__chrome {
 	font-weight: 700;
 	font-family: "Marcellus", Georgia, serif;
 	/* letter-spacing: 0.04em; */
-	color: rgb(217, 30, 24);
+	color: var(--color-logo);
 }
 
 .site-header__inner > .site-logo {
@@ -313,6 +313,15 @@ body.is-intro-leaving .site-header__chrome {
 	border: 1px solid rgb(255 255 255 / 60%);
 	border-radius: var(--radius-sm);
 	background-color: #fff;
+	transition:
+		width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+		border-color 0.25s ease;
+}
+
+.header-search input:focus {
+	width: 280px;
+	border-color: #efefef;
+	outline: none;
 }
 
 .header-search button {
@@ -323,10 +332,16 @@ body.is-intro-leaving .site-header__chrome {
 	color: #fff;
 	font-weight: 700;
 	cursor: pointer;
+	transition:
+		background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+		box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .header-search button:hover {
-	opacity: 0.9;
+	background-color: var(--color-logo);
+	transform: translate3d(0, -1px, 0);
+	box-shadow: 0 6px 14px rgb(217 30 24 / 28%);
 }
 
 @media (max-width: 767px) {
@@ -356,6 +371,10 @@ body.is-intro-leaving .site-header__chrome {
 
 	.header-search input {
 		width: 140px;
+	}
+
+	.header-search input:focus {
+		width: 220px;
 	}
 }
 
@@ -448,54 +467,62 @@ body.is-intro-leaving .site-header__chrome {
 }
 
 .footer-lead__cta {
-	position: relative;
 	display: inline-flex;
 	align-items: center;
-	justify-content: center;
-	overflow: hidden;
-	min-width: 14rem;
-	padding: 0.95em 2em;
-	border: 1px solid rgb(255 255 255 / 85%);
-	border-radius: var(--radius-sm);
-	background-color: rgb(255 255 255 / 92%);
-	color: #222;
-	font-size: clamp(1rem, 2vw, 1.125rem);
+	justify-content: space-between;
+	gap: 2.5rem;
+	min-width: 16rem;
+	padding: 0.55rem 0.55rem 0.55rem 1.75rem;
+	border: 0;
+	border-radius: 999px;
+	background-color: #1a1a1c;
+	color: #fff;
+	font-size: clamp(0.9375rem, 1.6vw, 1.0625rem);
 	font-weight: 700;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.06em;
 	text-decoration: none;
 	opacity: 0;
 	transform: translate3d(0, 0.75rem, 0);
 	transition:
 		opacity 1.2s cubic-bezier(0.05, 0.85, 0.05, 1) 0.45s,
 		transform 1.2s cubic-bezier(0.05, 0.85, 0.05, 1) 0.45s,
-		background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-		border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-		color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
 		box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.footer-lead__cta::after {
-	content: "→";
-	margin-left: 0.55em;
+.footer-lead__cta-label {
+	line-height: 1.2;
+}
+
+.footer-lead__cta-icon {
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 50%;
+	background-color: #fff;
+	color: #1a1a1c;
+	transition: background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-lead__cta-arrow {
 	display: inline-block;
+	font-size: 1.125rem;
+	line-height: 1;
 	transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .footer-lead__cta:hover {
-	background-color: #fff;
-	border-color: #fff;
-	color: #111;
 	transform: translate3d(0, -3px, 0);
-	box-shadow: 0 12px 28px rgb(0 0 0 / 22%);
+	box-shadow: 0 12px 28px rgb(0 0 0 / 28%);
 }
 
-.footer-lead__cta:hover::after {
-	transform: translate3d(0.35em, 0, 0);
+.footer-lead__cta:hover .footer-lead__cta-icon {
+	background-color: #f5d90a;
 }
 
-.footer-lead__cta:active {
-	transform: translate3d(0, -1px, 0);
-	box-shadow: 0 6px 16px rgb(0 0 0 / 18%);
+.footer-lead__cta:hover .footer-lead__cta-arrow {
+	transform: translate3d(0.3em, 0, 0);
 }
 
 .footer-lead.is-inview .footer-lead__catch {
@@ -512,16 +539,17 @@ body.is-intro-leaving .site-header__chrome {
 	transform: translate3d(0, -3px, 0);
 }
 
-.footer-lead.is-inview .footer-lead__cta:active {
-	transform: translate3d(0, -1px, 0);
-}
-
 @media (prefers-reduced-motion: reduce) {
 	.footer-lead__bg,
 	.footer-lead__catch,
 	.footer-lead__cta {
 		will-change: auto;
 		transform: none;
+		transition: none;
+	}
+
+	.footer-lead__cta-icon,
+	.footer-lead__cta-arrow {
 		transition: none;
 	}
 

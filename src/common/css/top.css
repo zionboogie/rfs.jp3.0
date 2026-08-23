@@ -60,6 +60,24 @@ FV下 rhythmfactory ロゴ
 	}
 }
 
+.top-rhythm-tagline {
+	padding-block: 0 var(--space-xl);
+	text-align: center;
+}
+
+.top-rhythm-tagline__link {
+	color: darkgrey;
+	font-size: clamp(1.0625rem, 1.8vw, 1.1875rem);
+	font-weight: 700;
+	letter-spacing: 0.3em;
+	text-decoration: none;
+	transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.top-rhythm-tagline__link:hover {
+	color: var(--color-logo);
+}
+
 /* ----------------------------------------
 About イントロ（全画面フェードスライダー）
 ---------------------------------------- */
@@ -215,7 +233,7 @@ About イントロ（全画面フェードスライダー）
 }
 
 .about-intro__slide.is-text-ready .about-intro__icon {
-	animation: about-catch-in 0.9s ease forwards;
+	animation: about-fade-in 0.9s ease forwards;
 }
 
 .about-intro__title {
@@ -250,7 +268,6 @@ About イントロ（全画面フェードスライダー）
 	font-weight: 500;
 	line-height: 2.75;
 	letter-spacing: 0.04em;
-	opacity: 0;
 }
 
 .about-intro__catch-line {
@@ -262,12 +279,17 @@ About イントロ（全画面フェードスライダー）
 	box-decoration-break: clone;
 }
 
-.about-intro__slide.is-text-ready .about-intro__catch {
-	animation: about-catch-in 1.2s ease forwards;
-	animation-delay: var(--catch-delay, 0s);
+.about-intro__catch-char {
+	display: inline-block;
+	opacity: 0;
 }
 
-@keyframes about-catch-in {
+.about-intro__slide.is-text-ready .about-intro__catch-char {
+	animation: about-char-in 0.85s ease forwards;
+	animation-delay: calc(var(--catch-delay, 0s) + var(--catch-char-index) * 0.1s);
+}
+
+@keyframes about-fade-in {
 	to {
 		opacity: 1;
 	}
@@ -321,7 +343,7 @@ About イントロ（全画面フェードスライダー）
 }
 
 .about-intro__steps li.is-active {
-	color: #222;
+	color: var(--color-logo);
 }
 
 .about-intro__steps li.is-active::before {
@@ -333,7 +355,7 @@ About イントロ（全画面フェードスライダー）
 	height: 0;
 	border-top: 4px solid transparent;
 	border-bottom: 4px solid transparent;
-	border-left: 6px solid #222;
+	border-left: 6px solid var(--color-logo);
 	transform: translateY(-50%);
 }
 
@@ -356,12 +378,13 @@ About イントロ（全画面フェードスライダー）
 	}
 
 	.about-intro__char,
-	.about-intro__catch,
+	.about-intro__catch-char,
 	.about-intro__icon,
 	.about-intro__slide.is-text-ready .about-intro__char,
-	.about-intro__slide.is-text-ready .about-intro__catch,
+	.about-intro__slide.is-text-ready .about-intro__catch-char,
 	.about-intro__slide.is-text-ready .about-intro__icon {
 		opacity: 1;
+		transform: none;
 		animation: none;
 	}
 
@@ -419,7 +442,7 @@ About イントロ（全画面フェードスライダー）
 		top: 0;
 		border-left: 4px solid transparent;
 		border-right: 4px solid transparent;
-		border-top: 6px solid #222;
+		border-top: 6px solid var(--color-logo);
 		transform: translateX(-50%);
 	}
 }
@@ -476,11 +499,125 @@ About イントロ（全画面フェードスライダー）
 	text-align: center;
 }
 #programming-languages {
-	background-color: #E8ECEF;
+	background-color: #e8ecef;
 }
+
 #programming-languages .section-heading {
 	color: #fff;
-	text-shadow: 0 0px 1px rgb(0 0 0 / 100%);
+	text-shadow: 0 0 1px rgb(0 0 0 / 100%);
+}
+
+#programming-languages .section-lead {
+	color: rgb(33 5 5 / 55%);
+}
+
+/* ----------------------------------------
+コース一覧リスト（programming-languages）
+---------------------------------------- */
+.course-list {
+	border-top: 1px solid rgb(33 5 5 / 18%);
+}
+
+.course-list__item {
+	display: grid;
+	grid-template-columns: 3.25rem minmax(10rem, 0.95fr) minmax(12rem, 1.15fr);
+	column-gap: clamp(1.5rem, 7vw, 5.5rem);
+	align-items: start;
+	padding-block: clamp(3.5rem, 8vw, 6rem);
+	border-bottom: 1px solid rgb(33 5 5 / 18%);
+	color: inherit;
+	text-decoration: none;
+	opacity: 0;
+	transform: translate3d(-1.75rem, 0, 0);
+	transition:
+		opacity 2.2s cubic-bezier(0.05, 0.85, 0.05, 1),
+		transform 2.2s cubic-bezier(0.05, 0.85, 0.05, 1),
+		color 0.25s ease;
+	transition-delay: calc(var(--item-index, 0) * 0.16s);
+}
+
+.course-list.is-inview .course-list__item {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.course-list__item:hover {
+	color: var(--color-logo);
+}
+
+.course-list__index {
+	padding-top: 0.45em;
+	color: rgb(33 5 5 / 45%);
+	font-family: "Marcellus", Georgia, serif;
+	font-size: 0.875rem;
+	letter-spacing: 0.04em;
+	line-height: 1.4;
+	transition: color 0.25s ease;
+}
+
+.course-list__item:hover .course-list__index {
+	color: var(--color-logo);
+}
+
+.course-list__title {
+	position: relative;
+	margin: 0;
+	font-family: "Marcellus", "Zen Kaku Gothic Antique", Georgia, serif;
+	font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+	font-weight: 700;
+	line-height: 1.35;
+	letter-spacing: 0.02em;
+}
+
+.course-list__title::before {
+	content: "☞";
+	position: absolute;
+	right: 100%;
+	margin-right: 0.35em;
+	color: var(--color-logo);
+	opacity: 0;
+	transform: translate3d(-0.4em, 0, 0);
+	transition:
+		opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.course-list__item:hover .course-list__title::before {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.course-list__description {
+	margin: 0;
+	padding-top: 0.35em;
+	color: rgb(33 5 5 / 72%);
+	font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+	line-height: 1.9;
+	transition: color 0.25s ease;
+}
+
+.course-list__item:hover .course-list__description {
+	color: rgb(217 30 24 / 82%);
+}
+
+@media (max-width: 767px) {
+	.course-list__item {
+		grid-template-columns: 2.75rem minmax(0, 1fr);
+		row-gap: var(--space-sm);
+		column-gap: var(--space-sm);
+	}
+
+	.course-list__description {
+		grid-column: 2 / -1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.course-list__item {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
 }
 
 #web-basics {
@@ -490,6 +627,33 @@ About イントロ（全画面フェードスライダー）
 
 #web-basics .section-heading,
 #web-basics .section-lead {
+	color: #fff;
+}
+
+#web-basics .course-list {
+	border-top-color: rgb(255 255 255 / 28%);
+}
+
+#web-basics .course-list__item {
+	border-bottom-color: rgb(255 255 255 / 28%);
+	color: #fff;
+}
+
+#web-basics .course-list__index {
+	color: rgb(255 255 255 / 55%);
+}
+
+#web-basics .course-list__description {
+	color: rgb(255 255 255 / 82%);
+}
+
+#web-basics .course-list__item:hover,
+#web-basics .course-list__item:hover .course-list__index,
+#web-basics .course-list__item:hover .course-list__description {
+	color: #fff;
+}
+
+#web-basics .course-list__title::before {
 	color: #fff;
 }
 

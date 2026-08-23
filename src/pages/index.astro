@@ -1,7 +1,7 @@
 ---
 import Layout from "../components/Layout.astro";
 import AboutIntro from "../components/AboutIntro.astro";
-import CourseTile from "../components/CourseTile.astro";
+import CourseListItem from "../components/CourseListItem.astro";
 import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
 import { languageCourses, webBasicsCourses, aiCourses } from "../data/courses";
 import "../common/css/top.css";
@@ -20,6 +20,19 @@ import "../common/css/top.css";
 					rel="noopener noreferrer"
 				>
 					<RhythmFactoryLogo />
+				</a>
+			</div>
+		</section>
+
+		<section class="top-rhythm-tagline">
+			<div class="container">
+				<a
+					class="top-rhythm-tagline__link"
+					href="https://rhythmfactory.jp/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					小回りがきくWEB制作会社です、ぜひ
 				</a>
 			</div>
 		</section>
@@ -59,8 +72,17 @@ import "../common/css/top.css";
 			<div class="container">
 				<h2 class="section-heading">プログラミング言語</h2>
 				<p class="section-lead">プログラミング言語の入門コースから始めよう</p>
-				<div class="tile-grid">
-					{languageCourses.map((course) => <CourseTile {...course} />)}
+				<div class="course-list">
+					{
+						languageCourses.map((course, index) => (
+							<CourseListItem
+								index={index + 1}
+								title={course.title}
+								description={course.description}
+								href={course.href}
+							/>
+						))
+					}
 				</div>
 			</div>
 		</section>
@@ -69,8 +91,17 @@ import "../common/css/top.css";
 			<div class="container">
 				<h2 class="section-heading">Web開発の基礎</h2>
 				<p class="section-lead">Web制作・開発に必要なツールと環境を学ぼう</p>
-				<div class="tile-grid">
-					{webBasicsCourses.map((course) => <CourseTile {...course} />)}
+				<div class="course-list">
+					{
+						webBasicsCourses.map((course, index) => (
+							<CourseListItem
+								index={index + 1}
+								title={course.title}
+								description={course.description}
+								href={course.href}
+							/>
+						))
+					}
 				</div>
 			</div>
 		</section>
@@ -79,8 +110,17 @@ import "../common/css/top.css";
 			<div class="container">
 				<h2 class="section-heading">AIを使う</h2>
 				<p class="section-lead">AIツールを活用して、開発を効率的に進めよう</p>
-				<div class="tile-grid">
-					{aiCourses.map((course) => <CourseTile {...course} />)}
+				<div class="course-list">
+					{
+						aiCourses.map((course, index) => (
+							<CourseListItem
+								index={index + 1}
+								title={course.title}
+								description={course.description}
+								href={course.href}
+							/>
+						))
+					}
 				</div>
 			</div>
 		</section>
@@ -294,7 +334,7 @@ import "../common/css/top.css";
 		disposeSectionReveal = null;
 
 		const targets = Array.from(
-			document.querySelectorAll(".section-heading, .tile-grid, .top-rhythm"),
+			document.querySelectorAll(".section-heading, .tile-grid, .course-list, .top-rhythm"),
 		).filter((el) => el instanceof HTMLElement);
 		if (targets.length === 0) return;
 
