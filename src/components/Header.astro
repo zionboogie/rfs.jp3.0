@@ -10,6 +10,7 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 			<p class="site-header__intro-tagline">AIと一緒に、コードを書こう。</p>
 		</div>
 	</div>
+	<div class="site-header__chrome" aria-hidden="true"></div>
 	<div class="site-header__inner container">
 		<a href="/" class="site-logo">smart</a>
 		<nav class="global-nav" aria-label="グローバルナビ">
@@ -18,7 +19,7 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 					navMenus.map((menu) => (
 						<li>
 							<a href={menu.href}>
-								<span>{menu.id === "programming-languages" ? `☞${menu.label}` : menu.label}</span>
+								<span>{menu.id === "programming-languages" ? `${menu.label}` : menu.label}</span>
 							</a>
 						</li>
 					))
@@ -35,7 +36,7 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 
 <script>
 	const COMPACT_DELAY_MS = 1100;
-	const INTRO_FADE_MS = 450;
+	const INTRO_FADE_MS = 950;
 
 	function preloadImages(urls) {
 		return Promise.all(
@@ -66,6 +67,8 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 		if (!(header instanceof HTMLElement)) return;
 		if (header.dataset.animated === "true") {
 			document.body.classList.remove("is-intro");
+			header.classList.add("is-ready", "is-logo-ready");
+			header.classList.remove("is-intro");
 			return;
 		}
 
@@ -73,15 +76,27 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 		const slideAssetUrls = getSlideAssetUrls(header);
 
 		const finishIntro = () => {
-			header.classList.add("is-ready");
-			header.classList.remove("is-intro");
-			window.setTimeout(() => {
-				document.body.classList.remove("is-intro");
-				header.dataset.animated = "true";
-				const intro = header.querySelector(".site-header__intro");
-				if (intro instanceof HTMLElement) intro.hidden = true;
-				document.dispatchEvent(new CustomEvent("site-intro:complete"));
-			}, INTRO_FADE_MS);
+			document.body.classList.add("is-intro-leaving");
+			document.body.classList.remove("is-intro");
+			document.dispatchEvent(new CustomEvent("site-intro:complete"));
+
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					header.classList.add("is-ready");
+					header.classList.remove("is-intro");
+
+					window.setTimeout(() => {
+						header.dataset.animated = "true";
+						const intro = header.querySelector(".site-header__intro");
+						if (intro instanceof HTMLElement) intro.hidden = true;
+						document.body.classList.remove("is-intro-leaving");
+						// visibility が戻ってからロゴフェードを開始
+						requestAnimationFrame(() => {
+							header.classList.add("is-logo-ready");
+						});
+					}, INTRO_FADE_MS);
+				});
+			});
 		};
 
 		const waitMinimumIntro = () =>

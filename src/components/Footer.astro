@@ -1,8 +1,148 @@
-<footer>
-	<nav>
-		<ul>
-			<li><a href="/">Home</a></li>
-			<li><a href="/about">About</a></li>
-		</ul>
-	</nav>
+---
+import { navMenus } from "../data/courses";
+---
+
+<section class="footer-lead" data-footer-lead>
+	<div class="footer-lead__bg" style="background-image: url('/common/img/common/bg_footer03.jpg')" aria-hidden="true"></div>
+	<div class="footer-lead__content">
+		<p class="footer-lead__catch">
+			Creating<br />
+			Your<br />
+			Future<br />
+			With Us
+		</p>
+		<a
+			class="footer-lead__cta"
+			href="https://rhythmfactory.jp/"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			<span class="footer-lead__cta-label">制作のご相談</span>
+			<span class="footer-lead__cta-icon" aria-hidden="true">
+				<span class="footer-lead__cta-arrow">→</span>
+			</span>
+		</a>
+	</div>
+</section>
+
+<footer class="site-footer">
+	<div class="site-footer__primary">
+		<div class="site-footer__primary-inner container">
+			<a href="/" class="site-logo site-footer__brand">smart</a>
+			<nav class="site-footer__sitemap" aria-label="サイトマップ">
+				<ul>
+					{
+						navMenus.map((menu) => (
+							<li>
+								<a href={menu.href}>{menu.label}</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+	<div class="site-footer__secondary">
+		<div class="site-footer__secondary-inner container">
+			<a class="site-footer__rhythm" href="https://rhythmfactory.jp/" target="_blank" rel="noopener noreferrer">
+				<img src="/common/img/common/logo_rhythmfactory.svg" alt="rhythmfactory" width="501" height="81" />
+			</a>
+			<p class="site-footer__copyright">&copy; rhythmfactory Ltd. All Rights Reserved.</p>
+		</div>
+	</div>
 </footer>
+
+<script>
+	/** @type {null | (() => void)} */
+	let disposeFooterLead = null;
+
+	function initFooterLead() {
+		disposeFooterLead?.();
+		disposeFooterLead = null;
+
+		const section = document.querySelector("[data-footer-lead]");
+		if (!(section instanceof HTMLElement)) return;
+
+		const bg = section.querySelector(".footer-lead__bg");
+		const catchEl = section.querySelector(".footer-lead__catch");
+		if (!(bg instanceof HTMLElement) || !(catchEl instanceof HTMLElement)) return;
+
+		const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+		if (prefersReducedMotion) {
+			section.classList.add("is-inview");
+			return;
+		}
+
+		const LERP = 0.07;
+		const BG_RANGE = 56;
+		const TEXT_RANGE = 28;
+		let bgY = 0;
+		let textY = 0;
+		let ticking = false;
+		let frameId = 0;
+
+		const progressOf = () => {
+			const rect = section.getBoundingClientRect();
+			const span = window.innerHeight + rect.height;
+			if (span <= 0) return 0.5;
+			return (window.innerHeight - rect.top) / span;
+		};
+
+		const targetOffset = (progress, range) => {
+			const eased = progress * progress * (3 - 2 * progress);
+			return (0.5 - eased) * range * 2;
+		};
+
+		const update = () => {
+			ticking = false;
+			const progress = progressOf();
+			const nextBg = targetOffset(progress, BG_RANGE);
+			const nextText = targetOffset(progress, TEXT_RANGE);
+
+			bgY += (nextBg - bgY) * LERP;
+			textY += (nextText - textY) * LERP;
+
+			bg.style.setProperty("--parallax-y", `${bgY.toFixed(2)}px`);
+			catchEl.style.setProperty("--parallax-y", `${textY.toFixed(2)}px`);
+
+			if (Math.abs(nextBg - bgY) > 0.05 || Math.abs(nextText - textY) > 0.05) {
+				ticking = true;
+				frameId = requestAnimationFrame(update);
+			}
+		};
+
+		const requestUpdate = () => {
+			if (ticking) return;
+			ticking = true;
+			frameId = requestAnimationFrame(update);
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					section.classList.add("is-inview");
+					observer.unobserve(section);
+				}
+			},
+			{ threshold: 0.28, rootMargin: "0px 0px -6% 0px" },
+		);
+
+		observer.observe(section);
+		window.addEventListener("scroll", requestUpdate, { passive: true });
+		window.addEventListener("resize", requestUpdate);
+		requestUpdate();
+
+		disposeFooterLead = () => {
+			observer.disconnect();
+			window.removeEventListener("scroll", requestUpdate);
+			window.removeEventListener("resize", requestUpdate);
+			cancelAnimationFrame(frameId);
+			ticking = false;
+		};
+	}
+
+	document.addEventListener("astro:page-load", initFooterLead);
+</script>

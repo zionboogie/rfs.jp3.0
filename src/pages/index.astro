@@ -1,13 +1,41 @@
 ---
 import Layout from "../components/Layout.astro";
 import AboutIntro from "../components/AboutIntro.astro";
-import CourseTile from "../components/CourseTile.astro";
+import CourseListItem from "../components/CourseListItem.astro";
+import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
 import { languageCourses, webBasicsCourses, aiCourses } from "../data/courses";
+import "../common/css/top.css";
 ---
 
 <Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
 	<main>
 		<AboutIntro />
+
+		<section class="top-rhythm" aria-label="rhythmfactory">
+			<div class="top-rhythm__inner container">
+				<a
+					class="top-rhythm__logo"
+					href="https://rhythmfactory.jp/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<RhythmFactoryLogo />
+				</a>
+			</div>
+		</section>
+
+		<section class="top-rhythm-tagline">
+			<div class="container">
+				<a
+					class="top-rhythm-tagline__link"
+					href="https://rhythmfactory.jp/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					小回りがきくWEB制作会社です、ぜひ
+				</a>
+			</div>
+		</section>
 
 		<section>
 			<!-- <div class="aiQuestion">
@@ -40,34 +68,299 @@ import { languageCourses, webBasicsCourses, aiCourses } from "../data/courses";
 			</script>
 		</section>
 
-		<section class="section" id="programming-languages">
+		<section class="section" id="programming-languages" data-parallax="content">
 			<div class="container">
 				<h2 class="section-heading">プログラミング言語</h2>
-				<p class="section-lead">プログラミング言語の入門コースから始めましょう</p>
-				<div class="tile-grid">
-					{languageCourses.map((course) => <CourseTile {...course} />)}
+				<p class="section-lead">プログラミング言語の入門コースから始めよう</p>
+				<div class="course-list">
+					{
+						languageCourses.map((course, index) => (
+							<CourseListItem
+								index={index + 1}
+								title={course.title}
+								description={course.description}
+								href={course.href}
+							/>
+						))
+					}
 				</div>
 			</div>
 		</section>
 
-		<section class="section" id="web-basics">
+		<section class="section" id="web-basics" data-parallax="content">
 			<div class="container">
 				<h2 class="section-heading">Web開発の基礎</h2>
-				<p class="section-lead">Web制作・開発に必要なツールと環境を学びましょう</p>
-				<div class="tile-grid">
-					{webBasicsCourses.map((course) => <CourseTile {...course} />)}
+				<p class="section-lead">Web制作・開発に必要なツールと環境を学ぼう</p>
+				<div class="course-list">
+					{
+						webBasicsCourses.map((course, index) => (
+							<CourseListItem
+								index={index + 1}
+								title={course.title}
+								description={course.description}
+								href={course.href}
+							/>
+						))
+					}
 				</div>
 			</div>
 		</section>
 
-		<section class="section" id="ai">
+		<section class="section" id="ai" data-parallax="content">
 			<div class="container">
 				<h2 class="section-heading">AIを使う</h2>
-				<p class="section-lead">AIツールを活用して、開発を効率的に進めましょう</p>
-				<div class="tile-grid">
-					{aiCourses.map((course) => <CourseTile {...course} />)}
+				<p class="section-lead">AIツールを活用して、開発を効率的に進めよう</p>
+				<div class="course-list">
+					{
+						aiCourses.map((course, index) => (
+							<CourseListItem
+								index={index + 1}
+								title={course.title}
+								description={course.description}
+								href={course.href}
+							/>
+						))
+					}
 				</div>
 			</div>
 		</section>
 	</main>
 </Layout>
+
+<script>
+	const LERP = 0.08;
+	const PHOTO_RANGE = 42;
+	const CONTENT_RANGE = 28;
+
+	/** @type {null | (() => void)} */
+	let disposeParallax = null;
+
+	function initParallax() {
+		disposeParallax?.();
+		disposeParallax = null;
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+		const about = document.querySelector(".about-intro");
+		const photoTargets = about instanceof HTMLElement ? Array.from(about.querySelectorAll(".about-intro__photo")) : [];
+		const contentSections = Array.from(document.querySelectorAll(".section[data-parallax='content']")).filter((el) => el instanceof HTMLElement);
+
+		if (photoTargets.length === 0 && contentSections.length === 0) return;
+
+		const state = {
+			photos: 0,
+			contents: contentSections.map(() => 0),
+		};
+
+		let ticking = false;
+		let frameId = 0;
+
+		const progressOf = (el) => {
+			const rect = el.getBoundingClientRect();
+			const span = window.innerHeight + rect.height;
+			if (span <= 0) return 0.5;
+			return (window.innerHeight - rect.top) / span;
+		};
+
+		const targetOffset = (progress, range) => {
+			const eased = progress * progress * (3 - 2 * progress);
+			return (0.5 - eased) * range * 2;
+		};
+
+		const update = () => {
+			ticking = false;
+
+			if (about instanceof HTMLElement && photoTargets.length > 0) {
+				const next = targetOffset(progressOf(about), PHOTO_RANGE);
+				state.photos += (next - state.photos) * LERP;
+				const y = `${state.photos.toFixed(2)}px`;
+				for (const photo of photoTargets) {
+					photo.style.setProperty("--parallax-y", y);
+				}
+			}
+
+			contentSections.forEach((section, index) => {
+				const layer = section.querySelector(".container");
+				if (!(layer instanceof HTMLElement)) return;
+				const next = targetOffset(progressOf(section), CONTENT_RANGE);
+				state.contents[index] += (next - state.contents[index]) * LERP;
+				layer.style.setProperty("--parallax-y", `${state.contents[index].toFixed(2)}px`);
+			});
+
+			const stillMoving =
+				(about instanceof HTMLElement && Math.abs(targetOffset(progressOf(about), PHOTO_RANGE) - state.photos) > 0.05) ||
+				contentSections.some((section, index) => {
+					return Math.abs(targetOffset(progressOf(section), CONTENT_RANGE) - state.contents[index]) > 0.05;
+				});
+
+			if (stillMoving) {
+				ticking = true;
+				frameId = requestAnimationFrame(update);
+			}
+		};
+
+		const requestUpdate = () => {
+			if (ticking) return;
+			ticking = true;
+			frameId = requestAnimationFrame(update);
+		};
+
+		window.addEventListener("scroll", requestUpdate, { passive: true });
+		window.addEventListener("resize", requestUpdate);
+		requestUpdate();
+
+		disposeParallax = () => {
+			window.removeEventListener("scroll", requestUpdate);
+			window.removeEventListener("resize", requestUpdate);
+			cancelAnimationFrame(frameId);
+			ticking = false;
+		};
+	}
+
+	document.addEventListener("astro:page-load", initParallax);
+</script>
+
+<script>
+	/** @type {null | (() => void)} */
+	let disposeSoftScroll = null;
+
+	function initSoftScroll() {
+		disposeSoftScroll?.();
+		disposeSoftScroll = null;
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		if (!window.matchMedia("(pointer: fine)").matches) return;
+
+		const EASE = 0.065;
+		const STOP_THRESHOLD = 0.4;
+
+		let current = window.scrollY;
+		let target = window.scrollY;
+		let frameId = 0;
+		let running = false;
+
+		document.documentElement.classList.add("is-soft-scroll");
+
+		const maxScroll = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
+		const isScrollLocked = () => document.body.classList.contains("is-intro") || document.body.classList.contains("is-intro-leaving");
+
+		const syncFromNative = () => {
+			current = window.scrollY;
+			target = window.scrollY;
+		};
+
+		const tick = () => {
+			if (isScrollLocked()) {
+				syncFromNative();
+				running = false;
+				frameId = 0;
+				return;
+			}
+
+			current += (target - current) * EASE;
+
+			if (Math.abs(target - current) < STOP_THRESHOLD) {
+				current = target;
+				window.scrollTo(0, current);
+				running = false;
+				frameId = 0;
+				return;
+			}
+
+			window.scrollTo(0, current);
+			frameId = requestAnimationFrame(tick);
+		};
+
+		const start = () => {
+			if (running) return;
+			running = true;
+			frameId = requestAnimationFrame(tick);
+		};
+
+		const onWheel = (event) => {
+			if (isScrollLocked()) return;
+			if (event.ctrlKey) return;
+
+			const path = event.composedPath();
+			const nestedScroll = path.some((node) => {
+				if (!(node instanceof HTMLElement) || node === document.body || node === document.documentElement) {
+					return false;
+				}
+				const style = window.getComputedStyle(node);
+				const overflowY = style.overflowY;
+				if (overflowY !== "auto" && overflowY !== "scroll") return false;
+				return node.scrollHeight > node.clientHeight + 1;
+			});
+			if (nestedScroll) return;
+
+			event.preventDefault();
+			target = Math.max(0, Math.min(maxScroll(), target + event.deltaY));
+			start();
+		};
+
+		const onScroll = () => {
+			if (!running) syncFromNative();
+		};
+
+		const onResize = () => {
+			target = Math.max(0, Math.min(maxScroll(), target));
+			if (!running) syncFromNative();
+		};
+
+		window.addEventListener("wheel", onWheel, { passive: false });
+		window.addEventListener("scroll", onScroll, { passive: true });
+		window.addEventListener("resize", onResize);
+
+		disposeSoftScroll = () => {
+			window.removeEventListener("wheel", onWheel);
+			window.removeEventListener("scroll", onScroll);
+			window.removeEventListener("resize", onResize);
+			cancelAnimationFrame(frameId);
+			running = false;
+			document.documentElement.classList.remove("is-soft-scroll");
+		};
+	}
+
+	document.addEventListener("astro:page-load", initSoftScroll);
+</script>
+
+<script>
+	/** @type {null | (() => void)} */
+	let disposeSectionReveal = null;
+
+	function initSectionReveal() {
+		disposeSectionReveal?.();
+		disposeSectionReveal = null;
+
+		const targets = Array.from(
+			document.querySelectorAll(".section-heading, .tile-grid, .course-list, .top-rhythm"),
+		).filter((el) => el instanceof HTMLElement);
+		if (targets.length === 0) return;
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			for (const target of targets) target.classList.add("is-inview");
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					entry.target.classList.add("is-inview");
+					observer.unobserve(entry.target);
+				}
+			},
+			{
+				threshold: 0.2,
+				rootMargin: "0px 0px -8% 0px",
+			},
+		);
+
+		for (const target of targets) observer.observe(target);
+
+		disposeSectionReveal = () => observer.disconnect();
+	}
+
+	document.addEventListener("astro:page-load", initSectionReveal);
+</script>

@@ -5,6 +5,7 @@
 	--color-primary: rgb(255 142 141); /* メインカラー */
 	--color-primary: #F2EFE7;
 	--color-text: rgb(33 5 5); /* 本文テキスト */
+	--color-logo: rgb(217, 30, 24); /* ブランドロゴ色 */
 	--color-intro: color-mix(in srgb, var(--color-text) 40%, var(--color-primary)); /* イントロ開始時の背景 */
 	--intro-duration: 0.55s; /* ロゴ鮮明化と背景のフェード（同時） */
 	--color-muted: rgb(100 90 90); /* 補助テキスト */
@@ -38,7 +39,7 @@
 	---------------------------------------- */
 	--container-width: 1200px; /* コンテンツ最大幅 */
 	--container-padding: 24px; /* 左右の余白 */
-	--section-padding: var(--space-xl); /* セクション上下余白 */
+	--section-padding: clamp(14rem, 28vh, 24rem); /* セクション上下余白（余裕を持たせる） */
 	--header-height: 5.5rem; /* 固定ヘッダーの目安高さ（コンテンツ退避用） */
 
 	/* ----------------------------------------

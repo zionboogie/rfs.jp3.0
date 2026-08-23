@@ -13,14 +13,14 @@ export const aboutSlides: AboutSlide[] = [
 		image: "/common/img/top/bg01.jpg",
 		icon: "",
 		title: "AI時代の<br>クリエイティビティ",
-		catchCopy: ["AIに聞いて、試して、また考える。", "自分一人ではなく、AIと一緒に。"],
+		catchCopy: ["AIに聞いて、試して、また考える。", "自分一人じゃないのが楽しい。"],
 	},
 	{
 		number: "02",
 		image: "/common/img/top/bg02.jpg",
 		icon: "",
 		title: "AIと一緒なら、<br>もっと自由に",
-		catchCopy: ["今日もコードを書こう。", "AIが全てを変えてくれることだってある。"],
+		catchCopy: ["今日もコードを書こう。", "AIと旅に出よう。"],
 	},
 ];
 
@@ -56,4 +56,22 @@ export function parseTitleTokens(title: string): { tokens: TitleToken[]; charCou
 
 export function plainTitle(title: string): string {
 	return title.replace(/<br\s*\/?>/gi, "").replace(/\n/g, "");
+}
+
+export type CatchChar = { value: string; index: number };
+
+/** キャッチコピーを行ごと・1文字ずつに分解 */
+export function parseCatchLines(lines: string[]): { chars: CatchChar[] }[] {
+	let charIndex = 0;
+	return lines.map((line) => ({
+		chars: [...line].map((value) => {
+			const current = charIndex;
+			charIndex += 1;
+			return { value, index: current };
+		}),
+	}));
+}
+
+export function catchCharCount(lines: string[]): number {
+	return lines.reduce((sum, line) => sum + [...line].length, 0);
 }

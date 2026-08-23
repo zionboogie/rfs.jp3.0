@@ -7,6 +7,14 @@
 html {
 	font-size: 100%;
 	scroll-behavior: smooth;
+	/* イントロ解除時にスクロールバーで幅が変わって FV パネルが跳ねるのを防ぐ */
+	scrollbar-gutter: stable;
+	overflow-y: scroll;
+}
+
+/* ソフトスクロール中はネイティブの scroll-behavior と干渉させない */
+html.is-soft-scroll {
+	scroll-behavior: auto;
 }
 
 /* ページ全体の基本タイポグラフィ */
