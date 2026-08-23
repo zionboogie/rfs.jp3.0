@@ -57,21 +57,3 @@ export function parseTitleTokens(title: string): { tokens: TitleToken[]; charCou
 export function plainTitle(title: string): string {
 	return title.replace(/<br\s*\/?>/gi, "").replace(/\n/g, "");
 }
-
-export type CatchChar = { value: string; index: number };
-
-/** キャッチコピーを行ごと・1文字ずつに分解 */
-export function parseCatchLines(lines: string[]): { chars: CatchChar[] }[] {
-	let charIndex = 0;
-	return lines.map((line) => ({
-		chars: [...line].map((value) => {
-			const current = charIndex;
-			charIndex += 1;
-			return { value, index: current };
-		}),
-	}));
-}
-
-export function catchCharCount(lines: string[]): number {
-	return lines.reduce((sum, line) => sum + [...line].length, 0);
-}

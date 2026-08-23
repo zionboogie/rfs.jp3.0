@@ -78,9 +78,9 @@ const glyphs: { tag: "path" | "polygon"; d?: string; points?: string }[] = [
 		glyphs.map((glyph, index) => (
 			<g class="top-rhythm__glyph" style={`--glyph-index: ${index}`}>
 				{glyph.tag === "path" ? (
-					<path fill="#000" d={glyph.d} />
+					<path fill="currentColor" d={glyph.d} />
 				) : (
-					<polygon fill="#000" points={glyph.points} />
+					<polygon fill="currentColor" points={glyph.points} />
 				)}
 			</g>
 		))

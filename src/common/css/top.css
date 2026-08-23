@@ -20,6 +20,13 @@ FV下 rhythmfactory ロゴ
 	display: block;
 	width: 100%;
 	line-height: 0;
+	color: #000;
+	text-decoration: none;
+	transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.top-rhythm__logo:hover {
+	color: var(--color-logo);
 }
 
 .top-rhythm__svg {
@@ -243,7 +250,7 @@ About イントロ（全画面フェードスライダー）
 	font-weight: 700;
 	line-height: 1.45;
 	letter-spacing: 0.06em;
-	text-shadow: 0 1px 5px rgb(0 0 0 / 5%);
+	text-shadow: 0 1px 5px rgb(0 0 0 / 10%);
 }
 
 .about-intro__char {
@@ -266,27 +273,28 @@ About イントロ（全画面フェードスライダー）
 	margin: 0;
 	font-size: clamp(1.125rem, 2.2vw, 1.5rem);
 	font-weight: 500;
-	line-height: 2.75;
+	line-height: 1.5;
 	letter-spacing: 0.04em;
 }
 
 .about-intro__catch-line {
-	display: inline;
-	padding: 0.12em 0.35em;
+	display: inline-block;
+	padding: 0.02em 0.35em;
 	background-color: #fff;
 	color: #555;
-	-webkit-box-decoration-break: clone;
-	box-decoration-break: clone;
+	clip-path: inset(0 100% 0 0);
+	will-change: clip-path;
 }
 
-.about-intro__catch-char {
-	display: inline-block;
-	opacity: 0;
+.about-intro__slide.is-text-ready .about-intro__catch-line {
+	animation: about-catch-line-reveal 1s cubic-bezier(0.05, 0.85, 0.05, 1) forwards;
+	animation-delay: calc(var(--catch-delay, 0s) + var(--line-index, 0) * 0.4s);
 }
 
-.about-intro__slide.is-text-ready .about-intro__catch-char {
-	animation: about-char-in 0.85s ease forwards;
-	animation-delay: calc(var(--catch-delay, 0s) + var(--catch-char-index) * 0.1s);
+@keyframes about-catch-line-reveal {
+	to {
+		clip-path: inset(0 0 0 0);
+	}
 }
 
 @keyframes about-fade-in {
@@ -378,13 +386,14 @@ About イントロ（全画面フェードスライダー）
 	}
 
 	.about-intro__char,
-	.about-intro__catch-char,
+	.about-intro__catch-line,
 	.about-intro__icon,
 	.about-intro__slide.is-text-ready .about-intro__char,
-	.about-intro__slide.is-text-ready .about-intro__catch-char,
+	.about-intro__slide.is-text-ready .about-intro__catch-line,
 	.about-intro__slide.is-text-ready .about-intro__icon {
 		opacity: 1;
 		transform: none;
+		clip-path: none;
 		animation: none;
 	}
 

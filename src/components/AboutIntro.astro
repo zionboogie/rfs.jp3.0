@@ -1,5 +1,5 @@
 ---
-import { aboutSlides, catchCharCount, parseCatchLines, parseTitleTokens, plainTitle } from "../data/aboutSlides";
+import { aboutSlides, parseTitleTokens, plainTitle } from "../data/aboutSlides";
 
 const slides = aboutSlides;
 ---
@@ -13,8 +13,6 @@ const slides = aboutSlides;
 					: { tokens: [], charCount: 0 };
 				const catchDelaySec =
 					charCount === 0 ? 0 : (charCount - 1) * 0.1 + 0.85 + 0.5;
-				const catchLines = parseCatchLines(slide.catchCopy);
-				const totalCatchChars = catchCharCount(slide.catchCopy);
 				return (
 					<div class:list={["about-intro__slide", { "is-active": index === 0 }]} data-slide={index}>
 						<div
@@ -27,7 +25,7 @@ const slides = aboutSlides;
 								{(slide.icon || slide.title || slide.catchCopy.length > 0) && (
 									<div
 										class="about-intro__copy"
-										style={`--title-length: ${charCount}; --catch-delay: ${catchDelaySec}s; --catch-length: ${totalCatchChars}`}
+										style={`--title-length: ${charCount}; --catch-delay: ${catchDelaySec}s`}
 									>
 										{slide.icon && (
 											<img
@@ -56,18 +54,14 @@ const slides = aboutSlides;
 										)}
 										{slide.catchCopy.length > 0 && (
 											<p class="about-intro__catch">
-												{catchLines.map((catchLine, lineIndex) => (
+												{slide.catchCopy.map((line, lineIndex) => (
 													<>
 														{lineIndex > 0 && <br />}
-														<span class="about-intro__catch-line">
-															{catchLine.chars.map(({ value, index }) => (
-																<span
-																	class="about-intro__catch-char"
-																	style={`--catch-char-index: ${index}`}
-																>
-																	{value === " " ? "\u00A0" : value}
-																</span>
-															))}
+														<span
+															class="about-intro__catch-line"
+															style={`--line-index: ${lineIndex}`}
+														>
+															{line}
 														</span>
 													</>
 												))}
@@ -103,6 +97,8 @@ const slides = aboutSlides;
 	const CHAR_STEP_MS = 100;
 	const CHAR_FADE_MS = 850;
 	const CATCH_AFTER_TITLE_MS = 500;
+	const CATCH_LINE_EXPAND_MS = 1000;
+	const CATCH_LINE_STEP_MS = 400;
 	const TEXT_HOLD_MS = 2000;
 	const TEXT_OUT_MS = 900;
 
@@ -127,12 +123,12 @@ const slides = aboutSlides;
 
 		const getCatchDoneMs = (slide: HTMLElement) => {
 			const titleCharCount = slide.querySelectorAll(".about-intro__char").length;
-			const catchCharCount = slide.querySelectorAll(".about-intro__catch-char").length;
+			const lineCount = slide.querySelectorAll(".about-intro__catch-line").length;
 			const titleDoneMs =
 				titleCharCount === 0 ? 0 : (titleCharCount - 1) * CHAR_STEP_MS + CHAR_FADE_MS;
-			if (catchCharCount === 0) return titleDoneMs;
+			if (lineCount === 0) return titleDoneMs;
 			const catchStartMs = titleDoneMs + (titleCharCount > 0 ? CATCH_AFTER_TITLE_MS : 0);
-			return catchStartMs + (catchCharCount - 1) * CHAR_STEP_MS + CHAR_FADE_MS;
+			return catchStartMs + (lineCount - 1) * CATCH_LINE_STEP_MS + CATCH_LINE_EXPAND_MS;
 		};
 
 		const startExpand = (slide: HTMLElement) => {
