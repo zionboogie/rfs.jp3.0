@@ -19,9 +19,16 @@ const {
 
 <a
 	href={href}
-	class="tile-card"
+	class="tile-card flex flex-col gap-sm rounded-lg border border-border bg-[#f7f5f2] p-md"
 	style={`--tile-title-bg: ${iconColor}; --tile-title-color: ${iconTextColor}`}
 >
-	<h3 class="tile-card__title">{title}</h3>
-	<p class="tile-card__description">{description}</p>
+	<h3
+		class="tile-card__title m-0 w-fit max-w-full rounded-sm px-[0.45em] py-[0.2em] text-[clamp(1.25rem,2.2vw,1.625rem)] leading-[1.35]"
+		style="background-color: var(--tile-title-bg); color: var(--tile-title-color)"
+	>
+		{title}
+	</h3>
+	<p class="tile-card__description text-[clamp(1.0625rem,1.6vw,1.25rem)] leading-[1.7] text-muted">
+		{description}
+	</p>
 </a>

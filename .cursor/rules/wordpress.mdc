@@ -1,0 +1,14 @@
+---
+description: Headless WordPress 連携
+alwaysApply: true
+---
+
+# WordPress（Headless）
+
+- WordPress は Headless CMS。投稿・固定ページ・メディア等は API 経由で Astro が取得する
+- WP 側のデータ構造変更時は Astro 側への影響を確認する
+- API データを Astro 側で必要以上に加工しない
+- 「WP で編集するコンテンツ」と「Astro の表示・レイアウト」を分離する
+- 認証情報・API キー・パスワードはソースに書かず `.env` 等を使う
+- 環境依存の URL はハードコードしない
+- WP 由来 HTML をそのまま出す場合は XSS 等の安全性を確認する

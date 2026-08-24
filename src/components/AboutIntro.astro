@@ -4,8 +4,11 @@ import { aboutSlides, catchCharCount, parseCatchLines, parseTitleTokens, plainTi
 const slides = aboutSlides;
 ---
 
-<section class="about-intro" data-about-intro>
-	<div class="about-intro__stage">
+<section
+	class="about-intro relative h-svh min-h-svh w-full overflow-hidden bg-[#1a1a1a]"
+	data-about-intro
+>
+	<div class="about-intro__stage absolute inset-0">
 		{
 			slides.map((slide, index) => {
 				const { tokens: titleTokens, charCount } = slide.title
@@ -16,22 +19,30 @@ const slides = aboutSlides;
 				const catchLines = parseCatchLines(slide.catchCopy);
 				const totalCatchChars = catchCharCount(slide.catchCopy);
 				return (
-					<div class:list={["about-intro__slide", { "is-active": index === 0 }]} data-slide={index}>
+					<div
+						class:list={["about-intro__slide absolute inset-0", { "is-active": index === 0 }]}
+						data-slide={index}
+					>
 						<div
-							class:list={["about-intro__photo", { [`about-intro__photo--tone-${index}`]: !slide.image }]}
+							class:list={[
+								"about-intro__photo absolute",
+								{ [`about-intro__photo--tone-${index}`]: !slide.image },
+							]}
 							style={slide.image ? `background-image: url(${slide.image})` : undefined}
 							aria-hidden="true"
 						/>
-						<div class="about-intro__panel">
-							<div class="about-intro__text">
+						<div class="about-intro__panel absolute inset-y-0 right-0 z-[2] bg-[#ececec]">
+							<div
+								class="about-intro__text relative z-[1] flex h-full items-center px-xl pb-xl pt-[calc(var(--header-height)+var(--spacing-lg))]"
+							>
 								{(slide.icon || slide.title || slide.catchCopy.length > 0) && (
 									<div
-										class="about-intro__copy"
+										class="about-intro__copy flex max-w-[28rem] flex-col gap-md text-[#222]"
 										style={`--title-length: ${charCount}; --catch-delay: ${catchDelaySec}s; --catch-length: ${totalCatchChars}`}
 									>
 										{slide.icon && (
 											<img
-												class="about-intro__icon"
+												class="about-intro__icon object-contain"
 												src={slide.icon}
 												alt=""
 												width="140"
@@ -39,13 +50,16 @@ const slides = aboutSlides;
 											/>
 										)}
 										{slide.title && (
-											<h2 class="about-intro__title" aria-label={plainTitle(slide.title)}>
+											<h2
+												class="about-intro__title m-0 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.45] tracking-[0.06em] text-white"
+												aria-label={plainTitle(slide.title)}
+											>
 												{titleTokens.map((token) =>
 													token.type === "br" ? (
 														<br />
 													) : (
 														<span
-															class="about-intro__char"
+															class="about-intro__char inline-block"
 															style={`--char-index: ${token.index}`}
 														>
 															{token.value === " " ? "\u00A0" : token.value}
@@ -55,22 +69,32 @@ const slides = aboutSlides;
 											</h2>
 										)}
 										{slide.catchCopy.length > 0 && (
-											<p class="about-intro__catch">
-												{catchLines.map((catchLine, lineIndex) => (
-													<>
-														{lineIndex > 0 && <br />}
-														<span class="about-intro__catch-line">
-															{catchLine.chars.map(({ value, index }) => (
-																<span
-																	class="about-intro__catch-char"
-																	style={`--catch-char-index: ${index}`}
-																>
-																	{value === " " ? "\u00A0" : value}
-																</span>
-															))}
-														</span>
-													</>
-												))}
+											<p class="about-intro__catch m-0 text-[clamp(1.125rem,2.2vw,1.5rem)] font-medium leading-normal tracking-[0.04em]">
+												{catchLines.map((catchLine) => {
+													const lineCharCount = catchLine.chars.length;
+													const lineStartIndex = catchLine.chars[0]?.index ?? 0;
+													const lineRevealDelaySec = catchDelaySec + lineStartIndex * 0.1;
+													const lineRevealDurationSec =
+														lineCharCount <= 1 ? 0.85 : (lineCharCount - 1) * 0.1 + 0.85;
+													return (
+														<>
+															{lineStartIndex > 0 && <br />}
+															<span
+																class="about-intro__catch-line inline-block px-[0.35em] py-[0.02em] text-[#555]"
+																style={`--line-reveal-delay: ${lineRevealDelaySec}s; --line-reveal-duration: ${lineRevealDurationSec}s`}
+															>
+																{catchLine.chars.map(({ value, index: catchCharIndex }) => (
+																	<span
+																		class="about-intro__catch-char inline-block"
+																		style={`--catch-char-index: ${catchCharIndex}`}
+																	>
+																		{value === " " ? "\u00A0" : value}
+																	</span>
+																))}
+															</span>
+														</>
+													);
+												})}
 											</p>
 										)}
 									</div>
@@ -83,12 +107,17 @@ const slides = aboutSlides;
 		}
 	</div>
 
-	<aside class="about-intro__nav" aria-hidden="true">
-		<span class="about-intro__explore">Explore!</span>
-		<ol class="about-intro__steps">
+	<aside
+		class="about-intro__nav absolute top-1/2 right-md z-[3] flex -translate-y-1/2 flex-col items-center gap-md text-[#222]"
+		aria-hidden="true"
+	>
+		<span class="about-intro__explore text-[0.8125rem] font-bold tracking-[0.14em] [writing-mode:vertical-rl]">
+			Explore!
+		</span>
+		<ol class="about-intro__steps m-0 flex list-none flex-col items-center gap-sm p-0 text-[0.8125rem] font-bold tracking-[0.08em]">
 			{
 				slides.map((slide, index) => (
-					<li class:list={[{ "is-active": index === 0 }]} data-step={index}>
+					<li class:list={["relative", { "is-active": index === 0 }]} data-step={index}>
 						{slide.number}
 					</li>
 				))

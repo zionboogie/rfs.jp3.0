@@ -1,4 +1,0 @@
-@import "./reset.css";
-@import "./variables.css";	/* 色・フォント・余白・幅などのデザイントークン */
-@import "./base.css";	/* 要素の基本スタイル */	
-@import "./layout.css";	/* サイト共通のユーティリティ / レイアウト補助クラス */

@@ -68,7 +68,7 @@ const glyphs: { tag: "path" | "polygon"; d?: string; points?: string }[] = [
 ---
 
 <svg
-	class="top-rhythm__svg"
+	class="top-rhythm__svg block h-auto w-full overflow-visible"
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 501.38 80.54"
 	role="img"
@@ -78,9 +78,9 @@ const glyphs: { tag: "path" | "polygon"; d?: string; points?: string }[] = [
 		glyphs.map((glyph, index) => (
 			<g class="top-rhythm__glyph" style={`--glyph-index: ${index}`}>
 				{glyph.tag === "path" ? (
-					<path fill="#000" d={glyph.d} />
+					<path fill="currentColor" d={glyph.d} />
 				) : (
-					<polygon fill="#000" points={glyph.points} />
+					<polygon fill="currentColor" points={glyph.points} />
 				)}
 			</g>
 		))

@@ -10,8 +10,24 @@ const { index, title, description, href } = Astro.props;
 const indexLabel = String(index).padStart(2, "0");
 ---
 
-<a href={href} class="course-list__item" style={`--item-index: ${index - 1}`}>
-	<span class="course-list__index">({indexLabel})</span>
-	<h3 class="course-list__title">{title}</h3>
-	<p class="course-list__description">{description}</p>
+<a
+	href={href}
+	class="course-list__item grid grid-cols-[3.25rem_minmax(10rem,0.95fr)_minmax(12rem,1.15fr)] items-start gap-x-[clamp(1.5rem,7vw,5.5rem)] border-b border-[rgb(33_5_5_/_18%)] py-[clamp(3.5rem,8vw,6rem)] text-inherit no-underline"
+	style={`--item-index: ${index - 1}`}
+>
+	<span
+		class="course-list__index pt-[0.45em] font-sans text-sm leading-snug tracking-[0.04em] text-[rgb(33_5_5_/_45%)]"
+	>
+		({indexLabel})
+	</span>
+	<h3
+		class="course-list__title relative m-0 font-sans text-[clamp(1.75rem,3.6vw,2.75rem)] font-bold leading-[1.35] tracking-[0.02em]"
+	>
+		{title}
+	</h3>
+	<p
+		class="course-list__description m-0 pt-[0.35em] text-[clamp(0.9375rem,1.5vw,1.0625rem)] leading-[1.9] text-[rgb(33_5_5_/_72%)]"
+	>
+		{description}
+	</p>
 </a>

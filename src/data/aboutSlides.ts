@@ -60,7 +60,7 @@ export function plainTitle(title: string): string {
 
 export type CatchChar = { value: string; index: number };
 
-/** キャッチコピーを行ごと・1文字ずつに分解 */
+/** キャッチコピーを行ごと・1文字ずつに分解（index は全行通し） */
 export function parseCatchLines(lines: string[]): { chars: CatchChar[] }[] {
 	let charIndex = 0;
 	return lines.map((line) => ({
