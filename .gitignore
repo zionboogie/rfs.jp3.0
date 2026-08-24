@@ -5,6 +5,7 @@ dist/
 
 # dependencies
 node_modules/
+dist/
 
 # logs
 npm-debug.log*
@@ -15,10 +16,12 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
+.env.*
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+
+.cursor/*.local.*

@@ -1,0 +1,65 @@
+---
+description: RFS.jp design system
+alwaysApply: true
+---
+
+# デザインシステム
+
+## カラー
+
+プロジェクトの既存のカラートークンを使用してください。
+
+必要がない限り、新しいカラーを作成しないでください。
+
+## レイアウト
+
+コンテンツ:
+max-width 1200px
+
+閲覧:
+max-width 760px
+
+## 余白
+
+推奨値：
+
+4px
+8px
+12px
+16px
+24px
+32px
+48px
+64px
+96px
+
+## タイポグラフィ
+
+既存のタイポグラフィシステムを使用してください。
+
+任意のフォントサイズを作成しないでください。
+
+## コンポーネント
+
+既存のコンポーネントを再利用してください：
+
+- Button
+- Card
+- Header
+- Footer
+- AIQuestion
+- CodeBlock
+- Callout
+- Breadcrumb
+
+重複するUIコンポーネントを作成しないでください。
+
+## レスポンシブ
+
+モバイルファーストでデザインしてください。
+
+確認事項：
+
+- mobile
+- tablet
+- desktop
