@@ -4,8 +4,11 @@ import { aboutSlides, parseTitleTokens, plainTitle } from "../data/aboutSlides";
 const slides = aboutSlides;
 ---
 
-<section class="about-intro" data-about-intro>
-	<div class="about-intro__stage">
+<section
+	class="about-intro relative h-svh min-h-svh w-full overflow-hidden bg-[#1a1a1a]"
+	data-about-intro
+>
+	<div class="about-intro__stage absolute inset-0">
 		{
 			slides.map((slide, index) => {
 				const { tokens: titleTokens, charCount } = slide.title
@@ -14,22 +17,30 @@ const slides = aboutSlides;
 				const catchDelaySec =
 					charCount === 0 ? 0 : (charCount - 1) * 0.1 + 0.85 + 0.5;
 				return (
-					<div class:list={["about-intro__slide", { "is-active": index === 0 }]} data-slide={index}>
+					<div
+						class:list={["about-intro__slide absolute inset-0", { "is-active": index === 0 }]}
+						data-slide={index}
+					>
 						<div
-							class:list={["about-intro__photo", { [`about-intro__photo--tone-${index}`]: !slide.image }]}
+							class:list={[
+								"about-intro__photo absolute",
+								{ [`about-intro__photo--tone-${index}`]: !slide.image },
+							]}
 							style={slide.image ? `background-image: url(${slide.image})` : undefined}
 							aria-hidden="true"
 						/>
-						<div class="about-intro__panel">
-							<div class="about-intro__text">
+						<div class="about-intro__panel absolute inset-y-0 right-0 z-[2] bg-[#ececec]">
+							<div
+								class="about-intro__text relative z-[1] flex h-full items-center px-xl pb-xl pt-[calc(var(--header-height)+var(--spacing-lg))]"
+							>
 								{(slide.icon || slide.title || slide.catchCopy.length > 0) && (
 									<div
-										class="about-intro__copy"
+										class="about-intro__copy flex max-w-[28rem] flex-col gap-md text-[#222]"
 										style={`--title-length: ${charCount}; --catch-delay: ${catchDelaySec}s`}
 									>
 										{slide.icon && (
 											<img
-												class="about-intro__icon"
+												class="about-intro__icon object-contain"
 												src={slide.icon}
 												alt=""
 												width="140"
@@ -37,13 +48,16 @@ const slides = aboutSlides;
 											/>
 										)}
 										{slide.title && (
-											<h2 class="about-intro__title" aria-label={plainTitle(slide.title)}>
+											<h2
+												class="about-intro__title m-0 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.45] tracking-[0.06em] text-white"
+												aria-label={plainTitle(slide.title)}
+											>
 												{titleTokens.map((token) =>
 													token.type === "br" ? (
 														<br />
 													) : (
 														<span
-															class="about-intro__char"
+															class="about-intro__char inline-block"
 															style={`--char-index: ${token.index}`}
 														>
 															{token.value === " " ? "\u00A0" : token.value}
@@ -53,12 +67,12 @@ const slides = aboutSlides;
 											</h2>
 										)}
 										{slide.catchCopy.length > 0 && (
-											<p class="about-intro__catch">
+											<p class="about-intro__catch m-0 text-[clamp(1.125rem,2.2vw,1.5rem)] font-medium leading-normal tracking-[0.04em]">
 												{slide.catchCopy.map((line, lineIndex) => (
 													<>
 														{lineIndex > 0 && <br />}
 														<span
-															class="about-intro__catch-line"
+															class="about-intro__catch-line inline-block bg-white px-[0.35em] py-[0.02em] text-[#555]"
 															style={`--line-index: ${lineIndex}`}
 														>
 															{line}
@@ -77,12 +91,17 @@ const slides = aboutSlides;
 		}
 	</div>
 
-	<aside class="about-intro__nav" aria-hidden="true">
-		<span class="about-intro__explore">Explore!</span>
-		<ol class="about-intro__steps">
+	<aside
+		class="about-intro__nav absolute top-1/2 right-md z-[3] flex -translate-y-1/2 flex-col items-center gap-md text-[#222]"
+		aria-hidden="true"
+	>
+		<span class="about-intro__explore text-[0.8125rem] font-bold tracking-[0.14em] [writing-mode:vertical-rl]">
+			Explore!
+		</span>
+		<ol class="about-intro__steps m-0 flex list-none flex-col items-center gap-sm p-0 text-[0.8125rem] font-bold tracking-[0.08em]">
 			{
 				slides.map((slide, index) => (
-					<li class:list={[{ "is-active": index === 0 }]} data-step={index}>
+					<li class:list={["relative", { "is-active": index === 0 }]} data-step={index}>
 						{slide.number}
 					</li>
 				))

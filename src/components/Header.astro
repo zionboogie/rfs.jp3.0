@@ -3,33 +3,51 @@ import { navMenus } from "../data/courses";
 import { aboutSlideAssetUrls } from "../data/aboutSlides";
 ---
 
-<header class="site-header is-intro" data-slide-assets={JSON.stringify(aboutSlideAssetUrls)}>
-	<div class="site-header__intro" aria-hidden="true">
-		<div class="site-header__intro-content">
+<header
+	class="site-header is-intro fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-transparent transition-transform duration-[220ms] ease-in"
+	data-slide-assets={JSON.stringify(aboutSlideAssetUrls)}
+>
+	<div class="site-header__intro fixed inset-0 z-[200] grid place-items-center" aria-hidden="true">
+		<div class="site-header__intro-content flex flex-col items-center gap-xs text-center">
 			<p class="site-logo site-logo--intro">smart</p>
-			<p class="site-header__intro-tagline">AIと一緒に、コードを書こう。</p>
+			<p
+				class="site-header__intro-tagline m-0 text-[clamp(1.25rem,3.5vw,2.25rem)] font-bold tracking-[0.12em] text-text"
+			>
+				AIと一緒に、コードを書こう。
+			</p>
 		</div>
 	</div>
-	<div class="site-header__chrome" aria-hidden="true"></div>
-	<div class="site-header__inner container">
+	<div class="site-header__chrome pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
+	<div class="site-header__inner container relative z-[2] flex items-center gap-md py-sm">
 		<a href="/" class="site-logo">smart</a>
 		<nav class="global-nav" aria-label="グローバルナビ">
-			<ul>
+			<ul class="flex list-none flex-wrap gap-y-sm gap-x-md p-0">
 				{
 					navMenus.map((menu) => (
 						<li>
-							<a href={menu.href}>
-								<span>{menu.id === "programming-languages" ? `${menu.label}` : menu.label}</span>
+							<a href={menu.href} class="font-bold hover:text-text hover:no-underline">
+								<span>{menu.label}</span>
 							</a>
 						</li>
 					))
 				}
 			</ul>
 		</nav>
-		<form class="header-search" action="/search" method="get" role="search">
+		<form class="header-search ml-auto flex shrink-0 gap-2" action="/search" method="get" role="search">
 			<label class="visually-hidden" for="header-search-input">サイト内検索</label>
-			<input id="header-search-input" type="search" name="q" placeholder="キーワードで検索" />
-			<button type="submit">検索</button>
+			<input
+				id="header-search-input"
+				class="rounded-sm border border-white/60 bg-white px-3 py-2"
+				type="search"
+				name="q"
+				placeholder="キーワードで検索"
+			/>
+			<button
+				type="submit"
+				class="cursor-pointer rounded-sm border-0 bg-text px-4 py-2 font-bold text-white"
+			>
+				検索
+			</button>
 		</form>
 	</div>
 </header>

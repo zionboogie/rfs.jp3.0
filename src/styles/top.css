@@ -1,39 +1,18 @@
 /*
-	top.css
-	トップページ専用スタイル（ヘッダ・フッタ以外）
+	トップページ専用
+	静的レイアウトは Astro 側の Tailwind utility、
+	スライダー・視差・reveal など状態依存のみここに残す
 */
 
 /* ----------------------------------------
-FV下 rhythmfactory ロゴ
+top-rhythm
 ---------------------------------------- */
-.top-rhythm {
-	padding-block: var(--space-xl);
-	overflow: hidden;
-}
-
-.top-rhythm__inner {
-	display: flex;
-	align-items: center;
-}
-
 .top-rhythm__logo {
-	display: block;
-	width: 100%;
-	line-height: 0;
-	color: #000;
-	text-decoration: none;
 	transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .top-rhythm__logo:hover {
 	color: var(--color-logo);
-}
-
-.top-rhythm__svg {
-	display: block;
-	width: 100%;
-	height: auto;
-	overflow: visible;
 }
 
 .top-rhythm__glyph {
@@ -57,6 +36,14 @@ FV下 rhythmfactory ロゴ
 	}
 }
 
+.top-rhythm-tagline__link {
+	transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.top-rhythm-tagline__link:hover {
+	color: var(--color-logo);
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.top-rhythm__glyph,
 	.top-rhythm.is-inview .top-rhythm__glyph {
@@ -67,34 +54,10 @@ FV下 rhythmfactory ロゴ
 	}
 }
 
-.top-rhythm-tagline {
-	padding-block: 0 var(--space-xl);
-	text-align: center;
-}
-
-.top-rhythm-tagline__link {
-	color: darkgrey;
-	font-size: clamp(1.0625rem, 1.8vw, 1.1875rem);
-	font-weight: 700;
-	letter-spacing: 0.3em;
-	text-decoration: none;
-	transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.top-rhythm-tagline__link:hover {
-	color: var(--color-logo);
-}
-
 /* ----------------------------------------
-About イントロ（全画面フェードスライダー）
+About イントロ
 ---------------------------------------- */
 .about-intro {
-	position: relative;
-	width: 100%;
-	height: 100svh;
-	min-height: 100svh;
-	overflow: hidden;
-	background-color: #1a1a1a;
 	visibility: hidden;
 	pointer-events: none;
 }
@@ -104,21 +67,13 @@ About イントロ（全画面フェードスライダー）
 	pointer-events: auto;
 }
 
-.about-intro__stage {
-	position: absolute;
-	inset: 0;
-}
-
 .about-intro__slide {
-	position: absolute;
-	inset: 0;
 	opacity: 0;
 	z-index: 0;
 	transition: opacity 1.6s ease;
 	pointer-events: none;
 }
 
-/* 下に待機している次スライド（常に見えている） */
 .about-intro__slide.is-under {
 	opacity: 1;
 	z-index: 0;
@@ -130,7 +85,6 @@ About イントロ（全画面フェードスライダー）
 	z-index: 1;
 }
 
-/* 上のスライドがフェードアウトし、下のスライドが見える */
 .about-intro__slide.is-leaving {
 	opacity: 0;
 	z-index: 2;
@@ -138,7 +92,6 @@ About イントロ（全画面フェードスライダー）
 }
 
 .about-intro__photo {
-	position: absolute;
 	inset: -8% 0;
 	background-position: left center;
 	background-size: auto 100%;
@@ -163,7 +116,6 @@ About イントロ（全画面フェードスライダー）
 	}
 }
 
-/* 写真プレースホルダー（画像未設定時） */
 .about-intro__photo--tone-0 {
 	background-image: linear-gradient(135deg, #2b3540 0%, #5a6b7a 45%, #8fa0ad 100%);
 }
@@ -177,13 +129,7 @@ About イントロ（全画面フェードスライダー）
 }
 
 .about-intro__panel {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 2;
 	width: 38%;
-	background-color: rgb(236 236 236);
 	transform-origin: right center;
 }
 
@@ -204,21 +150,7 @@ About イントロ（全画面フェードスライダー）
 	}
 }
 
-.about-intro__text {
-	position: relative;
-	z-index: 1;
-	display: flex;
-	align-items: center;
-	height: 100%;
-	padding: calc(var(--header-height) + var(--space-lg)) var(--space-xl) var(--space-xl);
-}
-
 .about-intro__copy {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-md);
-	max-width: 28rem;
-	color: #222;
 	opacity: 1;
 	transition: opacity 0.9s ease;
 }
@@ -235,7 +167,6 @@ About イントロ（全画面フェードスライダー）
 .about-intro__icon {
 	width: clamp(100px, 12vw, 140px);
 	height: clamp(100px, 12vw, 140px);
-	object-fit: contain;
 	opacity: 0;
 }
 
@@ -244,17 +175,10 @@ About イントロ（全画面フェードスライダー）
 }
 
 .about-intro__title {
-	margin: 0;
-	color: #fff;
-	font-size: clamp(2rem, 4.2vw, 3.25rem);
-	font-weight: 700;
-	line-height: 1.45;
-	letter-spacing: 0.06em;
 	text-shadow: 0 1px 5px rgb(0 0 0 / 10%);
 }
 
 .about-intro__char {
-	display: inline-block;
 	opacity: 0;
 }
 
@@ -269,19 +193,7 @@ About イントロ（全画面フェードスライダー）
 	}
 }
 
-.about-intro__catch {
-	margin: 0;
-	font-size: clamp(1.125rem, 2.2vw, 1.5rem);
-	font-weight: 500;
-	line-height: 1.5;
-	letter-spacing: 0.04em;
-}
-
 .about-intro__catch-line {
-	display: inline-block;
-	padding: 0.02em 0.35em;
-	background-color: #fff;
-	color: #555;
 	clip-path: inset(0 100% 0 0);
 	will-change: clip-path;
 }
@@ -304,47 +216,15 @@ About イントロ（全画面フェードスライダー）
 }
 
 .about-intro__nav {
-	position: absolute;
-	top: 50%;
-	right: var(--space-md);
-	z-index: 3;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: var(--space-md);
-	transform: translateY(-50%);
 	opacity: 0;
 	transition: opacity 0.8s ease 0.4s;
-	color: #222;
 }
 
 .about-intro.is-visible .about-intro__nav {
 	opacity: 1;
 }
 
-.about-intro__explore {
-	font-size: 0.8125rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	writing-mode: vertical-rl;
-	text-orientation: mixed;
-}
-
-.about-intro__steps {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: var(--space-sm);
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	font-size: 0.8125rem;
-	font-weight: 700;
-	letter-spacing: 0.08em;
-}
-
 .about-intro__steps li {
-	position: relative;
 	padding-left: 14px;
 	color: rgb(34 34 34 / 40%);
 	transition: color 0.3s ease;
@@ -425,11 +305,11 @@ About イントロ（全画面フェードスライダー）
 
 	.about-intro__nav {
 		top: auto;
-		bottom: var(--space-md);
-		right: var(--space-md);
+		bottom: var(--spacing-md);
+		right: var(--spacing-md);
 		flex-direction: row;
 		transform: none;
-		gap: var(--space-sm);
+		gap: var(--spacing-sm);
 	}
 
 	.about-intro__explore {
@@ -438,7 +318,7 @@ About イントロ（全画面フェードスライダー）
 
 	.about-intro__steps {
 		flex-direction: row;
-		gap: var(--space-md);
+		gap: var(--spacing-md);
 	}
 
 	.about-intro__steps li {
@@ -457,7 +337,7 @@ About イントロ（全画面フェードスライダー）
 }
 
 /* ----------------------------------------
-コースセクション / 視差
+セクション見出し / 視差
 ---------------------------------------- */
 .section[data-parallax] {
 	overflow: hidden;
@@ -469,13 +349,6 @@ About イントロ（全画面フェードスライダー）
 }
 
 .section-heading {
-	width: 90%;
-	margin-inline: auto;
-	margin-bottom: var(--space-md);
-	text-align: center;
-	font-size: clamp(2.5rem, 8vw, 5.75rem);
-	line-height: 1.2;
-	letter-spacing: 0.04em;
 	opacity: 0;
 	transform: translate3d(0, 1.5rem, 0);
 	transition:
@@ -486,6 +359,15 @@ About イントロ（全画面フェードスライダー）
 .section-heading.is-inview {
 	opacity: 1;
 	transform: translate3d(0, 0, 0);
+}
+
+#programming-languages .section-heading {
+	color: #fff;
+	text-shadow: 0 0 1px rgb(0 0 0 / 100%);
+}
+
+#programming-languages .section-lead {
+	color: rgb(33 5 5 / 55%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -502,40 +384,10 @@ About イントロ（全画面フェードスライダー）
 	}
 }
 
-.section-lead {
-	margin-bottom: calc(var(--space-lg) * 3);
-	color: var(--color-muted);
-	text-align: center;
-}
-#programming-languages {
-	background-color: #e8ecef;
-}
-
-#programming-languages .section-heading {
-	color: #fff;
-	text-shadow: 0 0 1px rgb(0 0 0 / 100%);
-}
-
-#programming-languages .section-lead {
-	color: rgb(33 5 5 / 55%);
-}
-
 /* ----------------------------------------
-コース一覧リスト（programming-languages）
+course-list
 ---------------------------------------- */
-.course-list {
-	border-top: 1px solid rgb(33 5 5 / 18%);
-}
-
 .course-list__item {
-	display: grid;
-	grid-template-columns: 3.25rem minmax(10rem, 0.95fr) minmax(12rem, 1.15fr);
-	column-gap: clamp(1.5rem, 7vw, 5.5rem);
-	align-items: start;
-	padding-block: clamp(3.5rem, 8vw, 6rem);
-	border-bottom: 1px solid rgb(33 5 5 / 18%);
-	color: inherit;
-	text-decoration: none;
 	opacity: 0;
 	transform: translate3d(-1.75rem, 0, 0);
 	transition:
@@ -555,27 +407,11 @@ About イントロ（全画面フェードスライダー）
 }
 
 .course-list__index {
-	padding-top: 0.45em;
-	color: rgb(33 5 5 / 45%);
-	font-family: "Marcellus", Georgia, serif;
-	font-size: 0.875rem;
-	letter-spacing: 0.04em;
-	line-height: 1.4;
 	transition: color 0.25s ease;
 }
 
 .course-list__item:hover .course-list__index {
 	color: var(--color-logo);
-}
-
-.course-list__title {
-	position: relative;
-	margin: 0;
-	font-family: "Marcellus", "Zen Kaku Gothic Antique", Georgia, serif;
-	font-size: clamp(1.75rem, 3.6vw, 2.75rem);
-	font-weight: 700;
-	line-height: 1.35;
-	letter-spacing: 0.02em;
 }
 
 .course-list__title::before {
@@ -597,11 +433,6 @@ About イントロ（全画面フェードスライダー）
 }
 
 .course-list__description {
-	margin: 0;
-	padding-top: 0.35em;
-	color: rgb(33 5 5 / 72%);
-	font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
-	line-height: 1.9;
 	transition: color 0.25s ease;
 }
 
@@ -612,8 +443,8 @@ About イントロ（全画面フェードスライダー）
 @media (max-width: 767px) {
 	.course-list__item {
 		grid-template-columns: 2.75rem minmax(0, 1fr);
-		row-gap: var(--space-sm);
-		column-gap: var(--space-sm);
+		row-gap: var(--spacing-sm);
+		column-gap: var(--spacing-sm);
 	}
 
 	.course-list__description {
@@ -627,16 +458,6 @@ About イントロ（全画面フェードスライダー）
 		transform: none;
 		transition: none;
 	}
-}
-
-#web-basics {
-	background-color: #909ea0;
-	color: #fff;
-}
-
-#web-basics .section-heading,
-#web-basics .section-lead {
-	color: #fff;
 }
 
 #web-basics .course-list {
@@ -667,14 +488,8 @@ About イントロ（全画面フェードスライダー）
 }
 
 /* ----------------------------------------
-コース一覧タイル
+tile-card（未使用でも互換維持）
 ---------------------------------------- */
-.tile-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-	gap: var(--space-md);
-}
-
 .tile-grid .tile-card {
 	opacity: 0;
 	transform: translate3d(-2.25rem, 0, 0);
@@ -716,16 +531,6 @@ About イントロ（全画面フェードスライダー）
 	--tile-index: 7;
 }
 
-.tile-card {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-sm);
-	padding: var(--space-md);
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius-lg);
-	background-color: #f7f5f2;
-}
-
 .tile-card:hover {
 	border-color: var(--color-primary);
 	box-shadow: 0 8px 24px rgb(33 5 5 / 8%);
@@ -733,22 +538,4 @@ About イントロ（全画面フェードスライダー）
 
 .tile-grid.is-inview .tile-card:hover {
 	transform: translate3d(0, -2px, 0);
-}
-
-.tile-card__title {
-	width: fit-content;
-	max-width: 100%;
-	margin: 0;
-	padding: 0.2em 0.45em;
-	border-radius: var(--radius-sm);
-	background-color: var(--tile-title-bg);
-	color: var(--tile-title-color);
-	font-size: clamp(1.25rem, 2.2vw, 1.625rem);
-	line-height: 1.35;
-}
-
-.tile-card__description {
-	color: var(--color-muted);
-	font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
-	line-height: 1.7;
 }
