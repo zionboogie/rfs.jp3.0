@@ -1,7 +1,0 @@
-/*
-	global.css（互換エントリ）
-	reset / variables / base をまとめて読み込む
-*/
-@import "./reset.css";
-@import "./variables.css";
-@import "./base.css";

@@ -1,65 +1,37 @@
 ---
-description: RFS.jp design system
+description: RFS.jp デザインシステム（常時）
 alwaysApply: true
 ---
 
 # デザインシステム
 
-## カラー
+## トークン
 
-プロジェクトの既存のカラートークンを使用してください。
-
-必要がない限り、新しいカラーを作成しないでください。
+- 既存のデザイントークン（色・余白・タイポ・角丸）を使う
+- 新しい色・余白・フォントサイズを勝手に増やさない
+- トークン定義の正は `src/styles/global.css` の `@theme`
 
 ## レイアウト
 
-コンテンツ:
-max-width 1200px
-
-閲覧:
-max-width 760px
-
-## 余白
-
-推奨値：
-
-4px
-8px
-12px
-16px
-24px
-32px
-48px
-64px
-96px
+- コンテンツ最大幅など既存のコンテナ定義に従う（約 1200px）
+- スマートフォン基準のモバイルファースト
 
 ## タイポグラフィ
 
-既存のタイポグラフィシステムを使用してください。
+- 既存のタイポグラフィシステムを使う
+- 任意のフォントサイズを増やさない
 
-任意のフォントサイズを作成しないでください。
+## コンポーネント再利用
 
-## コンポーネント
+存在するコンポーネントを優先する（例）:
 
-既存のコンポーネントを再利用してください：
+- Layout / Header / Footer
+- AboutIntro / RhythmFactoryLogo
+- CourseListItem / CourseTile / Button
 
-- Button
-- Card
-- Header
-- Footer
-- AIQuestion
-- CodeBlock
-- Callout
-- Breadcrumb
+同じ UI が複数箇所にある場合は共通化を検討する。新規作成の前に既存を確認する。
 
-重複するUIコンポーネントを作成しないでください。
+## スタイリング手段
 
-## レスポンシブ
-
-モバイルファーストでデザインしてください。
-
-確認事項：
-
-- mobile
-- tablet
-- desktop
+- レイアウト・レスポンシブは Tailwind を優先（詳細は `tailwind.mdc`）
+- 状態・アニメなど複雑なものは既存の CSS（`src/styles/`）に寄せる

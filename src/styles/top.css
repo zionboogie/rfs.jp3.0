@@ -58,6 +58,10 @@ top-rhythm
 About イントロ
 ---------------------------------------- */
 .about-intro {
+	--about-panel-width: 38%;
+	/* 表示エリア中央を基準に、画像を右へずらして左側の切れを緩和 */
+	--about-photo-shift: 30%;
+	--about-photo-focus: calc((100% - var(--about-panel-width)) / 2 - var(--about-photo-shift));
 	visibility: hidden;
 	pointer-events: none;
 }
@@ -93,10 +97,10 @@ About イントロ
 
 .about-intro__photo {
 	inset: -8% 0;
-	background-position: left center;
+	background-position: var(--about-photo-focus) center;
 	background-size: auto 100%;
 	background-repeat: no-repeat;
-	transform-origin: left center;
+	transform-origin: var(--about-photo-focus) center;
 	will-change: transform, scale;
 	transform: translate3d(0, var(--parallax-y, 0px), 0);
 	scale: 1.12;
@@ -129,7 +133,7 @@ About イントロ
 }
 
 .about-intro__panel {
-	width: 38%;
+	width: var(--about-panel-width);
 	transform-origin: right center;
 }
 
@@ -143,7 +147,7 @@ About イントロ
 
 @keyframes about-panel-expand {
 	0% {
-		width: 38%;
+		width: var(--about-panel-width);
 	}
 	100% {
 		width: 100%;
@@ -194,19 +198,30 @@ About イントロ
 }
 
 .about-intro__catch-line {
+	background-color: #fff;
 	clip-path: inset(0 100% 0 0);
 	will-change: clip-path;
 }
 
 .about-intro__slide.is-text-ready .about-intro__catch-line {
-	animation: about-catch-line-reveal 1s cubic-bezier(0.05, 0.85, 0.05, 1) forwards;
-	animation-delay: calc(var(--catch-delay, 0s) + var(--line-index, 0) * 0.4s);
+	animation: about-catch-line-reveal var(--line-reveal-duration, 0.85s)
+		cubic-bezier(0.05, 0.85, 0.05, 1) forwards;
+	animation-delay: var(--line-reveal-delay, 0s);
 }
 
 @keyframes about-catch-line-reveal {
 	to {
 		clip-path: inset(0 0 0 0);
 	}
+}
+
+.about-intro__catch-char {
+	opacity: 0;
+}
+
+.about-intro__slide.is-text-ready .about-intro__catch-char {
+	animation: about-char-in 0.85s ease forwards;
+	animation-delay: calc(var(--catch-delay, 0s) + var(--catch-char-index) * 0.1s);
 }
 
 @keyframes about-fade-in {
@@ -266,9 +281,11 @@ About イントロ
 	}
 
 	.about-intro__char,
+	.about-intro__catch-char,
 	.about-intro__catch-line,
 	.about-intro__icon,
 	.about-intro__slide.is-text-ready .about-intro__char,
+	.about-intro__slide.is-text-ready .about-intro__catch-char,
 	.about-intro__slide.is-text-ready .about-intro__catch-line,
 	.about-intro__slide.is-text-ready .about-intro__icon {
 		opacity: 1;
@@ -290,17 +307,8 @@ About イントロ
 }
 
 @media (max-width: 767px) {
-	.about-intro__panel {
-		width: 46%;
-	}
-
-	@keyframes about-panel-expand {
-		0% {
-			width: 46%;
-		}
-		100% {
-			width: 100%;
-		}
+	.about-intro {
+		--about-panel-width: 46%;
 	}
 
 	.about-intro__nav {

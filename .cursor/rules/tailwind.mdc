@@ -1,0 +1,14 @@
+---
+description: Tailwind CSS の書き方
+globs: ["**/*.astro", "**/*.css"]
+alwaysApply: false
+---
+
+# Tailwind CSS
+
+- スタイリングの基本手段として Tailwind を使う
+- デザイントークンは `@theme`（`src/styles/global.css`）を正とする
+- arbitrary values（例: `w-[123px]`）は必要なときだけ
+- Tailwind で足りるレイアウトに、不要な生 CSS を足さない
+- 既存の `src/styles/*.css`（状態・アニメ）と役割が被らないようにする
+- レスポンシブはモバイルファースト（`md:` / `lg:` など）
