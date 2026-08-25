@@ -1,0 +1,56 @@
+---
+import ArticleListItem from "./ArticleListItem.astro";
+import type { CategoryPageData } from "../lib/wordpress";
+
+interface Props {
+	category: CategoryPageData;
+}
+
+const { category } = Astro.props;
+
+function chapterLabel(index: number): string {
+	return String(index).padStart(2, "0");
+}
+---
+
+<main>
+	<header class="category-hero">
+		<div class="container">
+			<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
+				{category.title}
+			</h1>
+			{
+				category.description ? (
+					<p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">{category.description}</p>
+				) : null
+			}
+		</div>
+	</header>
+
+	{
+		category.chapters.map((chapter, chapterIndex) => {
+			const chapterNumber = chapterLabel(chapterIndex + 1);
+			const headingId = `chapter-${chapterNumber}`;
+
+			return (
+				<section class="category-chapter" aria-labelledby={headingId}>
+					<div class="container">
+						<h2 class="category-chapter__heading flex flex-wrap items-baseline gap-x-md gap-y-xs" id={headingId}>
+							<span class="category-chapter__index text-sm tracking-[0.08em] text-muted">
+								Chapter {chapterNumber}
+							</span>
+							<span class="category-chapter__name text-h3 font-bold tracking-[0.02em]">{chapter.title}</span>
+						</h2>
+						<ul class="article-list">
+							{chapter.articles.map((article) => (
+								<li>
+									<ArticleListItem title={article.title} href={article.href} updatedAt={article.updatedAt} />
+								</li>
+							))}
+						</ul>
+					</div>
+				</section>
+			);
+		})
+	}
+</main>

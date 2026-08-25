@@ -1,13 +1,23 @@
 ---
 import { navMenus } from "../data/courses";
 import { aboutSlideAssetUrls } from "../data/aboutSlides";
+
+interface Props {
+	skipIntro?: boolean;
+}
+
+const { skipIntro = false } = Astro.props;
 ---
 
 <header
-	class="site-header is-intro fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-transparent transition-transform duration-[220ms] ease-in"
+	class:list={[
+		"site-header fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-transparent transition-transform duration-[220ms] ease-in",
+		skipIntro ? "is-ready is-logo-ready is-no-intro" : "is-intro",
+	]}
+	data-skip-intro={skipIntro ? "" : undefined}
 	data-slide-assets={JSON.stringify(aboutSlideAssetUrls)}
 >
-	<div class="site-header__intro fixed inset-0 z-[200] grid place-items-center" aria-hidden="true">
+	<div class="site-header__intro fixed inset-0 z-[200] grid place-items-center" aria-hidden="true" hidden={skipIntro}>
 		<div class="site-header__intro-content flex flex-col items-center gap-xs text-center">
 			<p class="site-logo site-logo--intro">smart</p>
 			<p
@@ -80,13 +90,19 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 		}
 	}
 
+	function skipHeaderIntro(header) {
+		document.body.classList.remove("is-intro", "is-intro-leaving");
+		header.classList.add("is-ready", "is-logo-ready", "is-no-intro");
+		header.classList.remove("is-intro");
+		const intro = header.querySelector(".site-header__intro");
+		if (intro instanceof HTMLElement) intro.hidden = true;
+	}
+
 	function initHeaderAnimation() {
 		const header = document.querySelector(".site-header");
 		if (!(header instanceof HTMLElement)) return;
-		if (header.dataset.animated === "true") {
-			document.body.classList.remove("is-intro");
-			header.classList.add("is-ready", "is-logo-ready");
-			header.classList.remove("is-intro");
+		if (header.hasAttribute("data-skip-intro") || header.dataset.animated === "true") {
+			skipHeaderIntro(header);
 			return;
 		}
 

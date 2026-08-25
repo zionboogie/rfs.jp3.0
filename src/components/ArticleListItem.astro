@@ -1,0 +1,22 @@
+---
+import { formatUpdatedAt } from "../lib/wordpress";
+
+interface Props {
+	title: string;
+	href: string;
+	updatedAt: string;
+}
+
+const { title, href, updatedAt } = Astro.props;
+const dateLabel = formatUpdatedAt(updatedAt);
+---
+
+<a href={href} class="article-list__item text-inherit no-underline">
+	<span class="article-list__title">
+		<span class="article-list__title-text">{title}</span>
+	</span>
+	<time class="article-list__date" datetime={updatedAt}>
+		<span class="visually-hidden">更新日</span>
+		{dateLabel}
+	</time>
+</a>

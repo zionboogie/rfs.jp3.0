@@ -7,9 +7,10 @@ import { ClientRouter } from "astro:transitions";
 interface Props {
 	title?: string;
 	description?: string;
+	skipIntro?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, skipIntro = false } = Astro.props;
 ---
 
 <html lang="ja">
@@ -29,8 +30,8 @@ const { title, description } = Astro.props;
 		/>
 		<ClientRouter />
 	</head>
-	<body class="is-intro" transition:animate="fade">
-		<Header />
+	<body class:list={{ "is-intro": !skipIntro }} transition:animate="fade">
+		<Header skipIntro={skipIntro} />
 		<slot />
 		<Footer />
 	</body>

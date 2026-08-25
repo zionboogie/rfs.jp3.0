@@ -1,0 +1,42 @@
+---
+import Layout from "../../components/Layout.astro";
+import CategoryListing from "../../components/CategoryListing.astro";
+import {
+	getArchiveCategories,
+	getCategoryPageData,
+	toRouteParams,
+	type CategoryPageData,
+} from "../../lib/wordpress";
+import "../../styles/category.css";
+
+export async function getStaticPaths() {
+	const categories = await getArchiveCategories();
+	const paths = [];
+
+	for (const category of categories) {
+		const route = toRouteParams(category);
+		if (!route?.slug) continue;
+		paths.push({
+			params: {
+				section: route.section,
+				slug: route.slug,
+			},
+			props: {
+				page: await getCategoryPageData(category),
+			},
+		});
+	}
+
+	return paths;
+}
+
+interface Props {
+	page: CategoryPageData;
+}
+
+const { page } = Astro.props;
+---
+
+<Layout title={page.title} description={page.description || `${page.title}の記事一覧`} skipIntro>
+	<CategoryListing category={page} />
+</Layout>

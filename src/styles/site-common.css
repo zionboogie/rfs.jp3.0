@@ -120,6 +120,14 @@
 	display: none;
 }
 
+.site-header.is-no-intro .site-header__chrome,
+.site-header.is-no-intro .site-header__inner,
+.site-header.is-no-intro .site-header__inner > .site-logo {
+	opacity: 1;
+	animation: none;
+	transition: none;
+}
+
 body.is-intro,
 body.is-intro-leaving {
 	overflow: hidden;

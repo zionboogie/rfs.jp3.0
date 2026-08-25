@@ -1,0 +1,66 @@
+---
+import Layout from "../../components/Layout.astro";
+import CourseListItem from "../../components/CourseListItem.astro";
+import {
+	findArchiveCategory,
+	getChildSummaries,
+	wpText,
+	type WpCategory,
+} from "../../lib/wordpress";
+import "../../styles/top.css";
+import "../../styles/category.css";
+
+export async function getStaticPaths() {
+	const sections = ["sb", "server", "lern"] as const;
+	const paths: { params: { section: string }; props: { category: WpCategory } }[] = [];
+
+	for (const section of sections) {
+		const category = await findArchiveCategory(section);
+		if (!category) continue;
+		paths.push({
+			params: { section },
+			props: { category },
+		});
+	}
+
+	return paths;
+}
+
+interface Props {
+	category: WpCategory;
+}
+
+const { category } = Astro.props;
+const children = await getChildSummaries(category);
+const title = wpText(category.name);
+const description = wpText(category.description);
+---
+
+<Layout title={title} description={description || `${title}の一覧`} skipIntro>
+	<main>
+		<header class="category-hero">
+			<div class="container">
+				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
+					{title}
+				</h1>
+				{
+					description ? (
+						<p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">{description}</p>
+					) : null
+				}
+				<div class="course-list mt-xl border-t border-[rgb(33_5_5_/_18%)]">
+					{
+						children.map((child, index) => (
+							<CourseListItem
+								index={index + 1}
+								title={child.title}
+								description={child.description}
+								href={child.href}
+							/>
+						))
+					}
+				</div>
+			</div>
+		</header>
+	</main>
+</Layout>
