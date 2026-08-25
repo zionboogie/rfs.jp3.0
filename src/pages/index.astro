@@ -3,10 +3,10 @@ import Layout from "../components/Layout.astro";
 import AboutIntro from "../components/AboutIntro.astro";
 import CourseListItem from "../components/CourseListItem.astro";
 import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
-import { getLernCourses } from "../lib/wordpress";
+import { getLearnCourses } from "../lib/wordpress";
 import "../styles/top.css";
 
-const lernCourses = await getLernCourses();
+const learnCourses = await getLearnCourses();
 ---
 
 <Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
@@ -70,7 +70,7 @@ const lernCourses = await getLernCourses();
 			</script>
 		</section>
 
-		<section class="section" id="lern" data-parallax="content">
+		<section class="section" id="learn" data-parallax="content">
 			<div class="container">
 				<h2
 					class="section-heading mx-auto mb-md w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]"
@@ -82,7 +82,7 @@ const lernCourses = await getLernCourses();
 				</p>
 				<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
 					{
-						lernCourses.map((course, index) => (
+						learnCourses.map((course, index) => (
 							<CourseListItem
 								index={index + 1}
 								title={course.title}

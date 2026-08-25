@@ -11,7 +11,7 @@ import "../../styles/top.css";
 import "../../styles/category.css";
 
 export async function getStaticPaths() {
-	const sections = ["sb", "server", "lern"] as const;
+	const sections = ["sb", "server", "learn"] as const;
 	const paths: { params: { section: string }; props: { category: WpCategory } }[] = [];
 
 	for (const section of sections) {

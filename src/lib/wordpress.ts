@@ -1,7 +1,16 @@
-const ARCHIVE_ROOT_SLUGS = ["sb", "server", "lern"] as const;
+/**
+ * Headless WordPress API 連携
+ * - 読み取り専用（カテゴリ／投稿の取得と整形のみ）
+ * - WP 側への作成・更新・削除は行わない
+ * - 要: .env の WORDPRESS_API_URL（例: https://example.com/wp-json）
+ */
+
+/** アーカイブとして扱うルートカテゴリの slug（親なし） */
+const ARCHIVE_ROOT_SLUGS = ["sb", "server", "learn"] as const;
 
 export type ArchiveRootSlug = (typeof ARCHIVE_ROOT_SLUGS)[number];
 
+/** WP REST API のカテゴリ（必要なフィールドのみ） */
 export type WpCategory = {
 	id: number;
 	parent: number;
@@ -12,6 +21,7 @@ export type WpCategory = {
 	count: number;
 };
 
+/** WP REST API の投稿（必要なフィールドのみ） */
 export type WpPost = {
 	id: number;
 	link: string;
@@ -24,17 +34,20 @@ export type WpPost = {
 	};
 };
 
+/** 一覧表示用の記事1件 */
 export type CategoryArticle = {
 	title: string;
 	href: string;
 	updatedAt: string;
 };
 
+/** カテゴリページ内の章（子カテゴリ単位） */
 export type CategoryChapter = {
 	title: string;
 	articles: CategoryArticle[];
 };
 
+/** カテゴリ詳細ページ用データ */
 export type CategoryPageData = {
 	title: string;
 	description: string;
@@ -42,12 +55,14 @@ export type CategoryPageData = {
 	chapters: CategoryChapter[];
 };
 
+/** 子カテゴリの要約（トップのコース一覧など） */
 export type CategorySummary = {
 	title: string;
 	description: string;
 	href: string;
 };
 
+/** .env の WORDPRESS_API_URL を返す（末尾スラッシュは除去） */
 function getApiUrl(): string {
 	const value = import.meta.env.WORDPRESS_API_URL;
 	if (!value) {
@@ -56,10 +71,12 @@ function getApiUrl(): string {
 	return value.replace(/\/$/, "");
 }
 
+/** アーカイブルートの slug かどうか */
 export function isArchiveRootSlug(value: string): value is ArchiveRootSlug {
 	return (ARCHIVE_ROOT_SLUGS as readonly string[]).includes(value);
 }
 
+/** WP の絶対 URL からサイト内パス（pathname + search）を取り出す */
 export function toSitePath(link: string): string {
 	try {
 		const url = new URL(link);
@@ -69,6 +86,7 @@ export function toSitePath(link: string): string {
 	}
 }
 
+/** WP の HTML エンティティ／タグをプレーンテキストに変換 */
 export function wpText(value: string): string {
 	return value
 		.replace(/<[^>]*>/g, "")
@@ -80,12 +98,17 @@ export function wpText(value: string): string {
 		.replace(/&#x([0-9a-fA-F]+);/g, (_, code: string) => String.fromCharCode(parseInt(code, 16)));
 }
 
+/** ISO 日付を YYYY.MM.DD 表示用に整形 */
 export function formatUpdatedAt(isoDate: string): string {
 	const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate);
 	if (!match) return isoDate;
 	return `${match[1]}.${match[2]}.${match[3]}`;
 }
 
+/**
+ * WP コレクションを全ページ取得（per_page=100 でページング）
+ * @param resource 例: "categories" / "posts"
+ */
 async function fetchCollection<T>(resource: string, searchParams: Record<string, string> = {}): Promise<T[]> {
 	const items: T[] = [];
 	let page = 1;
@@ -114,9 +137,11 @@ async function fetchCollection<T>(resource: string, searchParams: Record<string,
 	return items;
 }
 
+/** ビルド／リクエスト内で使い回すキャッシュ */
 let categoryCache: Promise<WpCategory[]> | null = null;
 let postCache: Promise<WpPost[]> | null = null;
 
+/** 全カテゴリを取得（キャッシュあり） */
 export function getWpCategories(): Promise<WpCategory[]> {
 	categoryCache ??= fetchCollection<WpCategory>("categories", {
 		_fields: "id,parent,slug,name,description,link,count",
@@ -124,6 +149,7 @@ export function getWpCategories(): Promise<WpCategory[]> {
 	return categoryCache;
 }
 
+/** 全投稿を取得（キャッシュあり・日付昇順） */
 export function getWpPosts(): Promise<WpPost[]> {
 	postCache ??= fetchCollection<WpPost>("posts", {
 		_fields: "id,link,slug,title,date,modified,categories",
@@ -133,21 +159,25 @@ export function getWpPosts(): Promise<WpPost[]> {
 	return postCache;
 }
 
+/** 指定親の直下の子カテゴリ（slug 昇順） */
 function childrenOf(categories: WpCategory[], parentId: number): WpCategory[] {
 	return categories
 		.filter((category) => category.parent === parentId)
 		.sort((a, b) => a.slug.localeCompare(b.slug, "en"));
 }
 
+/** 自分＋子孫カテゴリ ID を再帰で集める */
 function descendantIds(categories: WpCategory[], parentId: number): number[] {
 	const children = childrenOf(categories, parentId);
 	return [parentId, ...children.flatMap((child) => descendantIds(categories, child.id))];
 }
 
+/** 指定カテゴリ ID が付いた投稿のみ */
 function postsForCategory(posts: WpPost[], categoryId: number): WpPost[] {
 	return posts.filter((post) => post.categories.includes(categoryId));
 }
 
+/** 同一投稿の重複を除去 */
 function uniquePosts(posts: WpPost[]): WpPost[] {
 	const seen = new Set<number>();
 	return posts.filter((post) => {
@@ -157,6 +187,7 @@ function uniquePosts(posts: WpPost[]): WpPost[] {
 	});
 }
 
+/** 投稿配列を一覧用 Article に変換（日付昇順） */
 function articlesFromPosts(posts: WpPost[]): CategoryArticle[] {
 	return uniquePosts(posts)
 		.sort((a, b) => a.date.localeCompare(b.date))
@@ -167,6 +198,11 @@ function articlesFromPosts(posts: WpPost[]): CategoryArticle[] {
 		}));
 }
 
+/**
+ * カテゴリノードの記事一覧
+ * - 直下に投稿があればそれを使う
+ * - なければ子孫カテゴリの投稿をまとめる
+ */
 function articlesForNode(categories: WpCategory[], posts: WpPost[], categoryId: number): CategoryArticle[] {
 	const direct = postsForCategory(posts, categoryId);
 	if (direct.length > 0) return articlesFromPosts(direct);
@@ -175,6 +211,7 @@ function articlesForNode(categories: WpCategory[], posts: WpPost[], categoryId: 
 	return articlesFromPosts(nestedIds.flatMap((id) => postsForCategory(posts, id)));
 }
 
+/** WP link からパスセグメント配列を取得（デコード済み） */
 function pathSegments(link: string): string[] {
 	return toSitePath(link)
 		.split("/")
@@ -188,6 +225,7 @@ function pathSegments(link: string): string[] {
 		});
 }
 
+/** 比較用にパスを正規化（先頭末尾スラッシュなし・デコード済み） */
 function normalizePath(path: string): string {
 	return path
 		.split("/")
@@ -202,12 +240,17 @@ function normalizePath(path: string): string {
 		.join("/");
 }
 
+/**
+ * アーカイブルート（sb / server / learn）とその子孫カテゴリだけを返す
+ * サイトの動的ルート対象を絞り込む
+ */
 export async function getArchiveCategories(): Promise<WpCategory[]> {
 	const categories = await getWpCategories();
 	const roots = categories.filter((category) => category.parent === 0 && isArchiveRootSlug(category.slug));
 	const rootIds = new Set(roots.map((root) => root.id));
 	const archiveIds = new Set(rootIds);
 
+	// 親がアーカイブ配下なら子も順に取り込む
 	let added = true;
 	while (added) {
 		added = false;
@@ -223,6 +266,10 @@ export async function getArchiveCategories(): Promise<WpCategory[]> {
 	return categories.filter((category) => archiveIds.has(category.id));
 }
 
+/**
+ * カテゴリ link から Astro ルート用パラメータへ変換
+ * 例: /learn/html/ → { section: "learn", slug: "html" }
+ */
 export function toRouteParams(category: WpCategory): { section: ArchiveRootSlug; slug?: string } | null {
 	const segments = pathSegments(category.link);
 	const section = segments[0];
@@ -231,6 +278,11 @@ export function toRouteParams(category: WpCategory): { section: ArchiveRootSlug;
 	return { section, slug: segments.slice(1).join("/") };
 }
 
+/**
+ * カテゴリ詳細ページ用データを組み立てる
+ * - 子カテゴリがあれば章ごとに記事を並べる
+ * - なければ「記事」1章にまとめる
+ */
 export async function getCategoryPageData(category: WpCategory): Promise<CategoryPageData> {
 	const [categories, posts] = await Promise.all([getWpCategories(), getWpPosts()]);
 	const children = childrenOf(categories, category.id);
@@ -258,6 +310,7 @@ export async function getCategoryPageData(category: WpCategory): Promise<Categor
 	};
 }
 
+/** 直下の子カテゴリを要約リストにする */
 export async function getChildSummaries(category: WpCategory): Promise<CategorySummary[]> {
 	const categories = await getWpCategories();
 	return childrenOf(categories, category.id).map((child) => ({
@@ -267,13 +320,18 @@ export async function getChildSummaries(category: WpCategory): Promise<CategoryS
 	}));
 }
 
-export async function getLernCourses(): Promise<CategorySummary[]> {
+/** トップ用: ルート「learn」直下のコース一覧 */
+export async function getLearnCourses(): Promise<CategorySummary[]> {
 	const categories = await getWpCategories();
-	const lern = categories.find((category) => category.parent === 0 && category.slug === "lern");
-	if (!lern) return [];
-	return getChildSummaries(lern);
+	const learn = categories.find((category) => category.parent === 0 && category.slug === "learn");
+	if (!learn) return [];
+	return getChildSummaries(learn);
 }
 
+/**
+ * section（と任意の slug）からアーカイブカテゴリを探す
+ * 例: findArchiveCategory("learn", "html")
+ */
 export async function findArchiveCategory(section: string, slug?: string): Promise<WpCategory | undefined> {
 	if (!isArchiveRootSlug(section)) return undefined;
 	const categories = await getArchiveCategories();
