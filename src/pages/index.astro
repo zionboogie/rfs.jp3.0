@@ -70,27 +70,12 @@ const learnCourses = await getLearnCourses();
 			</script>
 		</section>
 
-		<section class="section" id="learn" data-parallax="content">
+		<section class="section learn" data-parallax="content">
 			<div class="container">
-				<h2
-					class="section-heading mx-auto mb-md w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]"
-				>
-					開発と学習
-				</h2>
-				<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">
-					これから学ぶ新しいコンテンツから始めよう
-				</p>
+				<h2 class="section-heading mx-auto mb-md w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]">開発と学習</h2>
+				<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">これから学ぶ新しいコンテンツから始めよう</p>
 				<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
-					{
-						learnCourses.map((course, index) => (
-							<CourseListItem
-								index={index + 1}
-								title={course.title}
-								description={course.description}
-								href={course.href}
-							/>
-						))
-					}
+					{learnCourses.map((course, index) => <CourseListItem index={index + 1} title={course.title} description={course.description} href={course.href} />)}
 				</div>
 			</div>
 		</section>
@@ -303,9 +288,7 @@ const learnCourses = await getLearnCourses();
 		disposeSectionReveal?.();
 		disposeSectionReveal = null;
 
-		const targets = Array.from(
-			document.querySelectorAll(".section-heading, .tile-grid, .course-list, .top-rhythm"),
-		).filter((el) => el instanceof HTMLElement);
+		const targets = Array.from(document.querySelectorAll(".section-heading, .tile-grid, .course-list, .top-rhythm")).filter((el) => el instanceof HTMLElement);
 		if (targets.length === 0) return;
 
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
