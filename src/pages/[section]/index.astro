@@ -1,13 +1,7 @@
 ---
 import Layout from "../../components/Layout.astro";
 import CourseListItem from "../../components/CourseListItem.astro";
-import {
-	findArchiveCategory,
-	getChildSummaries,
-	wpText,
-	type WpCategory,
-} from "../../lib/wordpress";
-import "../../styles/top.css";
+import { findArchiveCategory, getChildSummaries, wpText, type WpCategory } from "../../lib/wordpress";
 import "../../styles/category.css";
 
 export async function getStaticPaths() {
@@ -43,22 +37,9 @@ const description = wpText(category.description);
 				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
 					{title}
 				</h1>
-				{
-					description ? (
-						<p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">{description}</p>
-					) : null
-				}
+				{description ? <p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">{description}</p> : null}
 				<div class="course-list mt-xl border-t border-[rgb(33_5_5_/_18%)]">
-					{
-						children.map((child, index) => (
-							<CourseListItem
-								index={index + 1}
-								title={child.title}
-								description={child.description}
-								href={child.href}
-							/>
-						))
-					}
+					{children.map((child, index) => <CourseListItem index={index + 1} title={child.title} description={child.description} href={child.href} />)}
 				</div>
 			</div>
 		</header>

@@ -65,6 +65,34 @@ const { skipIntro = false } = Astro.props;
 <script>
 	const COMPACT_DELAY_MS = 1100;
 	const INTRO_FADE_MS = 950;
+	const INTRO_SEEN_KEY = "rfs-intro-seen";
+
+	function hasSeenIntro() {
+		try {
+			return sessionStorage.getItem(INTRO_SEEN_KEY) === "1";
+		} catch {
+			return false;
+		}
+	}
+
+	function markIntroSeen() {
+		try {
+			sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+			document.documentElement.dataset.introSeen = "1";
+		} catch {
+			/* ignore */
+		}
+	}
+
+	function applySkippedIntro(root) {
+		const header = root.querySelector(".site-header");
+		if (!(header instanceof HTMLElement)) return;
+		root.body?.classList.remove("is-intro", "is-intro-leaving");
+		header.classList.add("is-ready", "is-logo-ready", "is-no-intro");
+		header.classList.remove("is-intro");
+		const intro = header.querySelector(".site-header__intro");
+		if (intro instanceof HTMLElement) intro.hidden = true;
+	}
 
 	function preloadImages(urls) {
 		return Promise.all(
@@ -90,19 +118,13 @@ const { skipIntro = false } = Astro.props;
 		}
 	}
 
-	function skipHeaderIntro(header) {
-		document.body.classList.remove("is-intro", "is-intro-leaving");
-		header.classList.add("is-ready", "is-logo-ready", "is-no-intro");
-		header.classList.remove("is-intro");
-		const intro = header.querySelector(".site-header__intro");
-		if (intro instanceof HTMLElement) intro.hidden = true;
-	}
-
 	function initHeaderAnimation() {
 		const header = document.querySelector(".site-header");
 		if (!(header instanceof HTMLElement)) return;
-		if (header.hasAttribute("data-skip-intro") || header.dataset.animated === "true") {
-			skipHeaderIntro(header);
+		if (header.hasAttribute("data-skip-intro") || header.dataset.animated === "true" || hasSeenIntro()) {
+			applySkippedIntro(document);
+			header.dataset.animated = "true";
+			document.dispatchEvent(new CustomEvent("site-intro:complete"));
 			return;
 		}
 
@@ -110,6 +132,7 @@ const { skipIntro = false } = Astro.props;
 		const slideAssetUrls = getSlideAssetUrls(header);
 
 		const finishIntro = () => {
+			markIntroSeen();
 			document.body.classList.add("is-intro-leaving");
 			document.body.classList.remove("is-intro");
 			document.dispatchEvent(new CustomEvent("site-intro:complete"));
@@ -181,6 +204,14 @@ const { skipIntro = false } = Astro.props;
 
 		window.addEventListener("scroll", onScroll, { passive: true });
 	}
+
+	document.addEventListener("astro:before-swap", (event) => {
+		if (!hasSeenIntro()) return;
+		const doc = event.newDocument;
+		if (!(doc instanceof Document)) return;
+		doc.documentElement.dataset.introSeen = "1";
+		applySkippedIntro(doc);
+	});
 
 	document.addEventListener("astro:page-load", () => {
 		initHeaderAnimation();

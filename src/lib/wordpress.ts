@@ -8,9 +8,14 @@
 /** アーカイブとして扱うルートカテゴリの slug（親なし） */
 const ARCHIVE_ROOT_SLUGS = ["sb", "server", "learn"] as const;
 
+/** 学習セクションの CPT / タクソノミー（REST base） */
+const LEARN_POST_TYPE = "learn";
+const LEARN_TAXONOMY = "learn_cat";
+const LEARN_ROOT_ID = -1;
+
 export type ArchiveRootSlug = (typeof ARCHIVE_ROOT_SLUGS)[number];
 
-/** WP REST API のカテゴリ（必要なフィールドのみ） */
+/** WP REST API のカテゴリ／タクソノミーターム（必要なフィールドのみ） */
 export type WpCategory = {
 	id: number;
 	parent: number;
@@ -19,6 +24,7 @@ export type WpCategory = {
 	description: string;
 	link: string;
 	count: number;
+	taxonomy?: "category" | "learn_cat";
 };
 
 /** WP REST API の投稿（必要なフィールドのみ） */
@@ -32,6 +38,22 @@ export type WpPost = {
 	title: {
 		rendered: string;
 	};
+};
+
+type WpLearnPostResponse = Omit<WpPost, "categories"> & {
+	learn_cat?: number[];
+};
+
+/** 学習セクションの仮想ルート（標準カテゴリ `learn` は存在しない） */
+const LEARN_ROOT: WpCategory = {
+	id: LEARN_ROOT_ID,
+	parent: 0,
+	slug: "learn",
+	name: "開発と学習",
+	description: "これから学ぶ新しいコンテンツから始めよう",
+	link: "/learn/",
+	count: 0,
+	taxonomy: "learn_cat",
 };
 
 /** 一覧表示用の記事1件 */
@@ -140,6 +162,8 @@ async function fetchCollection<T>(resource: string, searchParams: Record<string,
 /** ビルド／リクエスト内で使い回すキャッシュ */
 let categoryCache: Promise<WpCategory[]> | null = null;
 let postCache: Promise<WpPost[]> | null = null;
+let learnTermCache: Promise<WpCategory[]> | null = null;
+let learnPostCache: Promise<WpPost[]> | null = null;
 
 /** 全カテゴリを取得（キャッシュあり） */
 export function getWpCategories(): Promise<WpCategory[]> {
@@ -157,6 +181,48 @@ export function getWpPosts(): Promise<WpPost[]> {
 		order: "asc",
 	});
 	return postCache;
+}
+
+/** 学習タクソノミー learn_cat のタームを取得（リンクは /learn/{slug}/ に正規化） */
+export function getLearnTerms(): Promise<WpCategory[]> {
+	learnTermCache ??= fetchCollection<WpCategory>(LEARN_TAXONOMY, {
+		_fields: "id,parent,slug,name,description,link,count",
+	}).then((terms) =>
+		terms.map((term) => ({
+			...term,
+			link: `/learn/${term.slug}/`,
+			taxonomy: "learn_cat" as const,
+		})),
+	);
+	return learnTermCache;
+}
+
+/** 投稿タイプ learn を取得（learn_cat を categories として扱う） */
+export function getLearnPosts(): Promise<WpPost[]> {
+	learnPostCache ??= fetchCollection<WpLearnPostResponse>(LEARN_POST_TYPE, {
+		_fields: "id,link,slug,title,date,modified,learn_cat",
+		orderby: "date",
+		order: "asc",
+	}).then((posts) =>
+		posts.map((post) => ({
+			...post,
+			categories: post.learn_cat ?? [],
+		})),
+	);
+	return learnPostCache;
+}
+
+function isLearnTaxonomy(category: WpCategory): boolean {
+	return category.taxonomy === "learn_cat";
+}
+
+function summaryFromCategory(category: WpCategory): CategorySummary {
+	const path = toSitePath(category.link);
+	return {
+		title: wpText(category.name),
+		description: wpText(category.description),
+		href: path.endsWith("/") ? path : `${path}/`,
+	};
 }
 
 /** 指定親の直下の子カテゴリ（slug 昇順） */
@@ -241,11 +307,11 @@ function normalizePath(path: string): string {
 }
 
 /**
- * アーカイブルート（sb / server / learn）とその子孫カテゴリだけを返す
+ * アーカイブルート（sb / server）の子孫カテゴリと、learn_cat タームを返す
  * サイトの動的ルート対象を絞り込む
  */
 export async function getArchiveCategories(): Promise<WpCategory[]> {
-	const categories = await getWpCategories();
+	const [categories, learnTerms] = await Promise.all([getWpCategories(), getLearnTerms()]);
 	const roots = categories.filter((category) => category.parent === 0 && isArchiveRootSlug(category.slug));
 	const rootIds = new Set(roots.map((root) => root.id));
 	const archiveIds = new Set(rootIds);
@@ -263,7 +329,7 @@ export async function getArchiveCategories(): Promise<WpCategory[]> {
 		}
 	}
 
-	return categories.filter((category) => archiveIds.has(category.id));
+	return [...categories.filter((category) => archiveIds.has(category.id)), ...learnTerms];
 }
 
 /**
@@ -284,7 +350,9 @@ export function toRouteParams(category: WpCategory): { section: ArchiveRootSlug;
  * - なければ「記事」1章にまとめる
  */
 export async function getCategoryPageData(category: WpCategory): Promise<CategoryPageData> {
-	const [categories, posts] = await Promise.all([getWpCategories(), getWpPosts()]);
+	const [categories, posts] = isLearnTaxonomy(category)
+		? await Promise.all([getLearnTerms(), getLearnPosts()])
+		: await Promise.all([getWpCategories(), getWpPosts()]);
 	const children = childrenOf(categories, category.id);
 
 	const chapters =
@@ -312,20 +380,19 @@ export async function getCategoryPageData(category: WpCategory): Promise<Categor
 
 /** 直下の子カテゴリを要約リストにする */
 export async function getChildSummaries(category: WpCategory): Promise<CategorySummary[]> {
+	if (isLearnTaxonomy(category)) {
+		const terms = await getLearnTerms();
+		const parentId = category.id === LEARN_ROOT_ID ? 0 : category.id;
+		return childrenOf(terms, parentId).map(summaryFromCategory);
+	}
+
 	const categories = await getWpCategories();
-	return childrenOf(categories, category.id).map((child) => ({
-		title: wpText(child.name),
-		description: wpText(child.description),
-		href: toSitePath(child.link).endsWith("/") ? toSitePath(child.link) : `${toSitePath(child.link)}/`,
-	}));
+	return childrenOf(categories, category.id).map(summaryFromCategory);
 }
 
-/** トップ用: ルート「learn」直下のコース一覧 */
+/** トップ用: タクソノミー learn_cat のルートターム一覧 */
 export async function getLearnCourses(): Promise<CategorySummary[]> {
-	const categories = await getWpCategories();
-	const learn = categories.find((category) => category.parent === 0 && category.slug === "learn");
-	if (!learn) return [];
-	return getChildSummaries(learn);
+	return getChildSummaries(LEARN_ROOT);
 }
 
 /**
@@ -334,6 +401,14 @@ export async function getLearnCourses(): Promise<CategorySummary[]> {
  */
 export async function findArchiveCategory(section: string, slug?: string): Promise<WpCategory | undefined> {
 	if (!isArchiveRootSlug(section)) return undefined;
+
+	if (section === "learn") {
+		if (!slug) return LEARN_ROOT;
+		const terms = await getLearnTerms();
+		const target = `${section}/${slug}`;
+		return terms.find((term) => normalizePath(toSitePath(term.link)) === target);
+	}
+
 	const categories = await getArchiveCategories();
 	const target = slug ? `${section}/${slug}` : section;
 

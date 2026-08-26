@@ -262,7 +262,12 @@ const slides = aboutSlides;
 			});
 		};
 
-		if (header?.dataset.animated === "true") {
+		const introAlreadyDone =
+			header?.dataset.animated === "true" ||
+			header?.classList.contains("is-no-intro") ||
+			document.documentElement.dataset.introSeen === "1";
+
+		if (introAlreadyDone) {
 			show();
 			return;
 		}

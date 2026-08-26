@@ -53,12 +53,46 @@
 	border: 0;
 }
 
+/* ----------------------------------------
+パンくず
+---------------------------------------- */
+.site-breadcrumb {
+	padding-top: calc(var(--header-height) + var(--spacing-md));
+	padding-bottom: var(--spacing-sm);
+}
+
+.site-breadcrumb__item + .site-breadcrumb__item .site-breadcrumb__sep {
+	flex-shrink: 0;
+	margin-inline: 0.35em;
+	opacity: 0.45;
+}
+
+.site-breadcrumb__home {
+	display: block;
+}
+
+.site-breadcrumb__current {
+	color: var(--color-text);
+	font-weight: 700;
+}
+
 .site-logo {
 	flex-shrink: 0;
 	font-family: var(--font-logo);
 	font-size: 2.5rem;
 	font-weight: 700;
 	color: var(--color-logo);
+}
+
+a.site-logo {
+	transition:
+		filter 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+a.site-logo:hover {
+	transform: translate3d(0, -1px, 0);
+	filter: drop-shadow(0 0 1px rgb(255 255 255 / 80%)) drop-shadow(0 0 10px rgb(217 30 24 / 20%));
 }
 
 @media (max-width: 767px) {
@@ -121,11 +155,52 @@
 }
 
 .site-header.is-no-intro .site-header__chrome,
-.site-header.is-no-intro .site-header__inner,
-.site-header.is-no-intro .site-header__inner > .site-logo {
+.site-header.is-no-intro .site-header__inner {
 	opacity: 1;
 	animation: none;
 	transition: none;
+}
+
+.site-header.is-no-intro .site-header__inner > .site-logo {
+	opacity: 1;
+	animation: none;
+}
+
+html[data-intro-seen] body.is-intro,
+html[data-intro-seen] body.is-intro-leaving {
+	overflow: auto;
+}
+
+html[data-intro-seen] body.is-intro main,
+html[data-intro-seen] body.is-intro footer,
+html[data-intro-seen] body.is-intro .footer-lead,
+html[data-intro-seen] body.is-intro .gradient-bg,
+html[data-intro-seen] body.is-intro .site-header__inner,
+html[data-intro-seen] body.is-intro-leaving .site-header__inner {
+	visibility: visible;
+	pointer-events: auto;
+}
+
+html[data-intro-seen] body.is-intro .site-header__chrome,
+html[data-intro-seen] body.is-intro-leaving .site-header__chrome {
+	opacity: 1;
+}
+
+html[data-intro-seen] .site-header__intro {
+	display: none;
+}
+
+html[data-intro-seen] .site-header__chrome,
+html[data-intro-seen] .site-header__inner {
+	opacity: 1;
+	animation: none;
+	transition: none;
+}
+
+html[data-intro-seen] .site-header__inner > .site-logo,
+html[data-intro-seen] .site-header.is-logo-ready .site-header__inner > .site-logo {
+	opacity: 1;
+	animation: none;
 }
 
 body.is-intro,
@@ -236,6 +311,7 @@ body.is-intro-leaving .site-header__chrome {
 	transition:
 		width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
 		border-color 0.25s ease;
+	border: 1px solid #efefef;
 }
 
 .header-search input:focus {
