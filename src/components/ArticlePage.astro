@@ -3,7 +3,6 @@ import Copy from "@lucide/astro/icons/copy";
 import ChevronLeft from "@lucide/astro/icons/chevron-left";
 import ChevronRight from "@lucide/astro/icons/chevron-right";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
-import ArticleListItem from "./ArticleListItem.astro";
 import ArticleSidebar from "./ArticleSidebar.astro";
 import type { CategorySummary } from "../lib/wordpress";
 import "../styles/category.css";
@@ -22,19 +21,19 @@ const articleTitleChars = [...articleTitle];
 
 const relatedArticles = [
 	{
+		category: "JavaScript",
 		title: "データ型の考え方",
 		href: "#",
-		updatedAt: "2026-08-20",
 	},
 	{
+		category: "JavaScript",
 		title: "関数を使って処理をまとめる",
 		href: "#",
-		updatedAt: "2026-08-22",
 	},
 	{
+		category: "JavaScript",
 		title: "配列で複数の値を扱う",
 		href: "#",
-		updatedAt: "2026-08-24",
 	},
 ];
 ---
@@ -235,44 +234,67 @@ console.log(title);</code></pre>
 				</section>
 			</article>
 
-			<section class="article-continue pb-xl" aria-labelledby="article-continue-heading">
-				<h2 class="article-continue__heading mb-md mt-0 text-h3 font-bold tracking-[0.02em]" id="article-continue-heading">つづけて読む</h2>
-				<p class="mb-md mt-0">この記事には続きがあります。</p>
-				<p class="mb-md">
-					<a class="article-continue__link flex items-center gap-sm rounded-md border border-border p-md" href="#">
-						<ArrowRight class="shrink-0" size={20} aria-hidden="true" />
-						<span class="underline underline-offset-[0.2em]"> WordPressのテーマを作る前に、絶対に知っておきたい4つの基礎知識 </span>
-					</a>
-				</p>
-				<p class="m-0">ぜひ合わせて読んでみてください！</p>
+			<nav class="article-share mb-xl" aria-label="SNSでシェア（記事下部）">
+				<ul class="m-0 flex list-none items-center gap-sm p-0">
+					<li>
+						<a class="article-share__link" href="#" aria-label="Facebookでシェア">
+							<img src="/common/img/common/facebook-app-round-icon.svg" alt="" width="24" height="24" />
+						</a>
+					</li>
+					<li>
+						<a class="article-share__link" href="#" aria-label="Xでシェア">
+							<img src="/common/img/common/x-social-media-black-icon.svg" alt="" width="24" height="24" />
+						</a>
+					</li>
+					<li>
+						<a class="article-share__link" href="#" aria-label="はてなブックマークでシェア">
+							<span class="article-share__hatena" aria-hidden="true">B</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+
+			<section class="article-continue overflow-hidden pb-xl" data-parallax="content" aria-labelledby="article-continue-heading">
+				<div class="article-continue__layer">
+					<h2 class="article-continue__heading mb-md mt-0 text-h3 font-bold tracking-[0.02em]" id="article-continue-heading">つづけて読む</h2>
+					<p class="mb-md mt-0">続きの記事もあわせてどうぞ。</p>
+					<p class="mb-md">
+						<a class="article-continue__link flex items-center gap-sm rounded-md border border-border p-md" href="#">
+							<ArrowRight class="shrink-0" size={20} aria-hidden="true" />
+							<span class="underline underline-offset-[0.2em]"> WordPressのテーマを作る前に、絶対に知っておきたい4つの基礎知識 </span>
+						</a>
+					</p>
+					<p class="m-0">エンジョイ！</p>
+				</div>
 			</section>
 
 			<nav class="article-pager pb-xl" aria-label="前後の記事">
 				<div class="grid gap-md md:grid-cols-2">
-					<a class="article-pager__link flex items-start gap-xs no-underline" href="#">
-						<ChevronLeft class="mt-[0.35em] shrink-0" size={20} />
-						<span>
-							<span class="block text-sm tracking-[0.04em] text-muted">前の記事</span>
-							<span class="mt-xs block font-bold tracking-[0.02em] text-h4">データ型とは</span>
+					<a class="article-pager__link flex items-center gap-sm no-underline" href="#" aria-label="前の記事：データ型とは">
+						<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
+							<ChevronLeft size={20} />
 						</span>
+						<span class="font-bold tracking-[0.02em] text-h4 leading-heading">データ型とは</span>
 					</a>
-					<a class="article-pager__link flex items-start justify-start gap-xs text-left no-underline md:justify-end md:text-right" href="#">
-						<span>
-							<span class="block text-sm tracking-[0.04em] text-muted">次の記事</span>
-							<span class="mt-xs block font-bold tracking-[0.02em] text-h4">関数の基本</span>
+					<a class="article-pager__link flex items-center justify-start gap-sm text-left no-underline md:justify-end md:text-right" href="#" aria-label="次の記事：関数の基本">
+						<span class="font-bold tracking-[0.02em] text-h4 leading-heading">関数の基本</span>
+						<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
+							<ChevronRight size={20} />
 						</span>
-						<ChevronRight class="mt-[0.35em] shrink-0" size={20} />
 					</a>
 				</div>
 			</nav>
 
-			<section class="article-related pb-xl" aria-labelledby="article-related-heading">
-				<h2 class="article-related__heading mb-md mt-0 text-h3 font-bold tracking-[0.02em]" id="article-related-heading">興味があるかも</h2>
-				<ul class="article-list">
+			<section class="article-related pt-xl pb-xl" aria-labelledby="article-related-heading">
+				<h2 class="article-related__heading mb-lg mt-0 text-center text-h3 font-bold tracking-[0.02em]" id="article-related-heading">興味があるかも</h2>
+				<ul class="m-0 grid list-none gap-md p-0 md:grid-cols-3">
 					{
 						relatedArticles.map((article) => (
 							<li>
-								<ArticleListItem title={article.title} href={article.href} updatedAt={article.updatedAt} />
+								<a class="article-related__card flex h-full flex-col gap-sm rounded-md border border-border p-md text-inherit no-underline" href={article.href}>
+									<span class="text-sm tracking-[0.04em] text-muted">{article.category}</span>
+									<span class="font-bold tracking-[0.02em] text-h4 leading-heading">{article.title}</span>
+								</a>
 							</li>
 						))
 					}
@@ -294,4 +316,89 @@ console.log(title);</code></pre>
 	syncArticleMugOrigin();
 	window.addEventListener("resize", syncArticleMugOrigin);
 	document.addEventListener("astro:page-load", syncArticleMugOrigin);
+</script>
+
+<script>
+	const LERP = 0.08;
+	const CONTENT_RANGE = 28;
+
+	/** @type {null | (() => void)} */
+	let disposeContinueParallax = null;
+
+	function initContinueParallax() {
+		disposeContinueParallax?.();
+		disposeContinueParallax = null;
+
+		const section = document.querySelector(".article-continue[data-parallax]");
+		const layer = section?.querySelector(".article-continue__layer");
+		if (!(section instanceof HTMLElement) || !(layer instanceof HTMLElement)) return;
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			section.classList.add("is-inview");
+			return;
+		}
+
+		section.classList.add("is-parallax-ready");
+
+		let currentY = 0;
+		let ticking = false;
+		let frameId = 0;
+
+		const progressOf = () => {
+			const rect = section.getBoundingClientRect();
+			const span = window.innerHeight + rect.height;
+			if (span <= 0) return 0.5;
+			return Math.min(1, Math.max(0, (window.innerHeight - rect.top) / span));
+		};
+
+		const targetOffset = (progress, range) => {
+			const eased = progress * progress * (3 - 2 * progress);
+			return (0.5 - eased) * range * 2;
+		};
+
+		const update = () => {
+			ticking = false;
+			const next = targetOffset(progressOf(), CONTENT_RANGE);
+			currentY += (next - currentY) * LERP;
+			layer.style.setProperty("--parallax-y", `${currentY.toFixed(2)}px`);
+
+			if (Math.abs(next - currentY) > 0.05) {
+				ticking = true;
+				frameId = requestAnimationFrame(update);
+			}
+		};
+
+		const requestUpdate = () => {
+			if (ticking) return;
+			ticking = true;
+			frameId = requestAnimationFrame(update);
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					section.classList.add("is-inview");
+					observer.unobserve(section);
+				}
+			},
+			{ threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
+		);
+
+		observer.observe(section);
+		window.addEventListener("scroll", requestUpdate, { passive: true });
+		window.addEventListener("resize", requestUpdate);
+		requestUpdate();
+
+		disposeContinueParallax = () => {
+			observer.disconnect();
+			window.removeEventListener("scroll", requestUpdate);
+			window.removeEventListener("resize", requestUpdate);
+			cancelAnimationFrame(frameId);
+			ticking = false;
+		};
+	}
+
+	initContinueParallax();
+	document.addEventListener("astro:page-load", initContinueParallax);
 </script>

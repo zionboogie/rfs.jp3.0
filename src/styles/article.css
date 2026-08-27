@@ -7,6 +7,8 @@
 .article-hero {
 	padding-top: var(--spacing-md);
 	padding-bottom: var(--spacing-xl);
+	--article-title-char-duration: 0.8s;
+	--article-title-char-stagger: 0.07s;
 }
 
 .article-hero__lesson-digit {
@@ -48,9 +50,17 @@
 	transform: translate3d(5px, 0, 0);
 	animation:
 		article-mugcup-fade 1.05s cubic-bezier(0.05, 0.85, 0.05, 1)
-			calc((var(--article-title-chars) - 1) * 0.22s + 1.8s) forwards,
+			calc(
+				(var(--article-title-chars) - 1) * var(--article-title-char-stagger) +
+					var(--article-title-char-duration)
+			)
+			forwards,
 		article-mugcup-slide 3.2s cubic-bezier(0.05, 0.85, 0.05, 1)
-			calc((var(--article-title-chars) - 1) * 0.22s + 1.8s + 1.05s) forwards;
+			calc(
+				(var(--article-title-chars) - 1) * var(--article-title-char-stagger) +
+					var(--article-title-char-duration) + 1.05s
+			)
+			forwards;
 }
 
 @keyframes article-mugcup-fade {
@@ -76,14 +86,29 @@
 
 .article-hero__title-char {
 	opacity: 0;
-	animation: article-title-char-in 1.8s cubic-bezier(0.05, 0.85, 0.05, 1) forwards;
-	animation-delay: calc(var(--char-index) * 0.22s);
+	animation: article-title-char-in var(--article-title-char-duration)
+		cubic-bezier(0.95, 0.05, 0.795, 0.035) forwards;
+	animation-delay: calc(var(--char-index) * var(--article-title-char-stagger));
 }
 
 @keyframes article-title-char-in {
 	to {
 		opacity: 1;
 	}
+}
+
+.article-continue__layer {
+	will-change: transform;
+	transform: translate3d(0, var(--parallax-y, 0px), 0);
+}
+
+.article-continue.is-parallax-ready .article-continue__layer {
+	opacity: 0;
+	transition: opacity 1.55s cubic-bezier(0.05, 0.85, 0.05, 1);
+}
+
+.article-continue.is-inview .article-continue__layer {
+	opacity: 1;
 }
 
 .article-hero__tags a,
@@ -192,9 +217,18 @@
 	color: #fff;
 }
 
+.article-pager__arrow {
+	transition: border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .article-pager__link:hover,
 .article-pager__link:focus-visible {
 	color: var(--color-logo);
+}
+
+.article-pager__link:hover .article-pager__arrow,
+.article-pager__link:focus-visible .article-pager__arrow {
+	border-color: currentColor;
 }
 
 .article-side__heading {
@@ -211,6 +245,18 @@
 .article-side__link:focus-visible .article-side__text {
 	background-size: 100% 100%;
 	color: #fff;
+}
+
+.article-related__card {
+	transition:
+		color 0.25s ease,
+		border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.article-related__card:hover,
+.article-related__card:focus-visible {
+	border-color: var(--color-logo);
+	color: var(--color-logo);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -234,7 +280,16 @@
 	.article-hero__tags a,
 	.article-side__tags a,
 	.article-side__text,
-	.article-continue__link {
+	.article-continue__link,
+	.article-related__card,
+	.article-pager__arrow {
+		transition: none;
+	}
+
+	.article-continue__layer {
+		opacity: 1;
+		transform: none;
+		will-change: auto;
 		transition: none;
 	}
 }

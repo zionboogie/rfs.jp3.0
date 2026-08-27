@@ -10,5 +10,9 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
+		// @lucide/astro は .ts / .astro のまま公開されるため、Vite に変換させる
+		resolve: {
+			noExternal: ["@lucide/astro"],
+		},
 	},
 });
