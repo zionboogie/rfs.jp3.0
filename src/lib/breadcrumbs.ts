@@ -80,6 +80,15 @@ export async function getBreadcrumbItems(pathname: string): Promise<BreadcrumbIt
 	const home: BreadcrumbItem = { href: "/", label: "トップページ" };
 	const section = segments[0];
 
+	if (section === "article" && segments.length === 1) {
+		return [
+			home,
+			{ href: "/learn/", label: "開発と学習" },
+			{ href: "/learn/", label: "JavaScript" },
+			{ href: "/article/", label: "変数の宣言と使い方", current: true },
+		];
+	}
+
 	if (!section || !isArchiveRootSlug(section)) {
 		const items: BreadcrumbItem[] = [
 			home,

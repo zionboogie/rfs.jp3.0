@@ -3,6 +3,12 @@ import House from "@lucide/astro/icons/house";
 import ChevronRight from "@lucide/astro/icons/chevron-right";
 import { getBreadcrumbItems } from "../lib/breadcrumbs";
 
+interface Props {
+	placement?: "top" | "bottom";
+}
+
+const { placement = "top" } = Astro.props;
+const isBottom = placement === "bottom";
 const items = await getBreadcrumbItems(Astro.url.pathname);
 const origin = Astro.url.origin;
 const jsonLd = JSON.stringify({
@@ -19,14 +25,17 @@ const jsonLd = JSON.stringify({
 
 {
 	items.length > 0 ? (
-		<nav class="site-breadcrumb" aria-label="パンくずリスト">
+		<nav
+			class:list={["site-breadcrumb", isBottom && "site-breadcrumb--bottom"]}
+			aria-label={isBottom ? "パンくずリスト（ページ下部）" : "パンくずリスト"}
+		>
 			<div class="container">
 				<ol class="site-breadcrumb__list m-0 flex list-none flex-wrap items-center p-0 text-sm text-muted">
 					{items.map((item, index) => (
 						<li class="site-breadcrumb__item flex items-center">
 							{index > 0 ? <ChevronRight class="site-breadcrumb__sep" size={16} /> : null}
 							{item.current ? (
-								<span class="site-breadcrumb__current" aria-current="page">
+								<span class="site-breadcrumb__current" aria-current={isBottom ? undefined : "page"}>
 									{item.label}
 								</span>
 							) : index === 0 ? (
@@ -42,7 +51,7 @@ const jsonLd = JSON.stringify({
 					))}
 				</ol>
 			</div>
-			<script type="application/ld+json" set:html={jsonLd} />
+			{isBottom ? null : <script type="application/ld+json" set:html={jsonLd} />}
 		</nav>
 	) : null
 }

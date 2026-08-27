@@ -61,6 +61,11 @@
 	padding-bottom: var(--spacing-sm);
 }
 
+.site-breadcrumb--bottom {
+	padding-top: var(--spacing-md);
+	padding-bottom: var(--spacing-lg);
+}
+
 .site-breadcrumb__item + .site-breadcrumb__item .site-breadcrumb__sep {
 	flex-shrink: 0;
 	margin-inline: 0.35em;

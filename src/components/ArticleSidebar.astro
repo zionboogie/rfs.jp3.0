@@ -1,0 +1,84 @@
+---
+import type { CategorySummary } from "../lib/wordpress";
+
+interface Props {
+	categories: CategorySummary[];
+}
+
+const { categories } = Astro.props;
+
+const popularArticles = [
+	{ title: "変数の宣言と使い方", href: "/article/", date: "2026.08.26" },
+	{ title: "関数の基本", href: "#", date: "2026.08.24" },
+	{ title: "データ型の考え方", href: "#", date: "2026.08.22" },
+	{ title: "配列で複数の値を扱う", href: "#", date: "2026.08.20" },
+	{ title: "条件分岐をはじめよう", href: "#", date: "2026.08.18" },
+];
+
+const tags = [
+	{ label: "基礎", href: "#", weight: "strong" },
+	{ label: "変数", href: "#", weight: "strong" },
+	{ label: "関数", href: "#", weight: "normal" },
+	{ label: "HTML", href: "#", weight: "normal" },
+	{ label: "CSS", href: "#", weight: "normal" },
+	{ label: "配列", href: "#", weight: "normal" },
+	{ label: "const", href: "#", weight: "strong" },
+	{ label: "let", href: "#", weight: "normal" },
+	{ label: "入門", href: "#", weight: "normal" },
+	{ label: "実践", href: "#", weight: "normal" },
+];
+---
+
+<aside class="article-side flex flex-col gap-xl lg:sticky lg:top-md">
+	<section aria-labelledby="article-side-category-heading">
+		<h2 class="article-side__heading" id="article-side-category-heading">カテゴリ</h2>
+		<ul class="m-0 flex list-none flex-col p-0">
+			{
+				categories.map((category) => (
+					<li class="border-b border-[rgb(33_5_5_/_18%)]">
+						<a class="article-side__link block py-sm" href={category.href}>
+							<span class="article-side__text">{category.title}</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section aria-labelledby="article-side-popular-heading">
+		<h2 class="article-side__heading" id="article-side-popular-heading">人気記事</h2>
+		<ul class="m-0 flex list-none flex-col p-0">
+			{
+				popularArticles.map((article) => (
+					<li class="border-b border-[rgb(33_5_5_/_18%)]">
+						<a class="article-side__link block py-sm no-underline" href={article.href}>
+							<span class="article-side__text">{article.title}</span>
+							<time class="mt-xs block text-sm tracking-[0.04em] text-muted">{article.date}</time>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section aria-labelledby="article-side-tag-heading">
+		<h2 class="article-side__heading" id="article-side-tag-heading">タグ</h2>
+		<ul class="article-side__tags m-0 flex list-none flex-wrap gap-xs p-0">
+			{
+				tags.map((tag) => (
+					<li>
+						<a
+							class:list={[
+								"inline-block rounded-sm border border-border px-2 py-0.5 text-sm",
+								tag.weight === "strong" ? "font-bold" : "text-muted",
+							]}
+							href={tag.href}
+						>
+							{tag.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</aside>
