@@ -1,28 +1,77 @@
 ---
 import Layout from "../../components/Layout.astro";
 import CategoryListing from "../../components/CategoryListing.astro";
+import ArticlePage from "../../components/ArticlePage.astro";
 import {
+	findArchiveCategory,
+	getArchiveArticlePosts,
 	getArchiveCategories,
+	getArticleDetail,
 	getCategoryPageData,
+	getChildSummaries,
+	toPostRouteParams,
 	toRouteParams,
+	type ArticleDetail,
 	type CategoryPageData,
+	type CategorySummary,
 } from "../../lib/wordpress";
 import "../../styles/category.css";
 
 export async function getStaticPaths() {
 	const categories = await getArchiveCategories();
-	const paths = [];
+	const paths: {
+		params: { section: string; slug: string };
+		props: Props;
+	}[] = [];
+	const used = new Set<string>();
+	const sidebarBySection = new Map<string, Promise<CategorySummary[]>>();
+
+	function routeKey(section: string, slug: string) {
+		return `${section}/${slug}`;
+	}
+
+	function sidebarFor(section: string) {
+		const cached = sidebarBySection.get(section);
+		if (cached) return cached;
+		const pending = findArchiveCategory(section).then((root) => (root ? getChildSummaries(root) : []));
+		sidebarBySection.set(section, pending);
+		return pending;
+	}
 
 	for (const category of categories) {
 		const route = toRouteParams(category);
 		if (!route?.slug) continue;
+		const key = routeKey(route.section, route.slug);
+		if (used.has(key)) continue;
+		used.add(key);
 		paths.push({
 			params: {
 				section: route.section,
 				slug: route.slug,
 			},
 			props: {
+				kind: "category",
 				page: await getCategoryPageData(category),
+			},
+		});
+	}
+
+	const articles = await getArchiveArticlePosts();
+	for (const post of articles) {
+		const route = toPostRouteParams(post);
+		if (!route) continue;
+		const key = routeKey(route.section, route.slug);
+		if (used.has(key)) continue;
+		used.add(key);
+		paths.push({
+			params: {
+				section: route.section,
+				slug: route.slug,
+			},
+			props: {
+				kind: "article",
+				article: await getArticleDetail(post),
+				sidebarCategories: await sidebarFor(route.section),
 			},
 		});
 	}
@@ -30,13 +79,24 @@ export async function getStaticPaths() {
 	return paths;
 }
 
-interface Props {
-	page: CategoryPageData;
-}
+type Props =
+	| { kind: "category"; page: CategoryPageData }
+	| { kind: "article"; article: ArticleDetail; sidebarCategories: CategorySummary[] };
 
-const { page } = Astro.props;
+const props = Astro.props;
+const title = props.kind === "article" ? props.article.title : props.page.title;
+const description =
+	props.kind === "article"
+		? props.article.lead || props.article.title
+		: props.page.description || `${props.page.title}の記事一覧`;
 ---
 
-<Layout title={page.title} description={page.description || `${page.title}の記事一覧`} skipIntro>
-	<CategoryListing category={page} />
+<Layout title={title} description={description} skipIntro>
+	{
+		props.kind === "article" ? (
+			<ArticlePage article={props.article} learnCategories={props.sidebarCategories} />
+		) : (
+			<CategoryListing category={props.page} />
+		)
+	}
 </Layout>

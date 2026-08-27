@@ -1,6 +1,8 @@
 import { navMenus } from "../data/courses";
 import {
 	findArchiveCategory,
+	findArchivePost,
+	toArticlePath,
 	getLearnTerms,
 	getWpCategories,
 	isArchiveRootSlug,
@@ -80,15 +82,6 @@ export async function getBreadcrumbItems(pathname: string): Promise<BreadcrumbIt
 	const home: BreadcrumbItem = { href: "/", label: "トップページ" };
 	const section = segments[0];
 
-	if (section === "article" && segments.length === 1) {
-		return [
-			home,
-			{ href: "/learn/", label: "開発と学習" },
-			{ href: "/learn/", label: "JavaScript" },
-			{ href: "/article/", label: "変数の宣言と使い方", current: true },
-		];
-	}
-
 	if (!section || !isArchiveRootSlug(section)) {
 		const items: BreadcrumbItem[] = [
 			home,
@@ -104,6 +97,29 @@ export async function getBreadcrumbItems(pathname: string): Promise<BreadcrumbIt
 
 	const slug = segments.slice(1).join("/") || undefined;
 	const current = await findArchiveCategory(section, slug);
+	if (current) {
+		const items: BreadcrumbItem[] = [home, ...(await archiveTrail(section, current))];
+		const last = items.at(-1);
+		if (last) last.current = true;
+		return items;
+	}
+
+	const post = await findArchivePost(section, slug);
+	if (post) {
+		const parentSlug = segments.length > 2 ? segments.slice(1, -1).join("/") : undefined;
+		const parent = await findArchiveCategory(section, parentSlug);
+		const items: BreadcrumbItem[] = [
+			home,
+			...(await archiveTrail(section, parent)),
+			{
+				href: toArticlePath(post.link),
+				label: wpText(post.title.rendered),
+				current: true,
+			},
+		];
+		return items;
+	}
+
 	const items: BreadcrumbItem[] = [home, ...(await archiveTrail(section, current))];
 	const last = items.at(-1);
 	if (last) last.current = true;

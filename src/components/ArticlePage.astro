@@ -4,20 +4,40 @@ import ChevronLeft from "@lucide/astro/icons/chevron-left";
 import ChevronRight from "@lucide/astro/icons/chevron-right";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import ArticleSidebar from "./ArticleSidebar.astro";
-import type { CategorySummary } from "../lib/wordpress";
+import { formatDateJa, toDateTimeValue, type ArticleDetail, type CategorySummary } from "../lib/wordpress";
 import "../styles/category.css";
 import "../styles/article.css";
 
 interface Props {
 	learnCategories: CategorySummary[];
+	article: ArticleDetail;
 }
 
-const { learnCategories } = Astro.props;
+const { learnCategories, article } = Astro.props;
 
-const publishedAt = "2026-08-26";
-const updatedAt = "2026-08-26";
-const articleTitle = "変数の宣言と使い方";
+const articleTitle = article.title;
 const articleTitleChars = [...articleTitle];
+const publishedAt = toDateTimeValue(article.publishedAt);
+const updatedAt = toDateTimeValue(article.updatedAt);
+const publishedLabel = formatDateJa(article.publishedAt);
+const updatedLabel = formatDateJa(article.updatedAt);
+const lead = article.lead;
+const tags =
+	article.tags.length > 0
+		? article.tags
+		: [
+				{ label: "基礎", href: "#" },
+				{ label: "変数", href: "#" },
+			];
+const authorName = article.authorName || "あおいパスタ";
+const authorAvatar = article.authorAvatar || "/common/img/common/profile_aoipasta.jpg";
+const toc = article.toc;
+const shareUrl = new URL(article.path, Astro.url.origin).href;
+const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+const xHref = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(articleTitle)}`;
+const hatenaHref = `https://b.hatena.ne.jp/entry/panel/?url=${encodeURIComponent(shareUrl)}`;
+const shareTarget = "_blank";
+const shareRel = "noopener noreferrer";
 
 const relatedArticles = [
 	{
@@ -74,27 +94,32 @@ const relatedArticles = [
 						</h1>
 					</div>
 					<ul class="article-hero__tags mb-md flex list-none flex-wrap gap-xs p-0">
-						<li>
-							<a class="inline-block rounded-sm border border-border px-2 py-0.5 text-sm text-muted" href="#">基礎</a>
-						</li>
-						<li>
-							<a class="inline-block rounded-sm border border-border px-2 py-0.5 text-sm text-muted" href="#">変数</a>
-						</li>
+						{
+							tags.map((tag) => (
+								<li>
+									<a class="inline-block rounded-sm border border-border px-2 py-0.5 text-sm text-muted" href={tag.href}>
+										{tag.label}
+									</a>
+								</li>
+							))
+						}
 					</ul>
-					<p class="article-hero__lead m-0 max-w-[40rem] text-muted leading-body">
-						プログラムの中で値を覚えておく箱、それが変数です。まずは宣言のしかたと、名前の付け方から見ていきます。
-					</p>
+					{
+						lead ? (
+							<p class="article-hero__lead m-0 max-w-[40rem] text-muted leading-body">{lead}</p>
+						) : null
+					}
 
 					<div class="article-meta mt-lg flex flex-wrap items-start justify-between gap-sm border-t border-[rgb(33_5_5_/_18%)] pt-md">
 						<div class="flex min-w-0 flex-wrap items-start gap-x-lg gap-y-sm">
 							<div class="flex flex-col gap-sm">
 								<p class="m-0 whitespace-nowrap leading-none">
 									<span class="mr-sm align-top text-sm leading-none tracking-[0.04em] text-muted">公開日</span>
-									<time class="align-top text-sm leading-none text-muted" datetime={publishedAt}>2026年8月26日</time>
+									<time class="align-top text-sm leading-none text-muted" datetime={publishedAt}>{publishedLabel}</time>
 								</p>
 								<p class="m-0 whitespace-nowrap leading-none">
 									<span class="mr-sm align-top text-sm leading-none tracking-[0.04em] text-muted">更新日</span>
-									<time class="align-top text-sm leading-none text-muted" datetime={updatedAt}>2026年8月26日</time>
+									<time class="align-top text-sm leading-none text-muted" datetime={updatedAt}>{updatedLabel}</time>
 								</p>
 							</div>
 							<div class="flex flex-wrap items-start gap-x-md gap-y-sm">
@@ -105,13 +130,13 @@ const relatedArticles = [
 								<div class="article-author flex items-center gap-sm">
 									<img
 										class="size-12 shrink-0 rounded-full object-cover"
-										src="/common/img/common/profile_aoipasta.jpg"
+										src={authorAvatar}
 										alt=""
 										width="48"
 										height="48"
 									/>
 									<div>
-										<p class="m-0 font-bold leading-none">あおいパスタ</p>
+										<p class="m-0 font-bold leading-none">{authorName}</p>
 										<p class="m-0">
 											<a class="text-sm text-muted underline decoration-transparent underline-offset-4 hover:text-logo hover:decoration-current" href="#">
 												プロフィール
@@ -124,17 +149,17 @@ const relatedArticles = [
 						<nav class="article-share ml-auto shrink-0" aria-label="SNSでシェア">
 							<ul class="m-0 flex list-none items-center justify-end gap-sm p-0">
 								<li>
-									<a class="article-share__link" href="#" aria-label="Facebookでシェア">
+									<a class="article-share__link" href={facebookHref} target={shareTarget} rel={shareRel} aria-label="Facebookでシェア">
 										<img src="/common/img/common/facebook-app-round-icon.svg" alt="" width="24" height="24" />
 									</a>
 								</li>
 								<li>
-									<a class="article-share__link" href="#" aria-label="Xでシェア">
+									<a class="article-share__link" href={xHref} target={shareTarget} rel={shareRel} aria-label="Xでシェア">
 										<img src="/common/img/common/x-social-media-black-icon.svg" alt="" width="24" height="24" />
 									</a>
 								</li>
 								<li>
-									<a class="article-share__link" href="#" aria-label="はてなブックマークでシェア">
+									<a class="article-share__link" href={hatenaHref} target={shareTarget} rel={shareRel} aria-label="はてなブックマークでシェア">
 										<span class="article-share__hatena" aria-hidden="true">B</span>
 									</a>
 								</li>
@@ -143,111 +168,57 @@ const relatedArticles = [
 					</div>
 				</header>
 
-				<nav class="article-toc mb-xl" aria-labelledby="article-toc-heading">
-					<h2 class="article-toc__heading" id="article-toc-heading">目次</h2>
-					<ol class="article-toc__list m-0 flex list-decimal flex-col gap-xs pl-[1.5em]">
-						<li>
-							<a href="#intro">導入</a>
-						</li>
-						<li>
-							<a href="#what">変数とは</a>
-						</li>
-						<li>
-							<a href="#why">なぜ必要なのか</a>
-						</li>
-						<li>
-							<a href="#try">実際に書いてみる</a>
-						</li>
-						<li>
-							<a href="#browser">ブラウザで確認する</a>
-						</li>
-						<li>
-							<a href="#summary">まとめ</a>
-						</li>
-					</ol>
-				</nav>
+				{
+					toc.length > 0 ? (
+						<nav class="article-toc mb-xl" aria-labelledby="article-toc-heading">
+							<h2 class="article-toc__heading" id="article-toc-heading">
+								目次
+							</h2>
+							<ol class="article-toc__list m-0 flex list-decimal flex-col gap-xs pl-[1.5em]">
+								{toc.map((item) => (
+									<li>
+										<a href={`#${item.id}`}>{item.label}</a>
+									</li>
+								))}
+							</ol>
+						</nav>
+					) : null
+				}
 
-				<div class="article-body">
-					<h2 id="intro">導入</h2>
-					<p>コードを書いていると、「今の値を、あとでも使いたい」という場面が出てきます。そのときに使うのが変数です。</p>
-					<p>名前を付けて値を置いておく、それだけの仕組みですが、プログラムの土台になります。</p>
-
-					<h2 id="what">変数とは</h2>
-					<p>変数は、値を入れておく箱です。箱には名前が付いていて、あとからその名前で中身を取り出せます。</p>
-					<p>
-						JavaScriptでは、<code>const</code> や <code>let</code> を使って変数を宣言します。
-					</p>
-
-					<h2 id="why">なぜ必要なのか</h2>
-					<p>同じ値を何度も書き直すと、変更が入ったときに漏れが起きます。変数にまとめておけば、直す場所は一箇所で済みます。</p>
-					<ul>
-						<li>値に名前を付けて、意図を伝えやすくする</li>
-						<li>同じ値の使い回しを、安全にする</li>
-						<li>あとから読み返したときに、何をしているか追いやすくする</li>
-					</ul>
-
-					<h2 id="try">実際に書いてみる</h2>
-					<p>まずは <code>const</code> で、変更しない値を宣言してみます。</p>
-					<pre><code>const title = "変数の基本";
-console.log(title);</code></pre>
-					<p>
-						あとから値を変えたいときは <code>let</code> を使います。最初は <code>const</code> から始めると、意図がはっきりします。
-					</p>
-
-					<h2 id="browser">ブラウザで確認する</h2>
-					<p>ブラウザの開発者ツールを開き、コンソールに先ほどのコードを貼り付けて実行してみてください。表示された文字列が、変数の中身です。</p>
-
-					<h2 id="summary">まとめ</h2>
-					<p>
-						変数は、値に名前を付けて覚えておく仕組みです。まずは <code>const</code> で宣言し、必要になったら <code>let</code> を検討するところから始めましょう。
-					</p>
-				</div>
+				<div class="article-body" set:html={article.body} />
 
 				<section class="article-ask mt-xl mb-xl" aria-labelledby="article-ask-heading">
-					<h2 class="article-ask__heading mb-sm mt-0 text-h3 font-bold tracking-[0.02em]" id="article-ask-heading">AIに質問する</h2>
-					<p class="article-ask__lead mb-md mt-0 text-muted">分からないところは、次の質問をコピーして AI に聞いてみてください。</p>
-					<p class="mb-md">
-						<button class="article-ask__button cursor-pointer rounded-sm border-0 bg-text px-4 py-2 font-bold text-white" type="button"> AIに質問する </button>
-					</p>
-					<div class="flex flex-col gap-sm">
-						<div class="article-ask__item rounded-md border border-border bg-primary p-md">
-							<p class="article-ask__text m-0">constとletの違いを、具体的なコード例を使って初心者にも分かるように説明してください。</p>
-							<button
-								class="article-ask__copy mt-sm inline-flex cursor-pointer items-center gap-xs rounded-sm border border-current bg-transparent px-3 py-1 text-sm font-bold"
-								type="button"
-							>
-								<Copy size={16} />
-								コピー
-							</button>
-						</div>
-						<div class="article-ask__item rounded-md border border-border bg-primary p-md">
-							<p class="article-ask__text m-0">constを使うメリットを、初心者向けに具体例を使って説明してください。</p>
-							<button
-								class="article-ask__copy mt-sm inline-flex cursor-pointer items-center gap-xs rounded-sm border border-current bg-transparent px-3 py-1 text-sm font-bold"
-								type="button"
-							>
-								<Copy size={16} />
-								コピー
-							</button>
-						</div>
+					<div class="article-ask__item flex items-center gap-md rounded-md border border-border bg-primary p-md">
+						<h2 class="article-ask__heading m-0 shrink-0 text-sm font-bold tracking-[0.04em]" id="article-ask-heading">AIに聞こう</h2>
+						<p class="article-ask__text m-0 min-w-0 flex-1">constとletの違いを、具体的なコード例を使って初心者にも分かるように説明してください。</p>
+						<button
+							class="article-ask__copy inline-flex shrink-0 cursor-pointer items-center gap-xs rounded-sm border border-current bg-transparent px-3 py-1 text-sm font-bold"
+							type="button"
+						>
+							<Copy size={16} />
+							コピー
+						</button>
 					</div>
+					<dialog class="article-ask__popup" aria-label="コピー完了">
+						<p class="article-ask__popup-text m-0">コピーしたよ、お使いのAIに訊いてみて</p>
+					</dialog>
 				</section>
 			</article>
 
 			<nav class="article-share mb-xl" aria-label="SNSでシェア（記事下部）">
 				<ul class="m-0 flex list-none items-center gap-sm p-0">
 					<li>
-						<a class="article-share__link" href="#" aria-label="Facebookでシェア">
+						<a class="article-share__link" href={facebookHref} target={shareTarget} rel={shareRel} aria-label="Facebookでシェア">
 							<img src="/common/img/common/facebook-app-round-icon.svg" alt="" width="24" height="24" />
 						</a>
 					</li>
 					<li>
-						<a class="article-share__link" href="#" aria-label="Xでシェア">
+						<a class="article-share__link" href={xHref} target={shareTarget} rel={shareRel} aria-label="Xでシェア">
 							<img src="/common/img/common/x-social-media-black-icon.svg" alt="" width="24" height="24" />
 						</a>
 					</li>
 					<li>
-						<a class="article-share__link" href="#" aria-label="はてなブックマークでシェア">
+						<a class="article-share__link" href={hatenaHref} target={shareTarget} rel={shareRel} aria-label="はてなブックマークでシェア">
 							<span class="article-share__hatena" aria-hidden="true">B</span>
 						</a>
 					</li>
@@ -401,4 +372,77 @@ console.log(title);</code></pre>
 
 	initContinueParallax();
 	document.addEventListener("astro:page-load", initContinueParallax);
+</script>
+
+<script>
+	const POPUP_MS = 2500;
+
+	/** @type {null | (() => void)} */
+	let disposeAskCopy = null;
+
+	/** @param {string} text */
+	async function copyQuestion(text) {
+		try {
+			await navigator.clipboard.writeText(text);
+			return;
+		} catch {
+			/* 権限がない場合は textarea 経由でコピーする */
+		}
+
+		const input = document.createElement("textarea");
+		input.value = text;
+		input.setAttribute("readonly", "");
+		input.style.position = "fixed";
+		input.style.left = "-9999px";
+		document.body.append(input);
+		input.select();
+		document.execCommand("copy");
+		input.remove();
+	}
+
+	function initAskCopy() {
+		disposeAskCopy?.();
+		disposeAskCopy = null;
+
+		const section = document.querySelector(".article-ask");
+		const button = section?.querySelector(".article-ask__copy");
+		const textEl = section?.querySelector(".article-ask__text");
+		const popup = section?.querySelector(".article-ask__popup");
+		if (!(button instanceof HTMLButtonElement) || !(textEl instanceof HTMLElement) || !(popup instanceof HTMLDialogElement)) {
+			return;
+		}
+
+		let hideTimer = 0;
+
+		const hidePopup = () => {
+			window.clearTimeout(hideTimer);
+			if (popup.open) popup.close();
+		};
+
+		const onCopy = async () => {
+			const text = textEl.textContent?.trim() ?? "";
+			if (!text) return;
+			await copyQuestion(text);
+			popup.showModal();
+			window.clearTimeout(hideTimer);
+			hideTimer = window.setTimeout(hidePopup, POPUP_MS);
+		};
+
+		/** @param {MouseEvent} event */
+		const onPopupClick = (event) => {
+			if (event.target === popup) hidePopup();
+		};
+
+		button.addEventListener("click", onCopy);
+		popup.addEventListener("click", onPopupClick);
+
+		disposeAskCopy = () => {
+			hidePopup();
+			button.removeEventListener("click", onCopy);
+			popup.removeEventListener("click", onPopupClick);
+		};
+	}
+
+	initAskCopy();
+	document.addEventListener("astro:page-load", initAskCopy);
 </script>

@@ -35,9 +35,58 @@ export type WpPost = {
 	date: string;
 	modified: string;
 	categories: number[];
+	tags?: number[];
+	author?: number;
 	title: {
 		rendered: string;
 	};
+	excerpt?: {
+		rendered: string;
+	};
+	content?: {
+		rendered: string;
+	};
+};
+
+/** WP REST API のタグ */
+export type WpTag = {
+	id: number;
+	name: string;
+	slug: string;
+	link: string;
+};
+
+/** WP REST API のユーザー */
+export type WpUser = {
+	id: number;
+	name: string;
+	slug: string;
+	link: string;
+	avatar_urls?: Record<string, string>;
+};
+
+/** 記事詳細ページ用データ */
+export type ArticleTocItem = {
+	id: string;
+	label: string;
+};
+
+export type ArticleTag = {
+	label: string;
+	href: string;
+};
+
+export type ArticleDetail = {
+	title: string;
+	lead: string;
+	publishedAt: string;
+	updatedAt: string;
+	body: string;
+	toc: ArticleTocItem[];
+	tags: ArticleTag[];
+	authorName: string;
+	authorAvatar: string;
+	path: string;
 };
 
 type WpLearnPostResponse = Omit<WpPost, "categories"> & {
@@ -127,6 +176,18 @@ export function formatUpdatedAt(isoDate: string): string {
 	return `${match[1]}.${match[2]}.${match[3]}`;
 }
 
+/** ISO 日付を「YYYY年M月D日」表示用に整形 */
+export function formatDateJa(isoDate: string): string {
+	const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate);
+	if (!match) return isoDate;
+	return `${match[1]}年${Number(match[2])}月${Number(match[3])}日`;
+}
+
+/** datetime 属性用に日付部分だけ取り出す */
+export function toDateTimeValue(isoDate: string): string {
+	return isoDate.slice(0, 10);
+}
+
 /**
  * WP コレクションを全ページ取得（per_page=100 でページング）
  * @param resource 例: "categories" / "posts"
@@ -162,8 +223,11 @@ async function fetchCollection<T>(resource: string, searchParams: Record<string,
 /** ビルド／リクエスト内で使い回すキャッシュ */
 let categoryCache: Promise<WpCategory[]> | null = null;
 let postCache: Promise<WpPost[]> | null = null;
+let articlePostCache: Promise<WpPost[]> | null = null;
 let learnTermCache: Promise<WpCategory[]> | null = null;
 let learnPostCache: Promise<WpPost[]> | null = null;
+let tagCache: Promise<WpTag[]> | null = null;
+let userCache: Promise<WpUser[]> | null = null;
 
 /** 全カテゴリを取得（キャッシュあり） */
 export function getWpCategories(): Promise<WpCategory[]> {
@@ -200,7 +264,7 @@ export function getLearnTerms(): Promise<WpCategory[]> {
 /** 投稿タイプ learn を取得（learn_cat を categories として扱う） */
 export function getLearnPosts(): Promise<WpPost[]> {
 	learnPostCache ??= fetchCollection<WpLearnPostResponse>(LEARN_POST_TYPE, {
-		_fields: "id,link,slug,title,date,modified,learn_cat",
+		_fields: "id,link,slug,title,date,modified,learn_cat,tags,excerpt,content",
 		orderby: "date",
 		order: "asc",
 	}).then((posts) =>
@@ -259,7 +323,7 @@ function articlesFromPosts(posts: WpPost[]): CategoryArticle[] {
 		.sort((a, b) => a.date.localeCompare(b.date))
 		.map((post) => ({
 			title: wpText(post.title.rendered),
-			href: toSitePath(post.link),
+			href: toArticlePath(post.link),
 			updatedAt: post.modified || post.date,
 		}));
 }
@@ -416,4 +480,132 @@ export async function findArchiveCategory(section: string, slug?: string): Promi
 		const path = normalizePath(toSitePath(category.link));
 		return path === target;
 	});
+}
+
+/** 記事詳細用の通常投稿（本文付き） */
+function getWpArticlePosts(): Promise<WpPost[]> {
+	articlePostCache ??= fetchCollection<WpPost>("posts", {
+		_fields: "id,link,slug,title,date,modified,categories,tags,author,excerpt,content",
+		orderby: "date",
+		order: "asc",
+	});
+	return articlePostCache;
+}
+
+/** 全タグを取得（キャッシュあり） */
+function getWpTags(): Promise<WpTag[]> {
+	tagCache ??= fetchCollection<WpTag>("tags", {
+		_fields: "id,name,slug,link",
+	});
+	return tagCache;
+}
+
+/** 全ユーザーを取得（権限で失敗したら空） */
+function getWpUsers(): Promise<WpUser[]> {
+	userCache ??= fetchCollection<WpUser>("users", {
+		_fields: "id,name,slug,link,avatar_urls",
+	}).catch(() => []);
+	return userCache;
+}
+
+/** 本文の script 等を除く（WP は信頼できるが最低限の除去） */
+function stripUnsafeHtml(html: string): string {
+	return html
+		.replace(/<script\b[\s\S]*?<\/script>/gi, "")
+		.replace(/<style\b[\s\S]*?<\/style>/gi, "")
+		.replace(/\son\w+="[^"]*"/gi, "")
+		.replace(/\son\w+='[^']*'/gi, "");
+}
+
+/** 本文 h2 に id を補い、目次項目を作る */
+export function applyHeadingIds(html: string): { html: string; toc: ArticleTocItem[] } {
+	const toc: ArticleTocItem[] = [];
+	let headingIndex = 0;
+	const nextHtml = html.replace(/<h2\b([^>]*)>([\s\S]*?)<\/h2>/gi, (full, attrs: string, inner: string) => {
+		const label = wpText(inner).trim();
+		if (!label) return full;
+		headingIndex += 1;
+		const existing = /\bid\s*=\s*(["'])([^"']+)\1/i.exec(attrs);
+		const id = existing?.[2] || `section-${headingIndex}`;
+		toc.push({ id, label });
+		if (existing) return full;
+		const trimmed = attrs.trim();
+		const attrStr = trimmed ? ` ${trimmed}` : "";
+		return `<h2 id="${id}"${attrStr}>${inner}</h2>`;
+	});
+	return { html: nextHtml, toc };
+}
+
+/** sb / server の通常投稿 + learn CPT */
+export async function getArchiveArticlePosts(): Promise<WpPost[]> {
+	const [posts, learnPosts] = await Promise.all([getWpArticlePosts(), getLearnPosts()]);
+	const archivePosts = posts.filter((post) => {
+		const path = toSitePath(post.link);
+		return path.startsWith("/sb/") || path.startsWith("/server/");
+	});
+	return [...archivePosts, ...learnPosts];
+}
+
+/**
+ * 記事 permalink から Astro ルート用パラメータへ変換
+ * 例: /sb/javascript/foo.html → { section: "sb", slug: "javascript/foo" }
+ */
+export function toPostRouteParams(post: WpPost): { section: ArchiveRootSlug; slug: string } | null {
+	const segments = pathSegments(post.link);
+	const section = segments[0];
+	if (!section || !isArchiveRootSlug(section)) return null;
+	if (segments.length < 2) return null;
+	const rest = segments.slice(1);
+	const last = rest.at(-1);
+	if (last) rest[rest.length - 1] = last.replace(/\.html$/i, "");
+	return { section, slug: rest.join("/") };
+}
+
+/** 記事のサイト内パス（.html は外し、末尾スラッシュ付き） */
+export function toArticlePath(link: string): string {
+	const path = toSitePath(link).replace(/\.html\/?$/i, "/");
+	return path.endsWith("/") ? path : `${path}/`;
+}
+
+function buildArticleDetail(post: WpPost, tags: WpTag[], users: WpUser[]): ArticleDetail {
+	const title = wpText(post.title.rendered);
+	const lead = wpText(post.excerpt?.rendered ?? "")
+		.replace(/\s*[.…]+$/u, "")
+		.trim();
+	const { html, toc } = applyHeadingIds(stripUnsafeHtml(post.content?.rendered ?? ""));
+	const tagItems = (post.tags ?? [])
+		.map((id) => tags.find((tag) => tag.id === id))
+		.filter((tag): tag is WpTag => Boolean(tag))
+		.map((tag) => ({
+			label: wpText(tag.name),
+			href: "#",
+		}));
+	const user = post.author ? users.find((item) => item.id === post.author) : undefined;
+
+	return {
+		title,
+		lead,
+		publishedAt: post.date,
+		updatedAt: post.modified || post.date,
+		body: html,
+		toc,
+		tags: tagItems,
+		authorName: user?.name ?? "",
+		authorAvatar: user?.avatar_urls?.["96"] ?? user?.avatar_urls?.["48"] ?? "",
+		path: toArticlePath(post.link),
+	};
+}
+
+/** 記事詳細ページ用データを組み立てる */
+export async function getArticleDetail(post: WpPost): Promise<ArticleDetail> {
+	const [tags, users] = await Promise.all([getWpTags(), getWpUsers()]);
+	return buildArticleDetail(post, tags, users);
+}
+
+/** section + slug からアーカイブ記事を探す */
+export async function findArchivePost(section: string, slug?: string): Promise<WpPost | undefined> {
+	if (!isArchiveRootSlug(section) || !slug) return undefined;
+	const posts = await getArchiveArticlePosts();
+	const target = normalizePath(`${section}/${slug}`).replace(/\.html$/i, "");
+	return posts.find((post) => normalizePath(toArticlePath(post.link)) === target);
 }
