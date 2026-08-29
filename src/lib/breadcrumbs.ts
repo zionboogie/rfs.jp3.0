@@ -2,6 +2,8 @@ import { navMenus } from "../data/courses";
 import {
 	findArchiveCategory,
 	findArchivePost,
+	findWpTag,
+	getWpPageBySlug,
 	toArticlePath,
 	getLearnTerms,
 	getWpCategories,
@@ -28,9 +30,19 @@ function hrefFromCategory(category: WpCategory): string {
 
 function sectionItem(section: string): BreadcrumbItem {
 	const menu = navMenus.find((item) => item.id === section);
+	if (menu) {
+		return {
+			href: menu.href,
+			label: menu.label,
+		};
+	}
+
+	const fallbackLabel =
+		section === "learn" ? "開発と学習" : section === "sb" ? "Programming" : section === "server" ? "Server" : section;
+
 	return {
 		href: `/${section}/`,
-		label: menu?.label ?? section,
+		label: fallbackLabel,
 	};
 }
 
@@ -81,6 +93,46 @@ export async function getBreadcrumbItems(pathname: string): Promise<BreadcrumbIt
 
 	const home: BreadcrumbItem = { href: "/", label: "トップページ" };
 	const section = segments[0];
+
+	if (section === "archive" && segments.length === 1) {
+		const menu = navMenus.find((item) => item.id === "archive");
+		return [
+			home,
+			{
+				href: menu?.href ?? "/archive/",
+				label: menu?.label ?? "アーカイブ",
+				current: true,
+			},
+		];
+	}
+
+	if (section === "author" && segments.length === 1) {
+		const page = await getWpPageBySlug("author");
+		return [
+			home,
+			{
+				href: page?.path ?? "/author/",
+				label: page?.title ?? "author",
+				current: true,
+			},
+		];
+	}
+
+	if (section === "tag") {
+		const slug = segments[1];
+		if (!slug) {
+			return [{ ...home, current: true }];
+		}
+		const tag = await findWpTag(slug);
+		return [
+			home,
+			{
+				href: withTrailingSlash(`/${segments.slice(0, 2).join("/")}`),
+				label: tag ? wpText(tag.name) : slug,
+				current: true,
+			},
+		];
+	}
 
 	if (!section || !isArchiveRootSlug(section)) {
 		const items: BreadcrumbItem[] = [

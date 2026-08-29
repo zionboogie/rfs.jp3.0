@@ -14,6 +14,52 @@
 	transform: none;
 }
 
+.category-hero--learn .course-list__item {
+	transition: color 0.25s ease;
+}
+
+.category-hero--learn .course-list__item:hover,
+.category-hero--learn .course-list__item:focus-visible {
+	color: var(--color-logo);
+}
+
+.category-hero--learn .course-list__index {
+	transition: color 0.25s ease;
+}
+
+.category-hero--learn .course-list__item:hover .course-list__index,
+.category-hero--learn .course-list__item:focus-visible .course-list__index {
+	color: var(--color-logo);
+}
+
+.category-hero--learn .course-list__title::before {
+	content: "☞";
+	position: absolute;
+	right: 100%;
+	margin-right: 0.35em;
+	color: var(--color-logo);
+	opacity: 0;
+	transform: translate3d(-0.4em, 0, 0);
+	transition:
+		opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.category-hero--learn .course-list__item:hover .course-list__title::before,
+.category-hero--learn .course-list__item:focus-visible .course-list__title::before {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.category-hero--learn .course-list__description {
+	transition: color 0.25s ease;
+}
+
+.category-hero--learn .course-list__item:hover .course-list__description,
+.category-hero--learn .course-list__item:focus-visible .course-list__description {
+	color: rgb(217 30 24 / 82%);
+}
+
 .category-chapter {
 	padding-bottom: var(--spacing-xl);
 }
@@ -139,7 +185,11 @@
 	.article-list__item::before,
 	.article-list__title-text,
 	.article-list__title-text::before,
-	.article-list__date {
+	.article-list__date,
+	.category-hero--learn .course-list__item,
+	.category-hero--learn .course-list__index,
+	.category-hero--learn .course-list__title::before,
+	.category-hero--learn .course-list__description {
 		transition: none;
 	}
 

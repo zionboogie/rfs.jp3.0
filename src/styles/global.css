@@ -30,8 +30,7 @@
 	フォント
 	---------------------------------------- */
 	--font-sans:
-		"Zen Kaku Gothic Antique", system-ui, -apple-system, BlinkMacSystemFont,
-		sans-serif;
+	'Zen Kaku Gothic New', 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', "Yu Gothic", YuGothic, 'メイリオ', 'Meiryo', 'ＭＳ ゴシック', sans-serif;
 	--font-logo: Georgia, serif;
 
 	--text-body: 1rem;

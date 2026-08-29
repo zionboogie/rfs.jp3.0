@@ -1,10 +1,9 @@
 ---
-import Copy from "@lucide/astro/icons/copy";
 import ChevronLeft from "@lucide/astro/icons/chevron-left";
 import ChevronRight from "@lucide/astro/icons/chevron-right";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import ArticleSidebar from "./ArticleSidebar.astro";
-import { formatDateJa, toDateTimeValue, type ArticleDetail, type CategorySummary } from "../lib/wordpress";
+import { formatDateJa, getPopularArticles, getSidebarTags, toDateTimeValue, type ArticleDetail, type CategorySummary } from "../lib/wordpress";
 import "../styles/category.css";
 import "../styles/article.css";
 
@@ -14,6 +13,9 @@ interface Props {
 }
 
 const { learnCategories, article } = Astro.props;
+const [popularArticles, sidebarTags] = await Promise.all([getPopularArticles(), getSidebarTags()]);
+const previousArticle = article.previousArticle;
+const nextArticle = article.nextArticle;
 
 const articleTitle = article.title;
 const articleTitleChars = [...articleTitle];
@@ -22,20 +24,15 @@ const updatedAt = toDateTimeValue(article.updatedAt);
 const publishedLabel = formatDateJa(article.publishedAt);
 const updatedLabel = formatDateJa(article.updatedAt);
 const lead = article.lead;
-const tags =
-	article.tags.length > 0
-		? article.tags
-		: [
-				{ label: "基礎", href: "#" },
-				{ label: "変数", href: "#" },
-			];
-const authorName = article.authorName || "あおいパスタ";
-const authorAvatar = article.authorAvatar || "/common/img/common/profile_aoipasta.jpg";
+const tags = article.tags;
+const authorName = "あおいパスタ"; // article.authorName
+const authorAvatar = "/common/img/common/profile_aoipasta.jpg"; // article.authorAvatar
+const authorAvatarHover = "/common/img/common/profile_aoipasta02.jpg";
 const toc = article.toc;
 const shareUrl = new URL(article.path, Astro.url.origin).href;
 const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-const xHref = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(articleTitle)}`;
-const hatenaHref = `https://b.hatena.ne.jp/entry/panel/?url=${encodeURIComponent(shareUrl)}`;
+const xHref = `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(articleTitle)}`;
+const hatenaHref = `https://b.hatena.ne.jp/entry/${shareUrl}`;
 const shareTarget = "_blank";
 const shareRel = "noopener noreferrer";
 
@@ -58,32 +55,30 @@ const relatedArticles = [
 ];
 ---
 
+<link rel="stylesheet" href="/common/css/article-body.css" />
+<link rel="stylesheet" href="/common/css/prism.css" />
 <main>
 	<div class="container grid items-start gap-xl pb-xl lg:grid-cols-[minmax(0,1fr)_16rem]">
 		<div class="article-layout__main min-w-0">
 			<article>
 				<header class="article-hero">
-					<p class="article-hero__lesson mx-auto mt-[calc(var(--spacing-lg)*2)] mb-lg flex w-fit flex-col items-center">
+					<p class="article-hero__lesson mx-auto mt-[calc(var(--spacing-lg)*2)] mb-md flex w-fit flex-col items-center">
 						<span class="text-sm tracking-[0.12em]">LESSON</span>
 						<span class="mt-xs flex flex-col items-center">
 							<span class="article-hero__lesson-mask overflow-hidden">
-								<span class="article-hero__lesson-digit block font-logo text-[length:calc(var(--text-h1)*2)] font-bold leading-none">01</span>
+								<span class="article-hero__lesson-digit block font-logo text-[length:calc(var(--text-h1)*2)] font-bold leading-none"
+									>{article.lessonNumber}</span
+								>
 							</span>
 							<span class="h-1 w-full bg-text" aria-hidden="true"></span>
 						</span>
 					</p>
 					<div class="article-hero__title-wrap" style={`--article-title-chars: ${articleTitleChars.length}`}>
-						<img
-							class="article-hero__mugcup"
-							src="/common/img/common/mugcup.jpg"
-							alt=""
-							width="100"
-							height="218"
-						/>
-						<h1
-							class="article-hero__title mb-[calc(var(--spacing-xl)*2)] text-center font-bold tracking-[0.04em] text-h1 leading-heading"
-							aria-label={articleTitle}
-						>
+						<div class="article-hero__mugcup">
+							<img class="article-hero__mugcup-img" src="/common/img/common/mugcup1.jpg" alt="" width="80" height="175" />
+							<img class="article-hero__mugcup-balloon" src="/common/img/common/baloon_a_1.gif" alt="" width="100" />
+						</div>
+						<h1 class="article-hero__title mb-xl text-center font-bold tracking-[0.04em] text-h2 leading-heading" aria-label={articleTitle}>
 							{
 								articleTitleChars.map((char, index) => (
 									<span class="article-hero__title-char inline-block" style={`--char-index: ${index}`} aria-hidden="true">
@@ -93,22 +88,20 @@ const relatedArticles = [
 							}
 						</h1>
 					</div>
-					<ul class="article-hero__tags mb-md flex list-none flex-wrap gap-xs p-0">
-						{
-							tags.map((tag) => (
-								<li>
-									<a class="inline-block rounded-sm border border-border px-2 py-0.5 text-sm text-muted" href={tag.href}>
-										{tag.label}
-									</a>
-								</li>
-							))
-						}
-					</ul>
 					{
-						lead ? (
-							<p class="article-hero__lead m-0 max-w-[40rem] text-muted leading-body">{lead}</p>
+						tags.length > 0 ? (
+							<ul class="article-hero__tags mb-md flex list-none flex-wrap gap-xs p-0">
+								{tags.map((tag) => (
+									<li>
+										<a class="inline-block rounded-sm border border-border px-2 py-0.5 text-sm text-muted" href={tag.href}>
+											{tag.label}
+										</a>
+									</li>
+								))}
+							</ul>
 						) : null
 					}
+					{lead ? <p class="article-hero__lead m-0 max-w-[40rem] text-muted leading-body">{lead}</p> : null}
 
 					<div class="article-meta mt-lg flex flex-wrap items-start justify-between gap-sm border-t border-[rgb(33_5_5_/_18%)] pt-md">
 						<div class="flex min-w-0 flex-wrap items-start gap-x-lg gap-y-sm">
@@ -122,29 +115,16 @@ const relatedArticles = [
 									<time class="align-top text-sm leading-none text-muted" datetime={updatedAt}>{updatedLabel}</time>
 								</p>
 							</div>
-							<div class="flex flex-wrap items-start gap-x-md gap-y-sm">
-								<p class="m-0 whitespace-nowrap leading-none">
-									<span class="mr-sm align-top text-sm leading-none tracking-[0.04em] text-muted">読了時間</span>
-									<span class="align-top text-sm leading-none">目安30分</span>
-								</p>
-								<div class="article-author flex items-center gap-sm">
-									<img
-										class="size-12 shrink-0 rounded-full object-cover"
-										src={authorAvatar}
-										alt=""
-										width="48"
-										height="48"
-									/>
-									<div>
-										<p class="m-0 font-bold leading-none">{authorName}</p>
-										<p class="m-0">
-											<a class="text-sm text-muted underline decoration-transparent underline-offset-4 hover:text-logo hover:decoration-current" href="#">
-												プロフィール
-											</a>
-										</p>
-									</div>
-								</div>
-							</div>
+							<a class="article-author flex items-center gap-sm text-inherit no-underline" href="/author/">
+								<span class="article-author__photo size-12 shrink-0 overflow-hidden rounded-full">
+									<img class="article-author__photo-default size-full object-cover" src={authorAvatar} alt="" width="48" height="48" />
+									<img class="article-author__photo-hover size-full object-cover" src={authorAvatarHover} alt="" width="48" height="48" />
+								</span>
+								<span>
+									<span class="block font-bold leading-none">{authorName}</span>
+									<span class="mt-0 block text-sm text-muted">プロフィール</span>
+								</span>
+							</a>
 						</div>
 						<nav class="article-share ml-auto shrink-0" aria-label="SNSでシェア">
 							<ul class="m-0 flex list-none items-center justify-end gap-sm p-0">
@@ -186,26 +166,9 @@ const relatedArticles = [
 				}
 
 				<div class="article-body" set:html={article.body} />
-
-				<section class="article-ask mt-xl mb-xl" aria-labelledby="article-ask-heading">
-					<div class="article-ask__item flex items-center gap-md rounded-md border border-border bg-primary p-md">
-						<h2 class="article-ask__heading m-0 shrink-0 text-sm font-bold tracking-[0.04em]" id="article-ask-heading">AIに聞こう</h2>
-						<p class="article-ask__text m-0 min-w-0 flex-1">constとletの違いを、具体的なコード例を使って初心者にも分かるように説明してください。</p>
-						<button
-							class="article-ask__copy inline-flex shrink-0 cursor-pointer items-center gap-xs rounded-sm border border-current bg-transparent px-3 py-1 text-sm font-bold"
-							type="button"
-						>
-							<Copy size={16} />
-							コピー
-						</button>
-					</div>
-					<dialog class="article-ask__popup" aria-label="コピー完了">
-						<p class="article-ask__popup-text m-0">コピーしたよ、お使いのAIに訊いてみて</p>
-					</dialog>
-				</section>
 			</article>
 
-			<nav class="article-share mb-xl" aria-label="SNSでシェア（記事下部）">
+			<nav class="article-share mb-xl flex justify-end" aria-label="SNSでシェア（記事下部）">
 				<ul class="m-0 flex list-none items-center gap-sm p-0">
 					<li>
 						<a class="article-share__link" href={facebookHref} target={shareTarget} rel={shareRel} aria-label="Facebookでシェア">
@@ -225,36 +188,58 @@ const relatedArticles = [
 				</ul>
 			</nav>
 
-			<section class="article-continue overflow-hidden pb-xl" data-parallax="content" aria-labelledby="article-continue-heading">
-				<div class="article-continue__layer">
-					<h2 class="article-continue__heading mb-md mt-0 text-h3 font-bold tracking-[0.02em]" id="article-continue-heading">つづけて読む</h2>
-					<p class="mb-md mt-0">続きの記事もあわせてどうぞ。</p>
-					<p class="mb-md">
-						<a class="article-continue__link flex items-center gap-sm rounded-md border border-border p-md" href="#">
-							<ArrowRight class="shrink-0" size={20} aria-hidden="true" />
-							<span class="underline underline-offset-[0.2em]"> WordPressのテーマを作る前に、絶対に知っておきたい4つの基礎知識 </span>
-						</a>
-					</p>
-					<p class="m-0">エンジョイ！</p>
-				</div>
-			</section>
+			{
+				nextArticle ? (
+					<section class="article-continue overflow-hidden pb-xl" data-parallax="content" aria-labelledby="article-continue-heading">
+						<div class="article-continue__layer">
+							<h2 class="article-continue__heading mb-md mt-0 text-h3 font-bold tracking-[0.02em]" id="article-continue-heading">つづけて読む</h2>
+							<p class="mb-md mt-0">続きの記事もあわせてどうぞ。</p>
+							<p class="mb-md">
+								<a class="article-continue__link flex items-center gap-sm rounded-md border border-border p-md" href={nextArticle.href}>
+									<ArrowRight class="shrink-0" size={20} aria-hidden="true" />
+									<span class="underline underline-offset-[0.2em]">{nextArticle.title}</span>
+								</a>
+							</p>
+							<p class="m-0">エンジョイ！</p>
+						</div>
+					</section>
+				) : null
+			}
 
-			<nav class="article-pager pb-xl" aria-label="前後の記事">
-				<div class="grid gap-md md:grid-cols-2">
-					<a class="article-pager__link flex items-center gap-sm no-underline" href="#" aria-label="前の記事：データ型とは">
-						<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
-							<ChevronLeft size={20} />
-						</span>
-						<span class="font-bold tracking-[0.02em] text-h4 leading-heading">データ型とは</span>
-					</a>
-					<a class="article-pager__link flex items-center justify-start gap-sm text-left no-underline md:justify-end md:text-right" href="#" aria-label="次の記事：関数の基本">
-						<span class="font-bold tracking-[0.02em] text-h4 leading-heading">関数の基本</span>
-						<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
-							<ChevronRight size={20} />
-						</span>
-					</a>
-				</div>
-			</nav>
+			{
+				previousArticle || nextArticle ? (
+					<nav class="article-pager pb-xl" aria-label="前後の記事">
+						<div class="grid gap-md md:grid-cols-2">
+							{previousArticle ? (
+								<a
+									class="article-pager__link flex items-center gap-sm no-underline"
+									href={previousArticle.href}
+									aria-label={`前の記事：${previousArticle.title}`}
+								>
+									<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
+										<ChevronLeft size={20} />
+									</span>
+									<span class="font-bold tracking-[0.02em] text-h4 leading-heading">{previousArticle.title}</span>
+								</a>
+							) : (
+								<span class="hidden md:block"></span>
+							)}
+							{nextArticle ? (
+								<a
+									class="article-pager__link flex items-center justify-start gap-sm text-left no-underline md:justify-end md:text-right"
+									href={nextArticle.href}
+									aria-label={`次の記事：${nextArticle.title}`}
+								>
+									<span class="font-bold tracking-[0.02em] text-h4 leading-heading">{nextArticle.title}</span>
+									<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
+										<ChevronRight size={20} />
+									</span>
+								</a>
+							) : null}
+						</div>
+					</nav>
+				) : null
+			}
 
 			<section class="article-related pt-xl pb-xl" aria-labelledby="article-related-heading">
 				<h2 class="article-related__heading mb-lg mt-0 text-center text-h3 font-bold tracking-[0.02em]" id="article-related-heading">興味があるかも</h2>
@@ -264,7 +249,7 @@ const relatedArticles = [
 							<li>
 								<a class="article-related__card flex h-full flex-col gap-sm rounded-md border border-border p-md text-inherit no-underline" href={article.href}>
 									<span class="text-sm tracking-[0.04em] text-muted">{article.category}</span>
-									<span class="font-bold tracking-[0.02em] text-h4 leading-heading">{article.title}</span>
+									<span class="font-bold tracking-[0.02em] text-body leading-heading">{article.title}</span>
 								</a>
 							</li>
 						))
@@ -273,7 +258,7 @@ const relatedArticles = [
 			</section>
 		</div>
 
-		<ArticleSidebar categories={learnCategories} />
+		<ArticleSidebar categories={learnCategories} popularArticles={popularArticles} tags={sidebarTags} />
 	</div>
 </main>
 
@@ -284,9 +269,29 @@ const relatedArticles = [
 		wrap.style.setProperty("--mug-origin", `${-Math.round(wrap.getBoundingClientRect().left)}px`);
 	}
 
+	function randomizeMugBalloon() {
+		const balloon = document.querySelector(".article-hero__mugcup-balloon");
+		if (!(balloon instanceof HTMLImageElement)) return;
+		const index = Math.floor(Math.random() * 6) + 1;
+		balloon.src = `/common/img/common/baloon_a_${index}.gif`;
+	}
+
+	function randomizeMugcupImage() {
+		const mugcup = document.querySelector(".article-hero__mugcup-img");
+		if (!(mugcup instanceof HTMLImageElement)) return;
+		const index = Math.floor(Math.random() * 5) + 1;
+		mugcup.src = `/common/img/common/mugcup${index}.jpg`;
+	}
+
 	syncArticleMugOrigin();
+	randomizeMugBalloon();
+	randomizeMugcupImage();
 	window.addEventListener("resize", syncArticleMugOrigin);
-	document.addEventListener("astro:page-load", syncArticleMugOrigin);
+	document.addEventListener("astro:page-load", () => {
+		syncArticleMugOrigin();
+		randomizeMugBalloon();
+		randomizeMugcupImage();
+	});
 </script>
 
 <script>
@@ -400,49 +405,143 @@ const relatedArticles = [
 		input.remove();
 	}
 
+	function wrapAskTextMarks() {
+		for (const textEl of document.querySelectorAll(".article-body .article-ask__text")) {
+			if (!(textEl instanceof HTMLElement)) continue;
+			if (textEl.querySelector(".article-ask__mark")) continue;
+			const mark = document.createElement("span");
+			mark.className = "article-ask__mark";
+			while (textEl.firstChild) mark.append(textEl.firstChild);
+			textEl.append(mark);
+		}
+	}
+
 	function initAskCopy() {
 		disposeAskCopy?.();
 		disposeAskCopy = null;
+		wrapAskTextMarks();
 
-		const section = document.querySelector(".article-ask");
-		const button = section?.querySelector(".article-ask__copy");
-		const textEl = section?.querySelector(".article-ask__text");
-		const popup = section?.querySelector(".article-ask__popup");
-		if (!(button instanceof HTMLButtonElement) || !(textEl instanceof HTMLElement) || !(popup instanceof HTMLDialogElement)) {
-			return;
+		const sections = [...document.querySelectorAll(".article-body .article-ask")].filter(
+			(el) => el instanceof HTMLElement,
+		);
+		/** @type {(() => void)[]} */
+		const disposers = [];
+
+		for (const section of sections) {
+			const button = section.querySelector(".article-ask__copy");
+			const textEl = section.querySelector(".article-ask__text");
+			const popup = section.querySelector(".article-ask__popup");
+			if (!(button instanceof HTMLButtonElement) || !(textEl instanceof HTMLElement) || !(popup instanceof HTMLDialogElement)) {
+				continue;
+			}
+
+			let hideTimer = 0;
+
+			const hidePopup = () => {
+				window.clearTimeout(hideTimer);
+				if (popup.open) popup.close();
+			};
+
+			const onCopy = async () => {
+				const text = textEl.textContent?.trim() ?? "";
+				if (!text) return;
+				await copyQuestion(text);
+				if (!popup.open) popup.show();
+				window.clearTimeout(hideTimer);
+				hideTimer = window.setTimeout(hidePopup, POPUP_MS);
+			};
+
+			/** @param {MouseEvent} event */
+			const onPopupClick = (event) => {
+				if (event.target === popup) hidePopup();
+			};
+
+			button.addEventListener("click", onCopy);
+			popup.addEventListener("click", onPopupClick);
+
+			/** @type {null | IntersectionObserver} */
+			let popupObserver = null;
+			if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+				section.classList.add("is-inview");
+			} else {
+				popupObserver = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							if (!entry.isIntersecting) continue;
+							section.classList.add("is-inview");
+							popupObserver?.unobserve(section);
+						}
+					},
+					{ threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
+				);
+				section.classList.add("is-popup-ready");
+				popupObserver.observe(section);
+			}
+
+			disposers.push(() => {
+				hidePopup();
+				popupObserver?.disconnect();
+				button.removeEventListener("click", onCopy);
+				popup.removeEventListener("click", onPopupClick);
+			});
 		}
 
-		let hideTimer = 0;
-
-		const hidePopup = () => {
-			window.clearTimeout(hideTimer);
-			if (popup.open) popup.close();
-		};
-
-		const onCopy = async () => {
-			const text = textEl.textContent?.trim() ?? "";
-			if (!text) return;
-			await copyQuestion(text);
-			popup.showModal();
-			window.clearTimeout(hideTimer);
-			hideTimer = window.setTimeout(hidePopup, POPUP_MS);
-		};
-
-		/** @param {MouseEvent} event */
-		const onPopupClick = (event) => {
-			if (event.target === popup) hidePopup();
-		};
-
-		button.addEventListener("click", onCopy);
-		popup.addEventListener("click", onPopupClick);
-
 		disposeAskCopy = () => {
-			hidePopup();
-			button.removeEventListener("click", onCopy);
-			popup.removeEventListener("click", onPopupClick);
+			for (const dispose of disposers) dispose();
 		};
 	}
 
 	initAskCopy();
 	document.addEventListener("astro:page-load", initAskCopy);
+</script>
+
+<script is:inline src="/common/js/prism.js" data-manual></script>
+<script>
+	function highlightArticleBody() {
+		const body = document.querySelector(".article-body");
+		const prism = window.Prism;
+		if (!(body instanceof HTMLElement) || !prism) return;
+		prism.highlightAllUnder(body);
+	}
+
+	document.addEventListener("astro:page-load", highlightArticleBody);
+</script>
+
+<script>
+	/** @type {null | (() => void)} */
+	let disposeIllustFade = null;
+
+	function initIllustFade() {
+		disposeIllustFade?.();
+		disposeIllustFade = null;
+
+		const items = [...document.querySelectorAll(".article-body .illust")].filter((el) => el instanceof HTMLElement);
+		if (items.length === 0) return;
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			for (const item of items) item.classList.add("is-inview");
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					entry.target.classList.add("is-inview");
+					observer.unobserve(entry.target);
+				}
+			},
+			{ threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
+		);
+
+		for (const item of items) {
+			item.classList.add("is-fade-ready");
+			observer.observe(item);
+		}
+
+		disposeIllustFade = () => observer.disconnect();
+	}
+
+	initIllustFade();
+	document.addEventListener("astro:page-load", initIllustFade);
 </script>

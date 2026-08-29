@@ -1,7 +1,8 @@
 /*
 	記事詳細ページ
 	静的レイアウトは Astro 側の Tailwind utility、
-	本文の入れ子要素・ホバーのみここに置く
+	ホバー・アニメのみここに置く。
+	本文（.article-body）は /common/css/article-body.css
 */
 
 .article-hero {
@@ -33,6 +34,12 @@
 
 .article-hero__title-wrap {
 	position: relative;
+	--mug-fade-delay: calc(
+		(var(--article-title-chars) - 1) * var(--article-title-char-stagger) +
+			var(--article-title-char-duration)
+	);
+	--mug-slide-delay: var(--mug-fade-delay);
+	--mug-balloon-delay: calc(var(--mug-slide-delay) + 2.4s);
 }
 
 .article-hero__mugcup {
@@ -43,24 +50,30 @@
 		calc((min(calc(100vw - (var(--container-padding) * 2)), var(--container-width)) - 100vw) / 2)
 	);
 	z-index: 0;
-	width: 6.25rem;
-	height: auto;
 	pointer-events: none;
-	opacity: 0;
 	transform: translate3d(5px, 0, 0);
-	animation:
-		article-mugcup-fade 1.05s cubic-bezier(0.05, 0.85, 0.05, 1)
-			calc(
-				(var(--article-title-chars) - 1) * var(--article-title-char-stagger) +
-					var(--article-title-char-duration)
-			)
-			forwards,
-		article-mugcup-slide 3.2s cubic-bezier(0.05, 0.85, 0.05, 1)
-			calc(
-				(var(--article-title-chars) - 1) * var(--article-title-char-stagger) +
-					var(--article-title-char-duration) + 1.05s
-			)
-			forwards;
+	animation: article-mugcup-slide 3.2s cubic-bezier(0.05, 0.85, 0.05, 1) var(--mug-slide-delay)
+		forwards;
+}
+
+.article-hero__mugcup-img {
+	display: block;
+	width: auto;
+	height: 200px;
+	opacity: 0;
+	animation: article-mugcup-fade 1.05s cubic-bezier(0.05, 0.85, 0.05, 1) var(--mug-fade-delay)
+		forwards;
+}
+
+.article-hero__mugcup-balloon {
+	position: absolute;
+	top: -1.5rem;
+	left: 100%;
+	width: 100px;
+	height: auto;
+	opacity: 0;
+	animation: article-mugcup-fade 0.8s cubic-bezier(0.05, 0.85, 0.05, 1) var(--mug-balloon-delay)
+		forwards;
 }
 
 @keyframes article-mugcup-fade {
@@ -114,7 +127,8 @@
 .article-hero__tags a,
 .article-side__tags a,
 .article-side__text,
-.article-continue__link {
+.article-continue__link,
+.article-ask__copy {
 	background-image: linear-gradient(to right, #ee0979, #ff6a00);
 	background-repeat: no-repeat;
 	background-position: left center;
@@ -129,6 +143,10 @@
 	display: block;
 	width: fit-content;
 	max-width: 100%;
+	transition:
+		background-size 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+		color 0.5s ease,
+		padding 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .article-hero__tags a:hover,
@@ -136,10 +154,43 @@
 .article-side__tags a:hover,
 .article-side__tags a:focus-visible,
 .article-continue__link:hover,
-.article-continue__link:focus-visible {
+.article-continue__link:focus-visible,
+.article-ask__copy:hover,
+.article-ask__copy:focus-visible {
 	background-size: 100% 100%;
 	border-color: #ee0979;
 	color: #fff;
+}
+
+.article-author {
+	border: 1px solid transparent;
+	border-radius: var(--radius-sm, 4px);
+	padding: var(--spacing-xs, 8px);
+	margin: calc(var(--spacing-xs, 8px) * -1);
+	transition: border-color 0.25s ease;
+}
+
+.article-author:hover,
+.article-author:focus-visible {
+	border-color: rgb(33 5 5 / 18%);
+	outline: none;
+}
+
+.article-author__photo {
+	position: relative;
+	display: block;
+}
+
+.article-author__photo-hover {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.25s ease;
+}
+
+.article-author:hover .article-author__photo-hover,
+.article-author:focus-visible .article-author__photo-hover {
+	opacity: 1;
 }
 
 .article-share__link {
@@ -211,28 +262,39 @@
 	flex: 1 1 auto;
 }
 
-.article-ask__copy:hover,
-.article-ask__copy:focus-visible {
-	background-color: var(--color-text);
-	color: #fff;
+.article-ask.is-popup-ready .article-ask__item {
+	opacity: 0;
+	transform: translate3d(0, 1.25rem, 0) scale(0.92);
+	transform-origin: center bottom;
+	transition:
+		opacity 0.7s cubic-bezier(0.05, 0.85, 0.05, 1),
+		transform 0.7s cubic-bezier(0.34, 1.35, 0.64, 1);
+}
+
+.article-ask.is-inview .article-ask__item {
+	opacity: 1;
+	transform: none;
 }
 
 .article-ask__popup {
-	max-width: min(22rem, calc(100% - var(--spacing-lg)));
-	padding: var(--spacing-md) var(--spacing-lg);
-	border: 0;
+	position: absolute;
+	inset: auto;
+	top: calc(100% + var(--spacing-xs));
+	right: 0;
+	margin: 0;
+	width: max-content;
+	max-width: min(22rem, calc(100vw - var(--spacing-lg)));
+	padding: var(--spacing-sm) var(--spacing-md);
+	border: 1px solid var(--color-border);
 	border-radius: var(--radius-md);
-	background-color: var(--color-text);
-	color: #fff;
+	background-color: var(--color-background);
+	color: var(--color-text);
 	text-align: center;
 	font-size: var(--text-body);
 	font-weight: 700;
 	letter-spacing: 0.02em;
 	line-height: var(--leading-heading);
-}
-
-.article-ask__popup::backdrop {
-	background-color: rgb(33 5 5 / 40%);
+	z-index: 1;
 }
 
 .article-pager__arrow {
@@ -261,6 +323,8 @@
 
 .article-side__link:hover .article-side__text,
 .article-side__link:focus-visible .article-side__text {
+	padding-right: 10px;
+	padding-left: 10px;
 	background-size: 100% 100%;
 	color: #fff;
 }
@@ -290,8 +354,13 @@
 	}
 
 	.article-hero__mugcup {
-		opacity: 1;
 		transform: translate3d(-33.333%, 0, 0);
+		animation: none;
+	}
+
+	.article-hero__mugcup-img,
+	.article-hero__mugcup-balloon {
+		opacity: 1;
 		animation: none;
 	}
 
@@ -299,8 +368,12 @@
 	.article-side__tags a,
 	.article-side__text,
 	.article-continue__link,
+	.article-ask__copy,
 	.article-related__card,
-	.article-pager__arrow {
+	.article-pager__arrow,
+	.article-author,
+	.article-author__photo-hover,
+	.article-ask.is-popup-ready .article-ask__item {
 		transition: none;
 	}
 
@@ -310,74 +383,4 @@
 		will-change: auto;
 		transition: none;
 	}
-}
-
-.article-body > :first-child {
-	margin-top: 0;
-}
-
-.article-body h2 {
-	margin: var(--spacing-2xl) 0 var(--spacing-xl);
-	scroll-margin-top: calc(var(--header-height) + var(--spacing-sm));
-	font-size: var(--text-h2);
-	font-weight: 700;
-	letter-spacing: 0.02em;
-}
-
-.article-body h3 {
-	margin: var(--spacing-lg) 0 var(--spacing-sm);
-	font-size: var(--text-h3);
-	font-weight: 700;
-	letter-spacing: 0.02em;
-}
-
-.article-body p {
-	margin: 0 0 var(--spacing-md);
-}
-
-.article-body img {
-	max-width: 100%;
-	height: auto;
-}
-
-.article-body ul,
-.article-body ol {
-	margin: 0 0 var(--spacing-md);
-	padding-left: 1.5em;
-}
-
-.article-body li + li {
-	margin-top: var(--spacing-xs);
-}
-
-.article-body a {
-	text-decoration: underline;
-	text-underline-offset: 0.2em;
-}
-
-.article-body a:hover,
-.article-body a:focus-visible {
-	color: var(--color-logo);
-}
-
-.article-body pre {
-	margin: 0 0 var(--spacing-md);
-	padding: var(--spacing-md);
-	overflow-x: auto;
-	border-radius: var(--radius-md);
-	background-color: var(--color-footer-primary);
-	color: #fff;
-}
-
-.article-body code {
-	font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
-	font-size: 0.9375rem;
-}
-
-.article-body p code,
-.article-body li code {
-	padding: 0.1em 0.35em;
-	border-radius: var(--radius-sm);
-	background-color: var(--color-primary);
-	color: var(--color-text);
 }

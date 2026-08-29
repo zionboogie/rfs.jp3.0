@@ -347,6 +347,45 @@ About イントロ
 /* ----------------------------------------
 セクション見出し / 視差
 ---------------------------------------- */
+.section.learn {
+	padding-top: calc(var(--section-padding) / 2);
+}
+
+.section.learn.learn-accent {
+	padding-top: var(--section-padding);
+	background-color: #909ea0;
+	color: #fff;
+}
+
+.section.learn.learn-accent .section-heading,
+.section.learn.learn-accent .section-lead {
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list {
+	border-top-color: rgb(255 255 255 / 28%);
+}
+
+.section.learn.learn-accent .course-list__item {
+	border-bottom-color: rgb(255 255 255 / 28%);
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__index,
+.section.learn.learn-accent .course-list__description {
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__item:hover,
+.section.learn.learn-accent .course-list__item:hover .course-list__index,
+.section.learn.learn-accent .course-list__item:hover .course-list__description {
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__title::before {
+	color: #fff;
+}
+
 .section[data-parallax] {
 	overflow: hidden;
 }

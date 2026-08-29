@@ -1,0 +1,56 @@
+---
+import Layout from "../../components/Layout.astro";
+import ArticleListItem from "../../components/ArticleListItem.astro";
+import { decodeTagSlug, getTagPageData, getTaggedArchiveTags, type TagPageData } from "../../lib/wordpress";
+import "../../styles/category.css";
+
+export async function getStaticPaths() {
+	const tags = await getTaggedArchiveTags();
+	const paths: { params: { slug: string }; props: { page: TagPageData } }[] = [];
+
+	for (const tag of tags) {
+		paths.push({
+			params: { slug: decodeTagSlug(tag.slug) },
+			props: { page: await getTagPageData(tag) },
+		});
+	}
+
+	return paths;
+}
+
+interface Props {
+	page: TagPageData;
+}
+
+const { page } = Astro.props;
+---
+
+<Layout title={page.title} description={`${page.title}の記事一覧`} skipIntro>
+	<main>
+		<header class="category-hero">
+			<div class="container">
+				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
+					{page.title}
+				</h1>
+			</div>
+		</header>
+
+		<section class="category-chapter" aria-label={`${page.title}の記事`}>
+			<div class="container">
+				{
+					page.articles.length > 0 ? (
+						<ul class="article-list">
+							{page.articles.map((article) => (
+								<li>
+									<ArticleListItem title={article.title} href={article.href} updatedAt={article.updatedAt} />
+								</li>
+							))}
+						</ul>
+					) : (
+						<p class="m-0 text-muted">このタグの記事はまだありません。</p>
+					)
+				}
+			</div>
+		</section>
+	</main>
+</Layout>

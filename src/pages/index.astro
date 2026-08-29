@@ -3,10 +3,10 @@ import Layout from "../components/Layout.astro";
 import AboutIntro from "../components/AboutIntro.astro";
 import CourseListItem from "../components/CourseListItem.astro";
 import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
-import { getLearnCourses } from "../lib/wordpress";
+import { getLearnCourseSections } from "../lib/wordpress";
 import "../styles/top.css";
 
-const learnCourses = await getLearnCourses();
+const learnSections = await getLearnCourseSections();
 ---
 
 <Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
@@ -70,15 +70,35 @@ const learnCourses = await getLearnCourses();
 			</script>
 		</section>
 
-		<section class="section learn" data-parallax="content">
-			<div class="container">
-				<h2 class="section-heading mx-auto mb-md w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]">開発と学習</h2>
-				<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">これから学ぶ新しいコンテンツから始めよう</p>
-				<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
-					{learnCourses.map((course, index) => <CourseListItem index={index + 1} title={course.title} description={course.description} href={course.href} />)}
-				</div>
-			</div>
-		</section>
+		{
+			learnSections.map((section, sectionIndex) => (
+				<section class:list={["section learn", sectionIndex === 0 && "learn-accent"]} data-parallax="content">
+					<div class="container">
+						<h2
+							class:list={[
+								"section-heading mx-auto w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]",
+								section.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
+							]}
+						>
+							{section.title}
+						</h2>
+						{section.description ? (
+							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{section.description}</p>
+						) : null}
+						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
+							{section.courses.map((course, index) => (
+								<CourseListItem
+									index={index + 1}
+									title={course.title}
+									description={course.description}
+									href={course.href}
+								/>
+							))}
+						</div>
+					</div>
+				</section>
+			))
+		}
 	</main>
 </Layout>
 
@@ -183,6 +203,7 @@ const learnCourses = await getLearnCourses();
 		disposeSoftScroll?.();
 		disposeSoftScroll = null;
 
+		if (window.location.pathname !== "/") return;
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 		if (!window.matchMedia("(pointer: fine)").matches) return;
 
@@ -276,6 +297,12 @@ const learnCourses = await getLearnCourses();
 			document.documentElement.classList.remove("is-soft-scroll");
 		};
 	}
+
+	document.addEventListener("astro:before-swap", () => {
+		disposeSoftScroll?.();
+		disposeSoftScroll = null;
+		document.documentElement.classList.add("is-soft-scroll");
+	});
 
 	document.addEventListener("astro:page-load", initSoftScroll);
 </script>

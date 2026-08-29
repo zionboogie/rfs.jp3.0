@@ -3,7 +3,9 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
-import { ClientRouter } from "astro:transitions";
+import { ClientRouter, fade } from "astro:transitions";
+
+const pageFade = fade({ duration: "0.5s" });
 
 interface Props {
 	title?: string;
@@ -14,7 +16,7 @@ interface Props {
 const { title, description, skipIntro = false } = Astro.props;
 ---
 
-<html lang="ja">
+<html lang="ja" transition:name="root" transition:animate="none">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -42,10 +44,34 @@ const { title, description, skipIntro = false } = Astro.props;
 			})();
 		</script>
 	</head>
-	<body class:list={{ "is-intro": !skipIntro }} transition:animate="fade">
+	<body class:list={{ "is-intro": !skipIntro }} transition:animate={pageFade}>
 		<Header skipIntro={skipIntro} />
 		{Astro.url.pathname !== "/" && <Breadcrumb />}
 		<slot />
 		<Footer />
 	</body>
 </html>
+
+<script>
+	let resetScrollOnSwap = true;
+
+	document.addEventListener("astro:before-preparation", (event) => {
+		resetScrollOnSwap = event.navigationType !== "traverse";
+	});
+
+	document.addEventListener("astro:before-swap", () => {
+		document.documentElement.classList.add("is-soft-scroll");
+	});
+
+	document.addEventListener("astro:after-swap", () => {
+		if (!resetScrollOnSwap) return;
+		if (window.location.hash) return;
+		window.scrollTo(0, 0);
+	});
+
+	document.addEventListener("astro:page-load", () => {
+		if (window.location.pathname !== "/") {
+			document.documentElement.classList.remove("is-soft-scroll");
+		}
+	});
+</script>

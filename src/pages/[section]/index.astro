@@ -28,11 +28,12 @@ const { category } = Astro.props;
 const children = await getChildSummaries(category);
 const title = wpText(category.name);
 const description = wpText(category.description);
+const isLearnRoot = category.slug === "learn";
 ---
 
 <Layout title={title} description={description || `${title}の一覧`} skipIntro>
 	<main>
-		<header class="category-hero">
+		<header class:list={["category-hero", isLearnRoot && "category-hero--learn"]}>
 			<div class="container">
 				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
 					{title}

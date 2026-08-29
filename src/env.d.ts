@@ -7,3 +7,9 @@ interface ImportMetaEnv {
 interface ImportMeta {
 	readonly env: ImportMetaEnv;
 }
+
+interface Window {
+	Prism?: {
+		highlightAllUnder: (element: ParentNode) => void;
+	};
+}

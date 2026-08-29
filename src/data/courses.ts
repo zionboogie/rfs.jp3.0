@@ -6,18 +6,18 @@ export type NavMenu = {
 
 export const navMenus: NavMenu[] = [
 	{
-		id: "learn",
-		label: "開発と学習",
-		href: "/learn/",
+		id: "ai-web-development",
+		label: "AIと学ぶWeb制作",
+		href: "/learn/ai-web-development/",
 	},
 	{
-		id: "sb",
-		label: "Programming",
-		href: "/sb/",
+		id: "getting-started",
+		label: "知ってお得な学習方法",
+		href: "/learn/getting-started/",
 	},
 	{
-		id: "server",
-		label: "Server",
-		href: "/server/",
+		id: "archive",
+		label: "アーカイブ",
+		href: "/archive/",
 	},
 ];

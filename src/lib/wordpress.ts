@@ -15,6 +15,12 @@ const LEARN_ROOT_ID = -1;
 
 export type ArchiveRootSlug = (typeof ARCHIVE_ROOT_SLUGS)[number];
 
+/** ACF フィールド（未公開時は API が空配列を返す） */
+type WpAcf = {
+	category_sortno?: string | number | boolean | null;
+	sort?: string | number | boolean | null;
+};
+
 /** WP REST API のカテゴリ／タクソノミーターム（必要なフィールドのみ） */
 export type WpCategory = {
 	id: number;
@@ -25,6 +31,23 @@ export type WpCategory = {
 	link: string;
 	count: number;
 	taxonomy?: "category" | "learn_cat";
+	acf?: WpAcf | unknown[];
+};
+
+/** WP REST API の固定ページ（必要なフィールドのみ） */
+export type WpPage = {
+	id: number;
+	slug: string;
+	link: string;
+	title: {
+		rendered: string;
+	};
+	excerpt?: {
+		rendered: string;
+	};
+	content?: {
+		rendered: string;
+	};
 };
 
 /** WP REST API の投稿（必要なフィールドのみ） */
@@ -46,6 +69,7 @@ export type WpPost = {
 	content?: {
 		rendered: string;
 	};
+	acf?: WpAcf | unknown[];
 };
 
 /** WP REST API のタグ */
@@ -76,6 +100,11 @@ export type ArticleTag = {
 	href: string;
 };
 
+export type ArticleNeighbor = {
+	title: string;
+	href: string;
+};
+
 export type ArticleDetail = {
 	title: string;
 	lead: string;
@@ -86,6 +115,17 @@ export type ArticleDetail = {
 	tags: ArticleTag[];
 	authorName: string;
 	authorAvatar: string;
+	path: string;
+	lessonNumber: string;
+	previousArticle: ArticleNeighbor | null;
+	nextArticle: ArticleNeighbor | null;
+};
+
+/** 固定ページ表示用データ */
+export type WpPageDetail = {
+	title: string;
+	description: string;
+	body: string;
 	path: string;
 };
 
@@ -126,11 +166,23 @@ export type CategoryPageData = {
 	chapters: CategoryChapter[];
 };
 
+/** タグ一覧ページ用データ */
+export type TagPageData = {
+	title: string;
+	path: string;
+	articles: CategoryArticle[];
+};
+
 /** 子カテゴリの要約（トップのコース一覧など） */
 export type CategorySummary = {
 	title: string;
 	description: string;
 	href: string;
+};
+
+/** トップ用: /learn 直下カテゴリと、その中のコース一覧 */
+export type LearnCourseSection = CategorySummary & {
+	courses: CategorySummary[];
 };
 
 /** .env の WORDPRESS_API_URL を返す（末尾スラッシュは除去） */
@@ -220,6 +272,9 @@ async function fetchCollection<T>(resource: string, searchParams: Record<string,
 	return items;
 }
 
+/** サイドバー「人気記事」の件数 */
+const POPULAR_ARTICLE_LIMIT = 5;
+
 /** ビルド／リクエスト内で使い回すキャッシュ */
 let categoryCache: Promise<WpCategory[]> | null = null;
 let postCache: Promise<WpPost[]> | null = null;
@@ -228,11 +283,14 @@ let learnTermCache: Promise<WpCategory[]> | null = null;
 let learnPostCache: Promise<WpPost[]> | null = null;
 let tagCache: Promise<WpTag[]> | null = null;
 let userCache: Promise<WpUser[]> | null = null;
+let popularArticleCache: Promise<CategoryArticle[]> | null = null;
+const pageBySlugCache = new Map<string, Promise<WpPageDetail | undefined>>();
 
 /** 全カテゴリを取得（キャッシュあり） */
 export function getWpCategories(): Promise<WpCategory[]> {
 	categoryCache ??= fetchCollection<WpCategory>("categories", {
-		_fields: "id,parent,slug,name,description,link,count",
+		_fields: "id,parent,slug,name,description,link,count,acf",
+		acf_format: "standard",
 	});
 	return categoryCache;
 }
@@ -240,7 +298,8 @@ export function getWpCategories(): Promise<WpCategory[]> {
 /** 全投稿を取得（キャッシュあり・日付昇順） */
 export function getWpPosts(): Promise<WpPost[]> {
 	postCache ??= fetchCollection<WpPost>("posts", {
-		_fields: "id,link,slug,title,date,modified,categories",
+		_fields: "id,link,slug,title,date,modified,categories,acf",
+		acf_format: "standard",
 		orderby: "date",
 		order: "asc",
 	});
@@ -250,7 +309,8 @@ export function getWpPosts(): Promise<WpPost[]> {
 /** 学習タクソノミー learn_cat のタームを取得（リンクは /learn/{slug}/ に正規化） */
 export function getLearnTerms(): Promise<WpCategory[]> {
 	learnTermCache ??= fetchCollection<WpCategory>(LEARN_TAXONOMY, {
-		_fields: "id,parent,slug,name,description,link,count",
+		_fields: "id,parent,slug,name,description,link,count,acf",
+		acf_format: "standard",
 	}).then((terms) =>
 		terms.map((term) => ({
 			...term,
@@ -264,7 +324,8 @@ export function getLearnTerms(): Promise<WpCategory[]> {
 /** 投稿タイプ learn を取得（learn_cat を categories として扱う） */
 export function getLearnPosts(): Promise<WpPost[]> {
 	learnPostCache ??= fetchCollection<WpLearnPostResponse>(LEARN_POST_TYPE, {
-		_fields: "id,link,slug,title,date,modified,learn_cat,tags,excerpt,content",
+		_fields: "id,link,slug,title,date,modified,learn_cat,tags,excerpt,content,acf",
+		acf_format: "standard",
 		orderby: "date",
 		order: "asc",
 	}).then((posts) =>
@@ -289,11 +350,38 @@ function summaryFromCategory(category: WpCategory): CategorySummary {
 	};
 }
 
-/** 指定親の直下の子カテゴリ（slug 昇順） */
+/** ACF オブジェクトを取り出す（未公開時の空配列は無視） */
+function readAcf(acf: WpCategory["acf"] | WpPost["acf"]): WpAcf {
+	if (!acf || Array.isArray(acf)) return {};
+	return acf;
+}
+
+/** ACF の並び番号。未設定は null */
+function sortNumber(value: unknown): number | null {
+	if (value === null || value === undefined || value === "") return null;
+	const parsed = Number(value);
+	return Number.isFinite(parsed) ? parsed : null;
+}
+
+/** 並び番号の比較（低い順。未設定は末尾） */
+function compareSortNumber(a: number | null, b: number | null): number {
+	const left = a ?? Number.POSITIVE_INFINITY;
+	const right = b ?? Number.POSITIVE_INFINITY;
+	return left - right;
+}
+
+/** 指定親の直下の子カテゴリ（category_sortno 昇順、同値は slug） */
 function childrenOf(categories: WpCategory[], parentId: number): WpCategory[] {
 	return categories
 		.filter((category) => category.parent === parentId)
-		.sort((a, b) => a.slug.localeCompare(b.slug, "en"));
+		.sort((a, b) => {
+			const bySort = compareSortNumber(
+				sortNumber(readAcf(a.acf).category_sortno),
+				sortNumber(readAcf(b.acf).category_sortno),
+			);
+			if (bySort !== 0) return bySort;
+			return a.slug.localeCompare(b.slug, "en");
+		});
 }
 
 /** 自分＋子孫カテゴリ ID を再帰で集める */
@@ -317,10 +405,24 @@ function uniquePosts(posts: WpPost[]): WpPost[] {
 	});
 }
 
-/** 投稿配列を一覧用 Article に変換（日付昇順） */
-function articlesFromPosts(posts: WpPost[]): CategoryArticle[] {
+/**
+ * 投稿配列を一覧用 Article に変換
+ * - 記事 ACF sort が最優先
+ * - なければカテゴリ ACF sort（defaultSort）
+ * - 同値は日付昇順
+ */
+function articlesFromPosts(posts: WpPost[], defaultSort: number | null): CategoryArticle[] {
 	return uniquePosts(posts)
-		.sort((a, b) => a.date.localeCompare(b.date))
+		.sort((a, b) => {
+			const bySort = compareSortNumber(
+				sortNumber(readAcf(a.acf).sort) ?? defaultSort,
+				sortNumber(readAcf(b.acf).sort) ?? defaultSort,
+			);
+			if (bySort !== 0) return bySort;
+			const byDate = a.date.localeCompare(b.date);
+			if (byDate !== 0) return byDate;
+			return a.id - b.id;
+		})
 		.map((post) => ({
 			title: wpText(post.title.rendered),
 			href: toArticlePath(post.link),
@@ -334,11 +436,16 @@ function articlesFromPosts(posts: WpPost[]): CategoryArticle[] {
  * - なければ子孫カテゴリの投稿をまとめる
  */
 function articlesForNode(categories: WpCategory[], posts: WpPost[], categoryId: number): CategoryArticle[] {
+	const node = categories.find((category) => category.id === categoryId);
+	const defaultSort = sortNumber(readAcf(node?.acf).sort);
 	const direct = postsForCategory(posts, categoryId);
-	if (direct.length > 0) return articlesFromPosts(direct);
+	if (direct.length > 0) return articlesFromPosts(direct, defaultSort);
 
 	const nestedIds = descendantIds(categories, categoryId).filter((id) => id !== categoryId);
-	return articlesFromPosts(nestedIds.flatMap((id) => postsForCategory(posts, id)));
+	return articlesFromPosts(
+		nestedIds.flatMap((id) => postsForCategory(posts, id)),
+		defaultSort,
+	);
 }
 
 /** WP link からパスセグメント配列を取得（デコード済み） */
@@ -454,9 +561,27 @@ export async function getChildSummaries(category: WpCategory): Promise<CategoryS
 	return childrenOf(categories, category.id).map(summaryFromCategory);
 }
 
-/** トップ用: タクソノミー learn_cat のルートターム一覧 */
-export async function getLearnCourses(): Promise<CategorySummary[]> {
-	return getChildSummaries(LEARN_ROOT);
+/** トップ用: /learn 直下のカテゴリごとに、子カテゴリ（なければ記事）を並べる */
+export async function getLearnCourseSections(): Promise<LearnCourseSection[]> {
+	const [terms, posts] = await Promise.all([getLearnTerms(), getLearnPosts()]);
+
+	return childrenOf(terms, 0).map((root) => {
+		const childTerms = childrenOf(terms, root.id);
+		const defaultSort = sortNumber(readAcf(root.acf).sort);
+		const courses =
+			childTerms.length > 0
+				? childTerms.map(summaryFromCategory)
+				: articlesFromPosts(postsForCategory(posts, root.id), defaultSort).map((article) => ({
+						title: article.title,
+						description: "",
+						href: article.href,
+					}));
+
+		return {
+			...summaryFromCategory(root),
+			courses,
+		};
+	});
 }
 
 /**
@@ -498,6 +623,106 @@ function getWpTags(): Promise<WpTag[]> {
 		_fields: "id,name,slug,link",
 	});
 	return tagCache;
+}
+
+/** WP タグ slug は日本語がエンコードされたままのことがある */
+export function decodeTagSlug(slug: string): string {
+	try {
+		return decodeURIComponent(slug);
+	} catch {
+		return slug;
+	}
+}
+
+/** タグ一覧のサイト内パス */
+function toTagPath(slug: string): string {
+	return `/tag/${decodeTagSlug(slug)}/`;
+}
+
+/** slug からタグを探す */
+export async function findWpTag(slug: string): Promise<WpTag | undefined> {
+	const tags = await getWpTags();
+	const target = decodeTagSlug(slug);
+	return tags.find((tag) => decodeTagSlug(tag.slug) === target);
+}
+
+/** 記事が1件以上あるタグだけ返す（静的パス用） */
+export async function getTaggedArchiveTags(): Promise<WpTag[]> {
+	const [tags, posts] = await Promise.all([getWpTags(), getArchiveArticlePosts()]);
+	return tags.filter((tag) => posts.some((post) => (post.tags ?? []).includes(tag.id)));
+}
+
+const SIDEBAR_TAG_LIMIT = 20;
+
+/** 右カラム用: 記事が多いタグを最大20件、名前順で返す */
+export async function getSidebarTags(): Promise<ArticleTag[]> {
+	const [tags, posts] = await Promise.all([getWpTags(), getArchiveArticlePosts()]);
+	return tags
+		.map((tag) => ({
+			tag,
+			count: posts.filter((post) => (post.tags ?? []).includes(tag.id)).length,
+		}))
+		.filter((item) => item.count > 0)
+		.sort((a, b) => {
+			if (b.count !== a.count) return b.count - a.count;
+			return wpText(a.tag.name).localeCompare(wpText(b.tag.name), "ja");
+		})
+		.slice(0, SIDEBAR_TAG_LIMIT)
+		.sort((a, b) => wpText(a.tag.name).localeCompare(wpText(b.tag.name), "ja"))
+		.map(({ tag }) => ({
+			label: wpText(tag.name),
+			href: toTagPath(tag.slug),
+		}));
+}
+
+/** タグに紐づく記事一覧を組み立てる */
+export async function getTagPageData(tag: WpTag): Promise<TagPageData> {
+	const posts = await getArchiveArticlePosts();
+	const matched = posts.filter((post) => (post.tags ?? []).includes(tag.id));
+	return {
+		title: wpText(tag.name),
+		path: toTagPath(tag.slug),
+		articles: articlesFromPosts(matched, null),
+	};
+}
+
+/** 固定ページをスラッグで1件取得（キャッシュあり） */
+export function getWpPageBySlug(slug: string): Promise<WpPageDetail | undefined> {
+	const cached = pageBySlugCache.get(slug);
+	if (cached) return cached;
+
+	const pending = fetchWpPageBySlug(slug);
+	pageBySlugCache.set(slug, pending);
+	return pending;
+}
+
+async function fetchWpPageBySlug(slug: string): Promise<WpPageDetail | undefined> {
+	const url = new URL(`${getApiUrl()}/wp/v2/pages`);
+	url.searchParams.set("slug", slug);
+	url.searchParams.set("per_page", "1");
+	url.searchParams.set("_fields", "id,slug,link,title,excerpt,content");
+
+	const response = await fetch(url);
+	if (!response.ok) {
+		throw new Error(`WordPress API error: ${response.status} ${url.pathname}`);
+	}
+
+	const pages = (await response.json()) as WpPage[];
+	const page = pages[0];
+	if (!page) return undefined;
+
+	const { html } = applyHeadingIds(stripUnsafeHtml(page.content?.rendered ?? ""));
+	const description = wpText(page.excerpt?.rendered ?? "")
+		.replace(/\[&hellip;\]/g, "")
+		.replace(/\s*[.…]+$/u, "")
+		.trim();
+
+	return {
+		title: wpText(page.title.rendered),
+		description,
+		body: html,
+		path: toArticlePath(page.link),
+	};
 }
 
 /** 全ユーザーを取得（権限で失敗したら空） */
@@ -567,7 +792,109 @@ export function toArticlePath(link: string): string {
 	return path.endsWith("/") ? path : `${path}/`;
 }
 
-function buildArticleDetail(post: WpPost, tags: WpTag[], users: WpUser[]): ArticleDetail {
+/** このサイトの記事パスかどうか（sb / server / learn） */
+function isArchiveArticleLink(link: string): boolean {
+	const path = toSitePath(link);
+	return path.startsWith("/sb/") || path.startsWith("/server/") || path.startsWith("/learn/");
+}
+
+/**
+ * WordPress Popular Posts の REST から人気記事を取得
+ * GET /wordpress-popular-posts/v1/popular-posts
+ */
+async function fetchPopularArticles(): Promise<CategoryArticle[]> {
+	const url = new URL(`${getApiUrl()}/wordpress-popular-posts/v1/popular-posts`);
+	url.searchParams.set("range", "all");
+	url.searchParams.set("limit", String(POPULAR_ARTICLE_LIMIT));
+	url.searchParams.set("post_type", `post,${LEARN_POST_TYPE}`);
+	url.searchParams.set("_fields", "id,link,title,date,modified");
+
+	try {
+		const response = await fetch(url);
+		if (!response.ok) return [];
+
+		const data = (await response.json()) as WpPost[];
+		if (!Array.isArray(data)) return [];
+
+		return data
+			.filter((post) => post.link && isArchiveArticleLink(post.link))
+			.slice(0, POPULAR_ARTICLE_LIMIT)
+			.map((post) => ({
+				title: wpText(post.title.rendered),
+				href: toArticlePath(post.link),
+				updatedAt: post.modified || post.date,
+			}));
+	} catch {
+		return [];
+	}
+}
+
+/** サイドバー用の人気記事（キャッシュあり） */
+export function getPopularArticles(): Promise<CategoryArticle[]> {
+	popularArticleCache ??= fetchPopularArticles();
+	return popularArticleCache;
+}
+
+/** 記事パスに最も近い所属カテゴリ（タクソノミーを混ぜない） */
+function findPostCategory(post: WpPost, categories: WpCategory[]): WpCategory | undefined {
+	const isLearnPost = normalizePath(toArticlePath(post.link)).startsWith("learn/");
+	const pool = categories.filter((category) => (isLearnPost ? isLearnTaxonomy(category) : !isLearnTaxonomy(category)));
+	const assigned = pool.filter((category) => post.categories.includes(category.id));
+	if (assigned.length === 0) return undefined;
+
+	const articlePath = normalizePath(toArticlePath(post.link));
+	const byPath = assigned
+		.filter((category) => {
+			const path = normalizePath(toSitePath(category.link));
+			return path.length > 0 && (articlePath === path || articlePath.startsWith(`${path}/`));
+		})
+		.sort((a, b) => normalizePath(toSitePath(b.link)).length - normalizePath(toSitePath(a.link)).length);
+
+	return byPath[0] ?? assigned[0];
+}
+
+function articlesInPostCategory(post: WpPost, categories: WpCategory[], posts: WpPost[]): CategoryArticle[] {
+	const category = findPostCategory(post, categories);
+	if (!category) return [];
+	return articlesForNode(categories, posts, category.id);
+}
+
+/** 所属カテゴリ内の記事表示順を 01 形式で返す */
+function lessonNumberForPost(post: WpPost, categories: WpCategory[], posts: WpPost[]): string {
+	const articles = articlesInPostCategory(post, categories, posts);
+	const href = toArticlePath(post.link);
+	const index = articles.findIndex((item) => item.href === href);
+	return String(index >= 0 ? index + 1 : 1).padStart(2, "0");
+}
+
+function neighborFromArticle(article: CategoryArticle | undefined): ArticleNeighbor | null {
+	if (!article) return null;
+	return { title: article.title, href: article.href };
+}
+
+/** 同じカテゴリ内の前後記事 */
+function adjacentArticles(
+	post: WpPost,
+	categories: WpCategory[],
+	posts: WpPost[],
+): { previous: ArticleNeighbor | null; next: ArticleNeighbor | null } {
+	const articles = articlesInPostCategory(post, categories, posts);
+	const href = toArticlePath(post.link);
+	const index = articles.findIndex((item) => item.href === href);
+	if (index < 0) return { previous: null, next: null };
+	return {
+		previous: neighborFromArticle(articles[index - 1]),
+		next: neighborFromArticle(articles[index + 1]),
+	};
+}
+
+function buildArticleDetail(
+	post: WpPost,
+	tags: WpTag[],
+	users: WpUser[],
+	categories: WpCategory[],
+	posts: WpPost[],
+): ArticleDetail {
 	const title = wpText(post.title.rendered);
 	const lead = wpText(post.excerpt?.rendered ?? "")
 		.replace(/\s*[.…]+$/u, "")
@@ -578,9 +905,11 @@ function buildArticleDetail(post: WpPost, tags: WpTag[], users: WpUser[]): Artic
 		.filter((tag): tag is WpTag => Boolean(tag))
 		.map((tag) => ({
 			label: wpText(tag.name),
-			href: "#",
+			href: toTagPath(tag.slug),
 		}));
 	const user = post.author ? users.find((item) => item.id === post.author) : undefined;
+	const lessonNumber = lessonNumberForPost(post, categories, posts);
+	const { previous, next } = adjacentArticles(post, categories, posts);
 
 	return {
 		title,
@@ -593,13 +922,22 @@ function buildArticleDetail(post: WpPost, tags: WpTag[], users: WpUser[]): Artic
 		authorName: user?.name ?? "",
 		authorAvatar: user?.avatar_urls?.["96"] ?? user?.avatar_urls?.["48"] ?? "",
 		path: toArticlePath(post.link),
+		lessonNumber,
+		previousArticle: previous,
+		nextArticle: next,
 	};
 }
 
 /** 記事詳細ページ用データを組み立てる */
 export async function getArticleDetail(post: WpPost): Promise<ArticleDetail> {
-	const [tags, users] = await Promise.all([getWpTags(), getWpUsers()]);
-	return buildArticleDetail(post, tags, users);
+	const isLearnPost = normalizePath(toArticlePath(post.link)).startsWith("learn/");
+	const [tags, users, categories, posts] = await Promise.all([
+		getWpTags(),
+		getWpUsers(),
+		isLearnPost ? getLearnTerms() : getWpCategories(),
+		isLearnPost ? getLearnPosts() : getWpPosts(),
+	]);
+	return buildArticleDetail(post, tags, users, categories, posts);
 }
 
 /** section + slug からアーカイブ記事を探す */

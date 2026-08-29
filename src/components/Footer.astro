@@ -35,7 +35,7 @@ import { navMenus } from "../data/courses";
 	</div>
 </section>
 
-<footer class="site-footer flex min-h-svh flex-col bg-[#e8e8e8] text-text">
+<footer class="site-footer flex min-h-svh flex-col overflow-hidden bg-[#e8e8e8] text-text">
 	<div class="site-footer__primary flex flex-1 items-center border-b border-black/10 bg-footer-primary text-white">
 		<div
 			class="site-footer__primary-inner container flex items-start justify-between gap-xl py-2xl max-[767px]:flex-col max-[767px]:gap-lg max-[767px]:py-xl"
@@ -60,27 +60,25 @@ import { navMenus } from "../data/courses";
 		</div>
 	</div>
 
-	<div class="site-footer__secondary flex shrink-0 items-center">
-		<div
-			class="site-footer__secondary-inner container flex flex-col items-stretch gap-sm py-md max-[767px]:py-sm"
-		>
+	<div class="site-footer__secondary shrink-0 overflow-hidden">
+		<div class="site-footer__secondary-inner container flex flex-col items-stretch gap-sm pt-md pb-0">
+			<p class="site-footer__copyright m-0 text-xs tracking-[0.04em] text-muted">
+				&copy; rhythmfactory Ltd. All Rights Reserved.
+			</p>
 			<a
-				class="site-footer__rhythm block w-full"
+				class="site-footer__rhythm block w-full overflow-hidden"
 				href="https://rhythmfactory.jp/"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
 				<img
-					class="h-auto w-full"
+					class="site-footer__rhythm-img block h-auto w-full"
 					src="/common/img/common/logo_rhythmfactory.svg"
 					alt="rhythmfactory"
 					width="501"
 					height="81"
 				/>
 			</a>
-			<p class="site-footer__copyright m-0 text-sm tracking-[0.04em] text-muted">
-				&copy; rhythmfactory Ltd. All Rights Reserved.
-			</p>
 		</div>
 	</div>
 </footer>
