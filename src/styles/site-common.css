@@ -54,6 +54,67 @@
 }
 
 /* ----------------------------------------
+course-list（ホバー・疑似要素）
+---------------------------------------- */
+.course-list__item {
+	transition: color 0.25s ease;
+}
+
+.course-list__index,
+.course-list__description {
+	transition: color 0.25s ease;
+}
+
+.course-list__item:hover,
+.course-list__item:focus-visible {
+	color: var(--color-logo);
+}
+
+.course-list__item:hover .course-list__index,
+.course-list__item:focus-visible .course-list__index {
+	color: var(--color-logo);
+}
+
+.course-list__title::before {
+	content: "☞";
+	position: absolute;
+	right: 100%;
+	margin-right: 0.35em;
+	color: var(--color-logo);
+	opacity: 0;
+	transform: translate3d(-0.4em, 0, 0);
+	transition:
+		opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.course-list__item:hover .course-list__title::before,
+.course-list__item:focus-visible .course-list__title::before {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.course-list__item:hover .course-list__description,
+.course-list__item:focus-visible .course-list__description {
+	color: rgb(217 30 24 / 82%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.course-list__item,
+	.course-list__index,
+	.course-list__title::before,
+	.course-list__description {
+		transition: none;
+	}
+
+	.course-list__item:hover .course-list__title::before,
+	.course-list__item:focus-visible .course-list__title::before {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* ----------------------------------------
 パンくず
 ---------------------------------------- */
 .site-breadcrumb {

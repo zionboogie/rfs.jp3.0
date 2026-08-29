@@ -2,7 +2,6 @@
 import Layout from "../components/Layout.astro";
 import CourseListItem from "../components/CourseListItem.astro";
 import { findArchiveCategory, toSitePath, wpText } from "../lib/wordpress";
-import "../styles/category.css";
 
 const archiveRoots = ["sb", "server"] as const;
 const items: { title: string; description: string; href: string }[] = [];
@@ -21,7 +20,7 @@ for (const slug of archiveRoots) {
 
 <Layout title="アーカイブ" description="過去の記事アーカイブ" skipIntro>
 	<main>
-		<header class="category-hero">
+		<header class="category-hero pt-md pb-xl">
 			<div class="container">
 				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">アーカイブ</h1>
 				<div class="course-list mt-xl border-t border-[rgb(33_5_5_/_18%)]">

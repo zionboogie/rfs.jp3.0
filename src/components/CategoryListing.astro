@@ -14,7 +14,7 @@ function chapterLabel(index: number): string {
 ---
 
 <main>
-	<header class="category-hero">
+	<header class="category-hero pt-md pb-xl">
 		<div class="container">
 			<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
 				{category.title}
@@ -33,9 +33,9 @@ function chapterLabel(index: number): string {
 			const headingId = `chapter-${chapterNumber}`;
 
 			return (
-				<section class="category-chapter" aria-labelledby={headingId}>
+				<section class="category-chapter pb-xl" aria-labelledby={headingId}>
 					<div class="container">
-						<h2 class="category-chapter__heading flex flex-wrap items-baseline gap-x-md gap-y-xs" id={headingId}>
+						<h2 class="category-chapter__heading mb-md mt-0 flex flex-wrap items-baseline gap-x-md gap-y-xs" id={headingId}>
 							<span class="category-chapter__index text-sm tracking-[0.08em] text-muted">
 								Chapter {chapterNumber}
 							</span>

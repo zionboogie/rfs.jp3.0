@@ -27,7 +27,7 @@ const { page } = Astro.props;
 
 <Layout title={page.title} description={`${page.title}の記事一覧`} skipIntro>
 	<main>
-		<header class="category-hero">
+		<header class="category-hero pt-md pb-xl">
 			<div class="container">
 				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
 					{page.title}
@@ -35,7 +35,7 @@ const { page } = Astro.props;
 			</div>
 		</header>
 
-		<section class="category-chapter" aria-label={`${page.title}の記事`}>
+		<section class="category-chapter pb-xl" aria-label={`${page.title}の記事`}>
 			<div class="container">
 				{
 					page.articles.length > 0 ? (
