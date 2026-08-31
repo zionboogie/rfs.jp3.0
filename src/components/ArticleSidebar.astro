@@ -1,13 +1,20 @@
 ---
-import { formatUpdatedAt, type ArticleTag, type CategoryArticle, type CategorySummary } from "../lib/wordpress";
+import { hiddenArchiveTitles, navMenus } from "../data/courses";
+import { formatUpdatedAt, type ArchiveGroup, type ArticleTag, type CategoryArticle, type CategorySummary } from "../lib/wordpress";
 
 interface Props {
 	categories: CategorySummary[];
+	archiveGroups?: ArchiveGroup[];
 	popularArticles: CategoryArticle[];
 	tags: ArticleTag[];
 }
 
-const { categories, popularArticles, tags } = Astro.props;
+const { categories, archiveGroups = [], popularArticles, tags } = Astro.props;
+const featuredCourses = navMenus.filter((menu) => menu.id !== "archive");
+const featuredHrefs = new Set(featuredCourses.map((course) => course.href));
+const visibleCategories = categories.filter(
+	(category) => !hiddenArchiveTitles.has(category.title) && !featuredHrefs.has(category.href),
+);
 ---
 
 <aside class="article-side flex flex-col gap-xl lg:sticky lg:top-md">
@@ -15,7 +22,16 @@ const { categories, popularArticles, tags } = Astro.props;
 		<h2 class="article-side__heading" id="article-side-category-heading">カテゴリ</h2>
 		<ul class="m-0 flex list-none flex-col p-0">
 			{
-				categories.map((category) => (
+				featuredCourses.map((course) => (
+					<li class="border-b border-[rgb(33_5_5_/_18%)]">
+						<a class="article-side__link block py-sm" href={course.href}>
+							<span class="article-side__text">{course.label}</span>
+						</a>
+					</li>
+				))
+			}
+			{
+				visibleCategories.map((category) => (
 					<li class="border-b border-[rgb(33_5_5_/_18%)]">
 						<a class="article-side__link block py-sm" href={category.href}>
 							<span class="article-side__text">{category.title}</span>
@@ -25,6 +41,30 @@ const { categories, popularArticles, tags } = Astro.props;
 			}
 		</ul>
 	</section>
+
+	{
+		archiveGroups.length > 0 ? (
+			<section aria-labelledby="article-side-archive-heading">
+				<h2 class="article-side__heading" id="article-side-archive-heading">
+					アーカイブ
+				</h2>
+				{archiveGroups.map((group, groupIndex) => (
+					<div class:list={[groupIndex > 0 && "mt-md"]}>
+						<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]">{group.title}</h3>
+						<ul class="m-0 flex list-none flex-col p-0">
+							{group.children.map((child) => (
+								<li class="border-b border-[rgb(33_5_5_/_18%)]">
+									<a class="article-side__link block py-sm" href={child.href}>
+										<span class="article-side__text">{child.title}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</section>
+		) : null
+	}
 
 	{
 		popularArticles.length > 0 ? (

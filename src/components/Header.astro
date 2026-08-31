@@ -7,11 +7,14 @@ interface Props {
 }
 
 const { skipIntro = false } = Astro.props;
+const primaryMenus = navMenus.filter((menu) => menu.id !== "archive");
+const archiveMenu = navMenus.find((menu) => menu.id === "archive");
+const searchQuery = Astro.url.searchParams.get("q") ?? "";
 ---
 
 <header
 	class:list={[
-		"site-header fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-transparent transition-transform duration-[600ms] ease-in",
+		"site-header fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-transparent",
 		skipIntro ? "is-ready is-logo-ready is-no-intro" : "is-intro",
 	]}
 	data-skip-intro={skipIntro ? "" : undefined}
@@ -30,7 +33,7 @@ const { skipIntro = false } = Astro.props;
 	<div class="site-header__chrome pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 	<div class="site-header__inner container relative z-[2] flex items-center gap-md py-sm">
 		<a href="/" class="site-logo">smart</a>
-		<nav class="global-nav" aria-label="グローバルナビ">
+		<nav class="global-nav hidden md:block" aria-label="グローバルナビ">
 			<ul class="flex list-none flex-wrap gap-y-sm gap-x-md p-0">
 				{
 					navMenus.map((menu) => (
@@ -43,13 +46,14 @@ const { skipIntro = false } = Astro.props;
 				}
 			</ul>
 		</nav>
-		<form class="header-search ml-auto flex shrink-0 gap-2" action="/search" method="get" role="search">
+		<form class="header-search ml-auto hidden shrink-0 gap-2 md:flex" action="/search/" method="get" role="search">
 			<label class="visually-hidden" for="header-search-input">サイト内検索</label>
 			<input
 				id="header-search-input"
 				class="rounded-sm border border-white/60 bg-white px-3 py-2"
 				type="search"
 				name="q"
+				value={searchQuery}
 				placeholder="キーワードで検索"
 			/>
 			<button
@@ -59,7 +63,42 @@ const { skipIntro = false } = Astro.props;
 				検索
 			</button>
 		</form>
+		<button
+			type="button"
+			class="menu-toggle ml-auto flex size-11 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 md:hidden"
+			aria-expanded="false"
+			aria-controls="mobile-nav"
+			aria-label="メニューを開く"
+		>
+			<span class="menu-toggle__bars" aria-hidden="true">
+				<span class="menu-toggle__bar"></span>
+				<span class="menu-toggle__bar"></span>
+				<span class="menu-toggle__bar"></span>
+			</span>
+		</button>
 	</div>
+	<nav class="mobile-nav" id="mobile-nav" aria-label="カテゴリ" inert>
+		<ul class="mobile-nav__list">
+			{
+				primaryMenus.map((menu) => (
+					<li>
+						<a href={menu.href} class="text-h3 font-bold hover:text-text hover:no-underline">
+							<span>{menu.label}</span>
+						</a>
+					</li>
+				))
+			}
+			{
+				archiveMenu ? (
+					<li class="mobile-nav__archive">
+						<a href={archiveMenu.href} class="text-h3 font-bold hover:text-text hover:no-underline">
+							<span>{archiveMenu.label}</span>
+						</a>
+					</li>
+				) : null
+			}
+		</ul>
+	</nav>
 </header>
 
 <script>
@@ -191,6 +230,10 @@ const { skipIntro = false } = Astro.props;
 
 		const onScroll = () => {
 			if (!header.classList.contains("is-ready")) return;
+			if (header.classList.contains("is-menu-open")) {
+				header.classList.remove("is-hidden");
+				return;
+			}
 
 			if (window.scrollY <= 8) {
 				header.classList.remove("is-hidden");
@@ -213,8 +256,72 @@ const { skipIntro = false } = Astro.props;
 		applySkippedIntro(doc);
 	});
 
+	/** @type {AbortController | null} */
+	let mobileNavAbort = null;
+
+	function initMobileNav() {
+		const header = document.querySelector(".site-header");
+		if (!(header instanceof HTMLElement)) return;
+
+		const toggle = header.querySelector(".menu-toggle");
+		const panel = header.querySelector(".mobile-nav");
+		if (!(toggle instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
+
+		mobileNavAbort?.abort();
+		mobileNavAbort = new AbortController();
+		const { signal } = mobileNavAbort;
+		const desktopQuery = window.matchMedia("(min-width: 768px)");
+
+		const setOpen = (open) => {
+			toggle.setAttribute("aria-expanded", open ? "true" : "false");
+			toggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+			panel.classList.toggle("is-open", open);
+			panel.inert = !open;
+			header.classList.toggle("is-menu-open", open);
+			document.body.classList.toggle("is-menu-open", open);
+			if (open) header.classList.remove("is-hidden");
+		};
+
+		toggle.addEventListener(
+			"click",
+			() => {
+				setOpen(toggle.getAttribute("aria-expanded") !== "true");
+			},
+			{ signal },
+		);
+
+		document.addEventListener(
+			"keydown",
+			(event) => {
+				if (event.key !== "Escape") return;
+				if (toggle.getAttribute("aria-expanded") !== "true") return;
+				setOpen(false);
+				toggle.focus();
+			},
+			{ signal },
+		);
+
+		desktopQuery.addEventListener(
+			"change",
+			(event) => {
+				if (event.matches) setOpen(false);
+			},
+			{ signal },
+		);
+	}
+
+	function syncSearchInputs() {
+		const query = new URLSearchParams(window.location.search).get("q");
+		if (query === null) return;
+		for (const input of document.querySelectorAll(".header-search input[name='q']")) {
+			if (input instanceof HTMLInputElement) input.value = query;
+		}
+	}
+
 	document.addEventListener("astro:page-load", () => {
 		initHeaderAnimation();
 		initHeaderScroll();
+		initMobileNav();
+		syncSearchInputs();
 	});
 </script>

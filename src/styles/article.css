@@ -297,13 +297,27 @@
 	z-index: 1;
 }
 
+.article-pager__link {
+	width: fit-content;
+	max-width: 100%;
+	border: 1px solid transparent;
+	border-radius: var(--radius-sm, 4px);
+	padding: var(--spacing-xs, 8px);
+	margin: calc(var(--spacing-xs, 8px) * -1);
+	transition:
+		border-color 0.25s ease,
+		color 0.25s ease;
+}
+
 .article-pager__arrow {
-	transition: border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	transition: border-color 0.25s ease, color 0.25s ease;
 }
 
 .article-pager__link:hover,
 .article-pager__link:focus-visible {
+	border-color: rgb(33 5 5 / 18%);
 	color: var(--color-logo);
+	outline: none;
 }
 
 .article-pager__link:hover .article-pager__arrow,
@@ -370,6 +384,7 @@
 	.article-continue__link,
 	.article-ask__copy,
 	.article-related__card,
+	.article-pager__link,
 	.article-pager__arrow,
 	.article-author,
 	.article-author__photo-hover,

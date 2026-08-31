@@ -21,3 +21,12 @@ export const navMenus: NavMenu[] = [
 		href: "/archive/",
 	},
 ];
+
+/** トップのアーカイブ一覧で出さないカテゴリ（記事サイドバーでも同じ） */
+export const hiddenArchiveTitles = new Set([
+	"ActionScript講座",
+	"Atom講座",
+	"スマホ・モバイル講座",
+	"Samba",
+	"Namazu",
+]);

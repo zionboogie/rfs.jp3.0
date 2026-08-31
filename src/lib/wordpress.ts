@@ -173,6 +173,15 @@ export type TagPageData = {
 	articles: CategoryArticle[];
 };
 
+/** サイト内検索の索引1件 */
+export type SearchIndexItem = {
+	title: string;
+	href: string;
+	updatedAt: string;
+	updatedLabel: string;
+	excerpt: string;
+};
+
 /** 子カテゴリの要約（トップのコース一覧など） */
 export type CategorySummary = {
 	title: string;
@@ -183,6 +192,12 @@ export type CategorySummary = {
 /** トップ用: /learn 直下カテゴリと、その中のコース一覧 */
 export type LearnCourseSection = CategorySummary & {
 	courses: CategorySummary[];
+};
+
+/** トップ／記事サイドバーのアーカイブ（Programming / Server） */
+export type ArchiveGroup = {
+	title: string;
+	children: CategorySummary[];
 };
 
 /** .env の WORDPRESS_API_URL を返す（末尾スラッシュは除去） */
@@ -561,6 +576,33 @@ export async function getChildSummaries(category: WpCategory): Promise<CategoryS
 	return childrenOf(categories, category.id).map(summaryFromCategory);
 }
 
+/** トップ／記事サイドバー用: 表示対象のアーカイブグループ */
+export async function getVisibleArchiveGroups(hiddenTitles: Set<string>): Promise<ArchiveGroup[]> {
+	const [sbCategory, serverCategory] = await Promise.all([
+		findArchiveCategory("sb"),
+		findArchiveCategory("server"),
+	]);
+	const [sbChildren, serverChildren] = await Promise.all([
+		sbCategory ? getChildSummaries(sbCategory) : Promise.resolve([]),
+		serverCategory ? getChildSummaries(serverCategory) : Promise.resolve([]),
+	]);
+
+	return [
+		sbCategory
+			? {
+					title: wpText(sbCategory.name),
+					children: sbChildren.filter((child) => !hiddenTitles.has(child.title)),
+				}
+			: null,
+		serverCategory
+			? {
+					title: wpText(serverCategory.name),
+					children: serverChildren.filter((child) => !hiddenTitles.has(child.title)),
+				}
+			: null,
+	].filter((group): group is ArchiveGroup => group !== null && group.children.length > 0);
+}
+
 /** トップ用: /learn 直下のカテゴリごとに、子カテゴリ（なければ記事）を並べる */
 export async function getLearnCourseSections(): Promise<LearnCourseSection[]> {
 	const [terms, posts] = await Promise.all([getLearnTerms(), getLearnPosts()]);
@@ -684,6 +726,50 @@ export async function getTagPageData(tag: WpTag): Promise<TagPageData> {
 		path: toTagPath(tag.slug),
 		articles: articlesFromPosts(matched, null),
 	};
+}
+
+/** 検索用にタイトル・抜粋を正規化 */
+function searchHaystack(item: Pick<SearchIndexItem, "title" | "excerpt">): string {
+	return `${item.title}\n${item.excerpt}`.toLowerCase();
+}
+
+/** サイト内検索の索引（sb / server / learn の記事） */
+export async function getSearchIndex(): Promise<SearchIndexItem[]> {
+	const posts = await getArchiveArticlePosts();
+	const seen = new Set<number>();
+
+	return posts
+		.filter((post) => {
+			if (seen.has(post.id)) return false;
+			seen.add(post.id);
+			return true;
+		})
+		.sort((a, b) => {
+			const byModified = (b.modified || b.date).localeCompare(a.modified || a.date);
+			if (byModified !== 0) return byModified;
+			return b.id - a.id;
+		})
+		.map((post) => {
+			const updatedAt = post.modified || post.date;
+			return {
+				title: wpText(post.title.rendered),
+				href: toArticlePath(post.link),
+				updatedAt,
+				updatedLabel: formatUpdatedAt(updatedAt),
+				excerpt: post.excerpt ? wpText(post.excerpt.rendered).trim() : "",
+			};
+		});
+}
+
+/** 索引からキーワード（空白区切り AND）で絞り込む */
+export function filterSearchIndex(index: SearchIndexItem[], query: string): SearchIndexItem[] {
+	const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+	if (tokens.length === 0) return [];
+
+	return index.filter((item) => {
+		const haystack = searchHaystack(item);
+		return tokens.every((token) => haystack.includes(token));
+	});
 }
 
 /** 固定ページをスラッグで1件取得（キャッシュあり） */

@@ -2,11 +2,22 @@
 import Layout from "../components/Layout.astro";
 import AboutIntro from "../components/AboutIntro.astro";
 import CourseListItem from "../components/CourseListItem.astro";
+import CourseTile from "../components/CourseTile.astro";
 import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
-import { getLearnCourseSections } from "../lib/wordpress";
+import { hiddenArchiveTitles, navMenus } from "../data/courses";
+import { getLearnCourseSections, getVisibleArchiveGroups } from "../lib/wordpress";
 import "../styles/top.css";
 
-const learnSections = await getLearnCourseSections();
+const gettingStartedHref = navMenus.find((menu) => menu.id === "getting-started")?.href;
+const aiWebHref = navMenus.find((menu) => menu.id === "ai-web-development")?.href;
+
+const [learnSections, archiveGroups] = await Promise.all([
+	getLearnCourseSections(),
+	getVisibleArchiveGroups(hiddenArchiveTitles),
+]);
+
+const gettingStarted = learnSections.find((section) => section.href === gettingStartedHref);
+const aiWeb = learnSections.find((section) => section.href === aiWebHref);
 ---
 
 <Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
@@ -71,22 +82,22 @@ const learnSections = await getLearnCourseSections();
 		</section>
 
 		{
-			learnSections.map((section, sectionIndex) => (
-				<section class:list={["section learn", sectionIndex === 0 && "learn-accent"]} data-parallax="content">
+			gettingStarted ? (
+				<section class="section learn learn-accent" data-parallax="content">
 					<div class="container">
 						<h2
 							class:list={[
 								"section-heading mx-auto w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]",
-								section.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
+								gettingStarted.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
 							]}
 						>
-							{section.title}
+							{gettingStarted.title}
 						</h2>
-						{section.description ? (
-							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{section.description}</p>
+						{gettingStarted.description ? (
+							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{gettingStarted.description}</p>
 						) : null}
 						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
-							{section.courses.map((course, index) => (
+							{gettingStarted.courses.map((course, index) => (
 								<CourseListItem
 									index={index + 1}
 									title={course.title}
@@ -97,7 +108,58 @@ const learnSections = await getLearnCourseSections();
 						</div>
 					</div>
 				</section>
-			))
+			) : null
+		}
+
+		{/* AIと学ぶWeb制作 */}
+		{false && aiWeb ? (
+				<section class="section learn" data-parallax="content">
+					<div class="container">
+						<h2
+							class:list={[
+								"section-heading mx-auto w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]",
+								aiWeb.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
+							]}
+						>
+							{aiWeb.title}
+						</h2>
+						{aiWeb.description ? (
+							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{aiWeb.description}</p>
+						) : null}
+						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
+							{aiWeb.courses.map((course, index) => (
+								<CourseListItem
+									index={index + 1}
+									title={course.title}
+									description={course.description}
+									href={course.href}
+								/>
+							))}
+						</div>
+					</div>
+				</section>
+			) : null}
+
+		{
+			archiveGroups.length > 0 ? (
+				<section class="section learn" data-parallax="content">
+					<div class="container">
+						<h2 class="section-heading mx-auto mb-[calc(var(--space-lg)*3)] w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]">
+							アーカイブ
+						</h2>
+						{archiveGroups.map((group, groupIndex) => (
+							<div class:list={[groupIndex > 0 && "mt-[calc(var(--space-lg)*2)]"]}>
+								<h3 class="mb-md mt-0 text-h3 font-bold tracking-[0.04em]">{group.title}</h3>
+								<div class="tile-grid archive-tiles">
+									{group.children.map((child, index) => (
+										<CourseTile title={child.title} href={child.href} index={index} />
+									))}
+								</div>
+							</div>
+						))}
+					</div>
+				</section>
+			) : null
 		}
 	</main>
 </Layout>

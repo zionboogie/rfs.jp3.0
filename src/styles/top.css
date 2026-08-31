@@ -308,7 +308,27 @@ About イントロ
 
 @media (max-width: 767px) {
 	.about-intro {
-		--about-panel-width: 46%;
+		--about-panel-width: 100%;
+		--about-photo-focus: center;
+	}
+
+	.about-intro__photo {
+		background-size: cover;
+	}
+
+	.about-intro__panel {
+		background-color: transparent;
+		width: 100%;
+	}
+
+	.about-intro__copy {
+		max-width: none;
+	}
+
+	.about-intro__slide.is-expanding .about-intro__panel,
+	.about-intro__slide.is-expanded .about-intro__panel {
+		animation: none;
+		width: 100%;
 	}
 
 	.about-intro__nav {
@@ -367,8 +387,21 @@ About イントロ
 }
 
 .section.learn.learn-accent .course-list__item {
+	position: relative;
+	isolation: isolate;
 	border-bottom-color: rgb(255 255 255 / 28%);
 	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__item::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-color: var(--color-primary);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .section.learn.learn-accent .course-list__index,
@@ -382,11 +415,21 @@ About イントロ
 .section.learn.learn-accent .course-list__item:focus-visible .course-list__index,
 .section.learn.learn-accent .course-list__item:hover .course-list__description,
 .section.learn.learn-accent .course-list__item:focus-visible .course-list__description {
-	color: #fff;
+	color: var(--color-logo);
+}
+
+.section.learn.learn-accent .course-list__item:hover::before,
+.section.learn.learn-accent .course-list__item:focus-visible::before {
+	transform: scaleX(1);
 }
 
 .section.learn.learn-accent .course-list__title::before {
 	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__item:hover .course-list__title::before,
+.section.learn.learn-accent .course-list__item:focus-visible .course-list__title::before {
+	color: var(--color-logo);
 }
 
 .section[data-parallax] {
@@ -434,7 +477,8 @@ course-list
 	transition:
 		opacity 2.2s cubic-bezier(0.05, 0.85, 0.05, 1),
 		transform 2.2s cubic-bezier(0.05, 0.85, 0.05, 1),
-		color 0.25s ease;
+		color 0.25s ease,
+		padding-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 	transition-delay: calc(var(--item-index, 0) * 0.16s);
 }
 
@@ -443,10 +487,19 @@ course-list
 	transform: translate3d(0, 0, 0);
 }
 
+.course-list__item:hover,
+.course-list__item:focus-visible {
+	padding-left: 1.75em;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.course-list__item {
 		opacity: 1;
 		transform: none;
+		transition: none;
+	}
+
+	.section.learn.learn-accent .course-list__item::before {
 		transition: none;
 	}
 }
@@ -502,4 +555,35 @@ tile-card（未使用でも互換維持）
 
 .tile-grid.is-inview .tile-card:hover {
 	transform: translate3d(0, -2px, 0);
+}
+
+.archive-tiles .tile-card {
+	align-items: center;
+	justify-content: center;
+	min-height: calc(var(--spacing-2xl) + var(--spacing-md));
+	padding: var(--spacing-md);
+	border-color: rgb(33 5 5 / 10%);
+	border-radius: var(--radius-md);
+	background-color: var(--color-background);
+	text-align: center;
+	box-shadow: 0 1px 0 rgb(33 5 5 / 4%);
+	transition:
+		opacity 2.4s cubic-bezier(0.05, 0.85, 0.05, 1),
+		transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+		border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+		box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.archive-tiles .tile-card__title {
+	font-size: var(--text-body);
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	line-height: var(--leading-heading);
+}
+
+.archive-tiles.tile-grid.is-inview .tile-card:hover,
+.archive-tiles.tile-grid.is-inview .tile-card:focus-visible {
+	transform: translate3d(0, -0.4rem, 0);
+	border-color: rgb(33 5 5 / 12%);
+	box-shadow: 0 14px 32px rgb(33 5 5 / 8%);
 }

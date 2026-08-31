@@ -13,14 +13,14 @@
 .block-editor-iframe__body,
 .mce-content-body {
 	font-size: 1.125rem;
-	line-height: 2;
+	line-height: 1.95;
 
 	> :first-child {
 		margin-top: 0;
 	}
 
 	h2 {
-		margin: var(--spacing-2xl, 96px) 0 var(--spacing-lg, 40px);
+		margin: var(--spacing-2xl, 96px) 0 var(--spacing-md, 24px);
 		scroll-margin-top: calc(var(--header-height, 5.5rem) + var(--spacing-sm, 16px));
 		font-size: var(--text-h3, clamp(1.5rem, 2vw, 2rem));
 		font-weight: 700;
@@ -35,19 +35,19 @@
 	}
 
 	h4 {
-		margin: var(--spacing-lg, 40px) 0 var(--spacing-sm, 16px);
+		margin: var(--spacing-lg, 40px) 0 var(--spacing-md, 24px);
 	}
 
 	h5 {
-		margin: var(--spacing-md, 24px) 0 var(--spacing-xs, 8px);
+		margin: var(--spacing-md, 24px) 0 var(--spacing-md, 24px);
 	}
 
 	h6 {
-		margin: var(--spacing-sm, 16px) 0 var(--spacing-xs, 8px);
+		margin: var(--spacing-sm, 16px) 0 var(--spacing-md, 24px);
 	}
 
 	p {
-		margin: 0 0 var(--spacing-lg, 40px);
+		margin: 0 0 var(--spacing-md, 24px);
 	}
 
 	img {
@@ -94,6 +94,7 @@
 
 	a {
 		text-decoration: underline;
+		text-decoration-color: #9f9367;
 		text-underline-offset: 0.2em;
 	}
 
@@ -373,6 +374,21 @@
 	}
 
 	@media (max-width: 767px) {
+		.column {
+			grid-template-columns: minmax(0, 1fr);
+			width: 100%;
+		}
+
+		.column::before {
+			grid-row: auto;
+			grid-column: 1;
+			justify-self: center;
+		}
+
+		.column > * {
+			grid-column: 1;
+		}
+
 		.wp-block-table,
 		figure:has(> table) {
 			overflow-x: auto;

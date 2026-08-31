@@ -31,9 +31,9 @@ const description = wpText(category.description);
 
 <Layout title={title} description={description || `${title}の一覧`} skipIntro>
 	<main>
-		<header class="category-hero pt-md pb-xl">
+		<header class="category-hero pt-xl pb-xl">
 			<div class="container">
-				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
+				<h1 class="category-hero__title mb-xl font-bold tracking-[0.04em] text-h1 leading-heading">
 					{title}
 				</h1>
 				{description ? <p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">{description}</p> : null}

@@ -1,0 +1,374 @@
+---
+import Layout from "../components/Layout.astro";
+import ArticleListItem from "../components/ArticleListItem.astro";
+import { filterSearchIndex, getSearchIndex } from "../lib/wordpress";
+import "../styles/category.css";
+
+const SEARCH_PAGE_SIZE = 20;
+
+function parseSearchPage(raw: string | null, totalPages: number): number {
+	const parsed = Number.parseInt(raw ?? "1", 10);
+	if (!Number.isFinite(parsed) || parsed < 1) return 1;
+	return Math.min(parsed, Math.max(totalPages, 1));
+}
+
+function searchPageHref(query: string, page: number): string {
+	const params = new URLSearchParams();
+	params.set("q", query);
+	if (page > 1) params.set("page", String(page));
+	return `/search/?${params.toString()}`;
+}
+
+function paginationItems(current: number, total: number): Array<number | "ellipsis"> {
+	if (total <= 7) {
+		return Array.from({ length: total }, (_, index) => index + 1);
+	}
+
+	const pages = new Set<number>([1, total]);
+	for (let page = current - 1; page <= current + 1; page++) {
+		if (page >= 1 && page <= total) pages.add(page);
+	}
+
+	const sorted = [...pages].sort((a, b) => a - b);
+	const items: Array<number | "ellipsis"> = [];
+	for (let index = 0; index < sorted.length; index++) {
+		const page = sorted[index];
+		if (index > 0 && page - sorted[index - 1] > 1) items.push("ellipsis");
+		items.push(page);
+	}
+	return items;
+}
+
+const query = (Astro.url.searchParams.get("q") ?? "").trim();
+const index = await getSearchIndex();
+const articles = filterSearchIndex(index, query);
+const totalCount = articles.length;
+const totalPages = Math.max(1, Math.ceil(totalCount / SEARCH_PAGE_SIZE));
+const currentPage = parseSearchPage(Astro.url.searchParams.get("page"), totalPages);
+const pageArticles = articles.slice((currentPage - 1) * SEARCH_PAGE_SIZE, currentPage * SEARCH_PAGE_SIZE);
+const pageItems = paginationItems(currentPage, totalPages);
+const showPager = Boolean(query) && totalCount > SEARCH_PAGE_SIZE;
+const rangeStart = totalCount === 0 ? 0 : (currentPage - 1) * SEARCH_PAGE_SIZE + 1;
+const rangeEnd = Math.min(currentPage * SEARCH_PAGE_SIZE, totalCount);
+const searchIndexJson = JSON.stringify(index).replace(/</g, "\\u003c");
+
+const pageTitle = query ? `「${query}」の検索結果` : "検索";
+const pageDescription = query ? `「${query}」のサイト内検索結果` : "サイト内検索";
+
+const resultsMessage = query
+	? totalCount > 0
+		? showPager
+			? `「${query}」の検索結果（${totalCount}件中 ${rangeStart}〜${rangeEnd}件）`
+			: `「${query}」の検索結果（${totalCount}件）`
+		: `「${query}」に一致する記事はありません。`
+	: "キーワードを入力してください。";
+---
+
+<Layout title={pageTitle} description={pageDescription} skipIntro>
+	<main>
+		<header class="category-hero pt-xl pb-xl">
+			<div class="container">
+				<h1 class="category-hero__title mb-xl font-bold tracking-[0.04em] text-h1 leading-heading">検索</h1>
+				<form class="header-search flex gap-2" action="/search/" method="get" role="search">
+					<label class="visually-hidden" for="search-page-input">サイト内検索</label>
+					<input
+						id="search-page-input"
+						class="rounded-sm border border-white/60 bg-white px-3 py-2"
+						type="search"
+						name="q"
+						value={query}
+						placeholder="キーワードで検索"
+					/>
+					<button type="submit" class="cursor-pointer rounded-sm border-0 bg-text px-4 py-2 font-bold text-white">
+						検索
+					</button>
+				</form>
+			</div>
+		</header>
+
+		<section
+			class="category-chapter pb-xl"
+			aria-label="検索結果"
+			data-search-results
+			data-search-query={query}
+			data-search-page={String(currentPage)}
+			data-search-page-size={String(SEARCH_PAGE_SIZE)}
+		>
+			<div class="container">
+				<p class="search-results__message mb-md text-muted" data-search-message>
+					{resultsMessage}
+				</p>
+				{
+					pageArticles.length > 0 ? (
+						<ul class="article-list" data-search-list>
+							{pageArticles.map((article) => (
+								<li>
+									<ArticleListItem title={article.title} href={article.href} updatedAt={article.updatedAt} />
+								</li>
+							))}
+						</ul>
+					) : (
+						<ul class="article-list" data-search-list hidden></ul>
+					)
+				}
+				<nav class="search-pagination" aria-label="検索結果のページ" data-search-pagination hidden={!showPager}>
+					{
+						showPager ? (
+							<ul class="search-pagination__list">
+								{currentPage > 1 ? (
+									<li>
+										<a class="search-pagination__link" href={searchPageHref(query, currentPage - 1)} rel="prev">
+											前へ
+										</a>
+									</li>
+								) : null}
+								{pageItems.map((item) =>
+									item === "ellipsis" ? (
+										<li>
+											<span class="search-pagination__ellipsis" aria-hidden="true">
+												…
+											</span>
+										</li>
+									) : item === currentPage ? (
+										<li>
+											<span class="search-pagination__current" aria-current="page">
+												{item}
+											</span>
+										</li>
+									) : (
+										<li>
+											<a class="search-pagination__link" href={searchPageHref(query, item)}>
+												{item}
+											</a>
+										</li>
+									),
+								)}
+								{currentPage < totalPages ? (
+									<li>
+										<a class="search-pagination__link" href={searchPageHref(query, currentPage + 1)} rel="next">
+											次へ
+										</a>
+									</li>
+								) : null}
+							</ul>
+						) : null
+					}
+				</nav>
+			</div>
+		</section>
+	</main>
+
+	<script type="application/json" id="search-index" set:html={searchIndexJson} />
+</Layout>
+
+<script>
+	function parseIndex() {
+		const raw = document.getElementById("search-index");
+		if (!(raw instanceof HTMLScriptElement) || !raw.textContent) return [];
+		try {
+			const parsed = JSON.parse(raw.textContent);
+			return Array.isArray(parsed) ? parsed : [];
+		} catch {
+			return [];
+		}
+	}
+
+	function tokensOf(query) {
+		return query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+	}
+
+	function filterIndex(index, query) {
+		const tokens = tokensOf(query);
+		if (tokens.length === 0) return [];
+		return index.filter((item) => {
+			const haystack = `${item.title}\n${item.excerpt}`.toLowerCase();
+			return tokens.every((token) => haystack.includes(token));
+		});
+	}
+
+	function parseSearchPage(raw, totalPages) {
+		const parsed = Number.parseInt(raw ?? "1", 10);
+		if (!Number.isFinite(parsed) || parsed < 1) return 1;
+		return Math.min(parsed, Math.max(totalPages, 1));
+	}
+
+	function searchPageHref(query, page) {
+		const params = new URLSearchParams();
+		params.set("q", query);
+		if (page > 1) params.set("page", String(page));
+		return `/search/?${params.toString()}`;
+	}
+
+	function paginationItems(current, total) {
+		if (total <= 7) {
+			return Array.from({ length: total }, (_, index) => index + 1);
+		}
+
+		const pages = new Set([1, total]);
+		for (let page = current - 1; page <= current + 1; page++) {
+			if (page >= 1 && page <= total) pages.add(page);
+		}
+
+		const sorted = [...pages].sort((a, b) => a - b);
+		const items = [];
+		for (let index = 0; index < sorted.length; index++) {
+			const page = sorted[index];
+			if (index > 0 && page - sorted[index - 1] > 1) items.push("ellipsis");
+			items.push(page);
+		}
+		return items;
+	}
+
+	function renderArticle(article) {
+		const item = document.createElement("li");
+		const link = document.createElement("a");
+		link.className = "article-list__item text-inherit no-underline";
+		link.href = article.href;
+
+		const titleWrap = document.createElement("span");
+		titleWrap.className = "article-list__title";
+		const titleText = document.createElement("span");
+		titleText.className = "article-list__title-text";
+		titleText.textContent = article.title;
+		titleWrap.append(titleText);
+
+		const time = document.createElement("time");
+		time.className = "article-list__date";
+		time.dateTime = article.updatedAt;
+		const hidden = document.createElement("span");
+		hidden.className = "visually-hidden";
+		hidden.textContent = "更新日";
+		time.append(hidden, document.createTextNode(article.updatedLabel));
+
+		link.append(titleWrap, time);
+		item.append(link);
+		return item;
+	}
+
+	function renderPager(nav, query, currentPage, totalPages) {
+		if (!(nav instanceof HTMLElement)) return;
+
+		if (!query || totalPages <= 1) {
+			nav.replaceChildren();
+			nav.hidden = true;
+			return;
+		}
+
+		const list = document.createElement("ul");
+		list.className = "search-pagination__list";
+
+		const appendLink = (label, href, rel) => {
+			const item = document.createElement("li");
+			const link = document.createElement("a");
+			link.className = "search-pagination__link";
+			link.href = href;
+			link.textContent = label;
+			if (rel) link.rel = rel;
+			item.append(link);
+			list.append(item);
+		};
+
+		if (currentPage > 1) {
+			appendLink("前へ", searchPageHref(query, currentPage - 1), "prev");
+		}
+
+		for (const item of paginationItems(currentPage, totalPages)) {
+			const li = document.createElement("li");
+			if (item === "ellipsis") {
+				const ellipsis = document.createElement("span");
+				ellipsis.className = "search-pagination__ellipsis";
+				ellipsis.setAttribute("aria-hidden", "true");
+				ellipsis.textContent = "…";
+				li.append(ellipsis);
+			} else if (item === currentPage) {
+				const current = document.createElement("span");
+				current.className = "search-pagination__current";
+				current.setAttribute("aria-current", "page");
+				current.textContent = String(item);
+				li.append(current);
+			} else {
+				const link = document.createElement("a");
+				link.className = "search-pagination__link";
+				link.href = searchPageHref(query, item);
+				link.textContent = String(item);
+				li.append(link);
+			}
+			list.append(li);
+		}
+
+		if (currentPage < totalPages) {
+			appendLink("次へ", searchPageHref(query, currentPage + 1), "next");
+		}
+
+		nav.replaceChildren(list);
+		nav.hidden = false;
+	}
+
+	function renderResults(section, articles, query, pageRaw) {
+		const message = section.querySelector("[data-search-message]");
+		const list = section.querySelector("[data-search-list]");
+		const pager = section.querySelector("[data-search-pagination]");
+		if (!(message instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+
+		const pageSize = Number(section.dataset.searchPageSize) || 20;
+
+		if (!query) {
+			message.textContent = "キーワードを入力してください。";
+			list.replaceChildren();
+			list.hidden = true;
+			renderPager(pager, query, 1, 1);
+			section.dataset.searchPage = "1";
+			return;
+		}
+
+		if (articles.length === 0) {
+			message.textContent = `「${query}」に一致する記事はありません。`;
+			list.replaceChildren();
+			list.hidden = true;
+			renderPager(pager, query, 1, 1);
+			section.dataset.searchPage = "1";
+			return;
+		}
+
+		const totalPages = Math.max(1, Math.ceil(articles.length / pageSize));
+		const currentPage = parseSearchPage(pageRaw, totalPages);
+		const start = (currentPage - 1) * pageSize;
+		const pageArticles = articles.slice(start, start + pageSize);
+		const rangeStart = start + 1;
+		const rangeEnd = start + pageArticles.length;
+		const showPager = articles.length > pageSize;
+
+		message.textContent = showPager
+			? `「${query}」の検索結果（${articles.length}件中 ${rangeStart}〜${rangeEnd}件）`
+			: `「${query}」の検索結果（${articles.length}件）`;
+		list.hidden = false;
+		list.replaceChildren();
+		for (const article of pageArticles) {
+			list.append(renderArticle(article));
+		}
+
+		renderPager(pager, query, currentPage, totalPages);
+		section.dataset.searchPage = String(currentPage);
+	}
+
+	function initSearchResults() {
+		const section = document.querySelector("[data-search-results]");
+		if (!(section instanceof HTMLElement)) return;
+
+		const params = new URLSearchParams(window.location.search);
+		const urlQuery = params.get("q")?.trim() ?? "";
+		const urlPage = params.get("page")?.trim() || "1";
+		const renderedQuery = section.dataset.searchQuery ?? "";
+		const renderedPage = section.dataset.searchPage ?? "1";
+		if (urlQuery === renderedQuery && urlPage === renderedPage) return;
+
+		section.dataset.searchQuery = urlQuery;
+		renderResults(section, filterIndex(parseIndex(), urlQuery), urlQuery, urlPage);
+
+		for (const input of document.querySelectorAll('input[type="search"][name="q"]')) {
+			if (input instanceof HTMLInputElement) input.value = urlQuery;
+		}
+	}
+
+	document.addEventListener("astro:page-load", initSearchResults);
+</script>

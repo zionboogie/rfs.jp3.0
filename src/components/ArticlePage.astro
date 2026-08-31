@@ -3,7 +3,16 @@ import ChevronLeft from "@lucide/astro/icons/chevron-left";
 import ChevronRight from "@lucide/astro/icons/chevron-right";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import ArticleSidebar from "./ArticleSidebar.astro";
-import { formatDateJa, getPopularArticles, getSidebarTags, toDateTimeValue, type ArticleDetail, type CategorySummary } from "../lib/wordpress";
+import { hiddenArchiveTitles } from "../data/courses";
+import {
+	formatDateJa,
+	getPopularArticles,
+	getSidebarTags,
+	getVisibleArchiveGroups,
+	toDateTimeValue,
+	type ArticleDetail,
+	type CategorySummary,
+} from "../lib/wordpress";
 import "../styles/category.css";
 import "../styles/article.css";
 
@@ -13,7 +22,11 @@ interface Props {
 }
 
 const { learnCategories, article } = Astro.props;
-const [popularArticles, sidebarTags] = await Promise.all([getPopularArticles(), getSidebarTags()]);
+const [popularArticles, sidebarTags, archiveGroups] = await Promise.all([
+	getPopularArticles(),
+	getSidebarTags(),
+	getVisibleArchiveGroups(hiddenArchiveTitles),
+]);
 const previousArticle = article.previousArticle;
 const nextArticle = article.nextArticle;
 
@@ -226,7 +239,7 @@ const relatedArticles = [
 							)}
 							{nextArticle ? (
 								<a
-									class="article-pager__link flex items-center justify-start gap-sm text-left no-underline md:justify-end md:text-right"
+									class="article-pager__link flex items-center justify-start gap-sm text-left no-underline md:justify-self-end md:text-right"
 									href={nextArticle.href}
 									aria-label={`次の記事：${nextArticle.title}`}
 								>
@@ -258,7 +271,12 @@ const relatedArticles = [
 			</section>
 		</div>
 
-		<ArticleSidebar categories={learnCategories} popularArticles={popularArticles} tags={sidebarTags} />
+		<ArticleSidebar
+			categories={learnCategories}
+			archiveGroups={archiveGroups}
+			popularArticles={popularArticles}
+			tags={sidebarTags}
+		/>
 	</div>
 </main>
 

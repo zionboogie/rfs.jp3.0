@@ -118,6 +118,17 @@ export async function getBreadcrumbItems(pathname: string): Promise<BreadcrumbIt
 		];
 	}
 
+	if (section === "search") {
+		return [
+			home,
+			{
+				href: "/search/",
+				label: "検索",
+				current: true,
+			},
+		];
+	}
+
 	if (section === "tag") {
 		const slug = segments[1];
 		if (!slug) {
