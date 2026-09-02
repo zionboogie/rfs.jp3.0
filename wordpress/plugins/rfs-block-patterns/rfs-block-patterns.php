@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: RFS Block Patterns
- * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・AIに聞こう）
+ * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・AIに聞こう・サイト内リンク）
  * Version: 1.0.0
  */
 
@@ -56,6 +56,18 @@ add_action('init', static function () {
 </div>
 </div>
 </section>
+<!-- /wp:html -->',
+	]);
+
+	register_block_pattern('rfs/site-link', [
+		'title'       => 'サイト内リンク',
+		'description' => 'カテゴリ名と記事タイトルで他ページへ誘導。ホバーで背景が変わる。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:html -->
+<a class="article-site-link" href="/">
+<span class="article-site-link__category">カテゴリ名</span>
+<span class="article-site-link__title">記事タイトル</span>
+</a>
 <!-- /wp:html -->',
 	]);
 });

@@ -373,6 +373,71 @@
 		margin: 0;
 	}
 
+	/*
+		サイト内リンク（カテゴリ名＋記事タイトル）
+		WordPress: <a class="article-site-link" href="…"><span class="article-site-link__category">…</span><span class="article-site-link__title">…</span></a>
+		ホバー演出は「つづけて読む」（.article-continue__link）と同系統
+	*/
+	.article-site-link {
+		display: flex;
+		width: 100%; 
+		flex-direction: column;
+		gap: var(--spacing-xs, 8px);
+		margin: var(--spacing-md, 24px) 0;
+		padding: var(--spacing-md, 24px);
+		border: 1px solid var(--color-border, rgb(230 220 220));
+		border-radius: var(--radius-md, 8px);
+		text-decoration: none;
+		color: inherit;
+		background-color: transparent;
+		background-image: linear-gradient(to right, #ee0979, #ff6a00);
+		background-repeat: no-repeat;
+		background-position: left center;
+		background-size: 0 100%;
+		transition:
+			background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+			color 0.25s ease,
+			border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.article-site-link:hover,
+	.article-site-link:focus-visible {
+		background-size: 100% 100%;
+		border-color: #ee0979;
+		color: #fff;
+		outline: none;
+	}
+
+	.article-site-link__category {
+		font-size: 0.875rem;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		color: var(--color-muted, rgb(100 90 90));
+		flex-basis: 33.33%; padding: 1rem;
+	}
+
+	.article-site-link__title {
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		line-height: var(--leading-heading, 1.3);
+		flex-basis: 66.66%; padding: 1rem;
+	}
+
+	.article-site-link:hover .article-site-link__category,
+	.article-site-link:focus-visible .article-site-link__category {
+		color: inherit;
+	}
+	/* リンクの擬似要素をカラム全体に広げる */
+	.article-site-link .overlay-link::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 10;
+	}
+
 	@media (max-width: 767px) {
 		.column {
 			grid-template-columns: minmax(0, 1fr);
@@ -419,5 +484,11 @@
 			transform: none;
 			transition: none;
 		}
+
+		.article-site-link {
+			transition: none;
+		}
 	}
 }
+
+
