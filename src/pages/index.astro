@@ -6,6 +6,7 @@ import CourseTile from "../components/CourseTile.astro";
 import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
 import { hiddenArchiveTitles, navMenus } from "../data/courses";
 import { getLearnCourseSections, getVisibleArchiveGroups } from "../lib/wordpress";
+import { SITE_NAME, websiteJsonLd } from "../lib/structured-data";
 import "../styles/top.css";
 
 const gettingStartedHref = navMenus.find((menu) => menu.id === "getting-started")?.href;
@@ -18,9 +19,20 @@ const [learnSections, archiveGroups] = await Promise.all([
 
 const gettingStarted = learnSections.find((section) => section.href === gettingStartedHref);
 const aiWeb = learnSections.find((section) => section.href === aiWebHref);
+
+const pageDescription = "プログラミングとWeb開発の入門コース一覧";
+const jsonLd = websiteJsonLd({
+	origin: Astro.url.origin,
+	description: pageDescription,
+	items: [
+		...(aiWeb?.courses ?? []).map((course) => ({ name: course.title, url: course.href })),
+		...(gettingStarted?.courses ?? []).map((course) => ({ name: course.title, url: course.href })),
+		...archiveGroups.flatMap((group) => group.children.map((child) => ({ name: child.title, url: child.href }))),
+	],
+});
 ---
 
-<Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
+<Layout title={SITE_NAME} description={pageDescription} jsonLd={jsonLd}>
 	<main>
 		<AboutIntro />
 
@@ -82,8 +94,38 @@ const aiWeb = learnSections.find((section) => section.href === aiWebHref);
 		</section>
 
 		{
-			gettingStarted ? (
+			aiWeb ? (
 				<section class="section learn learn-accent" data-parallax="content">
+					<div class="container">
+						<h2
+							class:list={[
+								"section-heading mx-auto w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]",
+								aiWeb.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
+							]}
+						>
+							{aiWeb.title}
+						</h2>
+						{aiWeb.description ? (
+							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{aiWeb.description}</p>
+						) : null}
+						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
+							{aiWeb.courses.map((course, index) => (
+								<CourseListItem
+									index={index + 1}
+									title={course.title}
+									description={course.description}
+									href={course.href}
+								/>
+							))}
+						</div>
+					</div>
+				</section>
+			) : null
+		}
+
+		{
+			gettingStarted ? (
+				<section class="section learn" data-parallax="content">
 					<div class="container">
 						<h2
 							class:list={[
@@ -110,35 +152,6 @@ const aiWeb = learnSections.find((section) => section.href === aiWebHref);
 				</section>
 			) : null
 		}
-
-		{/* AIと学ぶWeb制作 */}
-		{false && aiWeb ? (
-				<section class="section learn" data-parallax="content">
-					<div class="container">
-						<h2
-							class:list={[
-								"section-heading mx-auto w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]",
-								aiWeb.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
-							]}
-						>
-							{aiWeb.title}
-						</h2>
-						{aiWeb.description ? (
-							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{aiWeb.description}</p>
-						) : null}
-						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
-							{aiWeb.courses.map((course, index) => (
-								<CourseListItem
-									index={index + 1}
-									title={course.title}
-									description={course.description}
-									href={course.href}
-								/>
-							))}
-						</div>
-					</div>
-				</section>
-			) : null}
 
 		{
 			archiveGroups.length > 0 ? (

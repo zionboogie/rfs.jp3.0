@@ -1,7 +1,9 @@
 ---
 import Layout from "../../components/Layout.astro";
 import CourseListItem from "../../components/CourseListItem.astro";
-import { findArchiveCategory, getChildSummaries, wpText, type WpCategory } from "../../lib/wordpress";
+import { findArchiveCategory, getChildSummaries, getLatestCategoryArticles, toSitePath, wpText, type WpCategory } from "../../lib/wordpress";
+import { collectionJsonLd } from "../../lib/structured-data";
+import { categoryListTitle } from "../../lib/seo";
 
 export async function getStaticPaths() {
 	const sections = ["sb", "server", "learn"] as const;
@@ -24,12 +26,20 @@ interface Props {
 }
 
 const { category } = Astro.props;
-const children = await getChildSummaries(category);
+const [children, latestArticles] = await Promise.all([getChildSummaries(category), getLatestCategoryArticles(category)]);
 const title = wpText(category.name);
-const description = wpText(category.description);
+const description = wpText(category.description).trim();
+const pageDescription = description || `${title}の一覧`;
+const jsonLd = collectionJsonLd({
+	origin: Astro.url.origin,
+	name: title,
+	description: pageDescription,
+	url: toSitePath(category.link),
+	items: latestArticles.map((article) => ({ name: article.title, url: article.href })),
+});
 ---
 
-<Layout title={title} description={description || `${title}の一覧`} skipIntro>
+<Layout title={categoryListTitle(title)} description={pageDescription} skipIntro jsonLd={jsonLd}>
 	<main>
 		<header class="category-hero pt-xl pb-xl">
 			<div class="container">

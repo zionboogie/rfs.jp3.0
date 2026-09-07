@@ -3,28 +3,52 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
+import Seo from "../components/Seo.astro";
 import { ClientRouter, fade } from "astro:transitions";
+import type { SeoType } from "../lib/seo";
 
 const pageFade = fade({ duration: "0.5s" });
 
 interface Props {
 	title?: string;
 	description?: string;
+	type?: SeoType;
+	noindex?: boolean;
 	skipIntro?: boolean;
+	jsonLd?: string;
 }
 
-const { title, description, skipIntro = false } = Astro.props;
+const { title, description, type, noindex, skipIntro = false, jsonLd } = Astro.props;
 ---
 
 <html lang="ja" transition:name="root" transition:animate="none">
 	<head>
 		<meta charset="utf-8" />
+		<!-- Google Tag Manager -->
+		<script is:inline>
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != "dataLayer" ? "&l=" + l : "";
+				j.async = true;
+				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, "script", "dataLayer", "GTM-FG5C9");
+		</script>
+		<!-- End Google Tag Manager -->
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title ?? "サイトタイトル"}</title>
-		<meta name="description" content={description ?? "サイトの説明文です。"} />
+		<Seo
+			title={title}
+			description={description}
+			type={type}
+			noindex={noindex}
+			jsonLd={jsonLd}
+		/>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -45,6 +69,15 @@ const { title, description, skipIntro = false } = Astro.props;
 		</script>
 	</head>
 	<body class:list={{ "is-intro": !skipIntro }} transition:animate={pageFade}>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript>
+			<iframe
+				src="https://www.googletagmanager.com/ns.html?id=GTM-FG5C9"
+				height="0"
+				width="0"
+				style="display:none;visibility:hidden"></iframe>
+		</noscript>
+		<!-- End Google Tag Manager (noscript) -->
 		<Header skipIntro={skipIntro} />
 		{Astro.url.pathname !== "/" && <Breadcrumb />}
 		<slot />

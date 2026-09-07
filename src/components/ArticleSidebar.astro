@@ -1,52 +1,86 @@
 ---
-import { hiddenArchiveTitles, navMenus } from "../data/courses";
-import { formatUpdatedAt, type ArchiveGroup, type ArticleTag, type CategoryArticle, type CategorySummary } from "../lib/wordpress";
+import { formatUpdatedAt, type ArchiveGroup, type ArticleTag, type CategoryArticle, type SidebarLearnSection } from "../lib/wordpress";
 
 interface Props {
-	categories: CategorySummary[];
+	learnSections: SidebarLearnSection[];
 	archiveGroups?: ArchiveGroup[];
+	archiveTitle?: string;
+	archiveHref?: string;
 	popularArticles: CategoryArticle[];
 	tags: ArticleTag[];
 }
 
-const { categories, archiveGroups = [], popularArticles, tags } = Astro.props;
-const featuredCourses = navMenus.filter((menu) => menu.id !== "archive");
-const featuredHrefs = new Set(featuredCourses.map((course) => course.href));
-const visibleCategories = categories.filter(
-	(category) => !hiddenArchiveTitles.has(category.title) && !featuredHrefs.has(category.href),
-);
+const {
+	learnSections,
+	archiveGroups = [],
+	archiveTitle = "過去アーカイブ",
+	archiveHref = "/archive/",
+	popularArticles,
+	tags,
+} = Astro.props;
 ---
 
 <aside class="article-side flex flex-col gap-xl lg:sticky lg:top-md">
-	<section aria-labelledby="article-side-category-heading">
-		<h2 class="article-side__heading" id="article-side-category-heading">カテゴリ</h2>
-		<ul class="m-0 flex list-none flex-col p-0">
-			{
-				featuredCourses.map((course) => (
-					<li class="border-b border-[rgb(33_5_5_/_18%)]">
-						<a class="article-side__link block py-sm" href={course.href}>
-							<span class="article-side__text">{course.label}</span>
+	{
+		learnSections.map((section) => {
+			const headingId = `article-side-learn-${section.slug}`;
+			const latestHeadingId = `article-side-learn-latest-${section.slug}`;
+			const courseHeadingId = `article-side-learn-courses-${section.slug}`;
+			return (
+				<section aria-labelledby={headingId}>
+					<h2 class="article-side__heading" id={headingId}>
+						<a class="text-inherit no-underline" href={section.href}>
+							{section.title}
 						</a>
-					</li>
-				))
-			}
-			{
-				visibleCategories.map((category) => (
-					<li class="border-b border-[rgb(33_5_5_/_18%)]">
-						<a class="article-side__link block py-sm" href={category.href}>
-							<span class="article-side__text">{category.title}</span>
-						</a>
-					</li>
-				))
-			}
-		</ul>
-	</section>
+					</h2>
+					{
+						section.latestArticles.length > 0 ? (
+							<div>
+								<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]" id={latestHeadingId}>
+									最新記事
+								</h3>
+								<ul class="m-0 flex list-none flex-col overflow-hidden rounded-md border border-border p-sm" aria-labelledby={latestHeadingId}>
+									{section.latestArticles.map((article) => (
+										<li>
+											<a class="article-side__link block py-xs no-underline" href={article.href}>
+												<span class="article-side__text">{article.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							</div>
+						) : null
+					}
+					{
+						section.courses.length > 0 ? (
+							<div class="mt-md">
+								<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]" id={courseHeadingId}>
+									講座リスト
+								</h3>
+								<ul class="m-0 flex list-none flex-col p-0" aria-labelledby={courseHeadingId}>
+									{section.courses.map((course) => (
+										<li class="border-b border-[rgb(33_5_5_/_18%)]">
+											<a class="article-side__link block py-sm" href={course.href}>
+												<span class="article-side__text">{course.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							</div>
+						) : null
+					}
+				</section>
+			);
+		})
+	}
 
 	{
 		archiveGroups.length > 0 ? (
 			<section aria-labelledby="article-side-archive-heading">
 				<h2 class="article-side__heading" id="article-side-archive-heading">
-					アーカイブ
+					<a class="text-inherit no-underline" href={archiveHref}>
+						{archiveTitle}
+					</a>
 				</h2>
 				{archiveGroups.map((group, groupIndex) => (
 					<div class:list={[groupIndex > 0 && "mt-md"]}>

@@ -3,29 +3,34 @@ import ChevronLeft from "@lucide/astro/icons/chevron-left";
 import ChevronRight from "@lucide/astro/icons/chevron-right";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import ArticleSidebar from "./ArticleSidebar.astro";
-import { hiddenArchiveTitles } from "../data/courses";
+import { hiddenArchiveTitles, navMenus } from "../data/courses";
 import {
 	formatDateJa,
 	getPopularArticles,
+	getRelatedArticles,
+	getSidebarLearnSections,
 	getSidebarTags,
 	getVisibleArchiveGroups,
+	isArchivePageHref,
 	toDateTimeValue,
 	type ArticleDetail,
-	type CategorySummary,
 } from "../lib/wordpress";
 import "../styles/category.css";
 import "../styles/article.css";
 
 interface Props {
-	learnCategories: CategorySummary[];
 	article: ArticleDetail;
 }
 
-const { learnCategories, article } = Astro.props;
-const [popularArticles, sidebarTags, archiveGroups] = await Promise.all([
+const { article } = Astro.props;
+const learnHrefs = navMenus.filter((menu) => !isArchivePageHref(menu.href)).map((menu) => menu.href);
+const archiveNav = navMenus.find((menu) => isArchivePageHref(menu.href));
+const [popularArticles, sidebarTags, archiveGroups, relatedArticles, learnSections] = await Promise.all([
 	getPopularArticles(),
 	getSidebarTags(),
 	getVisibleArchiveGroups(hiddenArchiveTitles),
+	getRelatedArticles(article.id),
+	getSidebarLearnSections(learnHrefs),
 ]);
 const previousArticle = article.previousArticle;
 const nextArticle = article.nextArticle;
@@ -48,24 +53,6 @@ const xHref = `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&tex
 const hatenaHref = `https://b.hatena.ne.jp/entry/${shareUrl}`;
 const shareTarget = "_blank";
 const shareRel = "noopener noreferrer";
-
-const relatedArticles = [
-	{
-		category: "JavaScript",
-		title: "データ型の考え方",
-		href: "#",
-	},
-	{
-		category: "JavaScript",
-		title: "関数を使って処理をまとめる",
-		href: "#",
-	},
-	{
-		category: "JavaScript",
-		title: "配列で複数の値を扱う",
-		href: "#",
-	},
-];
 ---
 
 <link rel="stylesheet" href="/common/css/article-body.css" />
@@ -254,26 +241,32 @@ const relatedArticles = [
 				) : null
 			}
 
-			<section class="article-related pt-xl pb-xl" aria-labelledby="article-related-heading">
-				<h2 class="article-related__heading mb-lg mt-0 text-center text-h3 font-bold tracking-[0.02em]" id="article-related-heading">興味があるかも</h2>
-				<ul class="m-0 grid list-none gap-md p-0 md:grid-cols-3">
-					{
-						relatedArticles.map((article) => (
-							<li>
-								<a class="article-related__card flex h-full flex-col gap-sm rounded-md border border-border p-md text-inherit no-underline" href={article.href}>
-									<span class="text-sm tracking-[0.04em] text-muted">{article.category}</span>
-									<span class="font-bold tracking-[0.02em] text-body leading-heading">{article.title}</span>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+			{
+				relatedArticles.length > 0 ? (
+					<section class="article-related pt-xl pb-xl" aria-labelledby="article-related-heading">
+						<h2 class="article-related__heading mb-lg mt-0 text-center text-h3 font-bold tracking-[0.02em]" id="article-related-heading">興味があるかも</h2>
+						<ul class="m-0 grid list-none gap-md p-0 md:grid-cols-3">
+							{
+								relatedArticles.map((related) => (
+									<li>
+										<a class="article-related__card flex h-full flex-col gap-sm rounded-md border border-border p-md text-inherit no-underline" href={related.href}>
+											{related.category ? <span class="text-sm tracking-[0.04em] text-muted">{related.category}</span> : null}
+											<span class="font-bold tracking-[0.02em] text-body leading-heading">{related.title}</span>
+										</a>
+									</li>
+								))
+							}
+						</ul>
+					</section>
+				) : null
+			}
 		</div>
 
 		<ArticleSidebar
-			categories={learnCategories}
+			learnSections={learnSections}
 			archiveGroups={archiveGroups}
+			archiveTitle={archiveNav?.label ?? "過去アーカイブ"}
+			archiveHref={archiveNav?.href ?? "/archive/"}
 			popularArticles={popularArticles}
 			tags={sidebarTags}
 		/>

@@ -420,7 +420,7 @@ body.is-intro-leaving .site-header__chrome {
 	margin-top: -1px;
 	background-color: var(--color-text);
 	transition:
-		transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
 		opacity 0.25s ease;
 }
 
@@ -441,7 +441,7 @@ body.is-intro-leaving .site-header__chrome {
 }
 
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(1) {
-	transform: rotate(45deg);
+	transform: rotate(-135deg);
 }
 
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(2) {
@@ -449,29 +449,35 @@ body.is-intro-leaving .site-header__chrome {
 }
 
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(3) {
-	transform: rotate(-45deg);
+	transform: rotate(135deg);
 }
 
 .mobile-nav {
+	--menu-origin-x: calc(100vw - var(--container-padding) - 1.375rem);
+	--menu-origin-y: calc(var(--header-height) / 2);
 	position: fixed;
 	inset: 0;
 	z-index: 1;
 	display: flex;
 	flex-direction: column;
 	padding: var(--header-height) var(--container-padding) var(--spacing-xl);
+	overflow: hidden;
 	background-color: var(--color-primary);
-	opacity: 0;
 	visibility: hidden;
 	pointer-events: none;
+	clip-path: circle(0px at var(--menu-origin-x) var(--menu-origin-y));
 	transition:
-		opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-		visibility 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+		clip-path 0.4s cubic-bezier(0.7, 0, 0.84, 0),
+		visibility 0s 0.4s;
 }
 
 .mobile-nav.is-open {
-	opacity: 1;
 	visibility: visible;
 	pointer-events: auto;
+	clip-path: circle(150vmax at var(--menu-origin-x) var(--menu-origin-y));
+	transition:
+		clip-path 0.3s cubic-bezier(0.32, 0, 0.67, 0),
+		visibility 0s;
 }
 
 .mobile-nav__list {
@@ -485,10 +491,13 @@ body.is-intro-leaving .site-header__chrome {
 	overflow-y: auto;
 	list-style: none;
 	text-align: right;
+	opacity: 0;
+	transition: opacity 0.2s cubic-bezier(0.87, 0, 0.13, 1);
 }
 
-.mobile-nav__archive {
-	margin-top: auto;
+.mobile-nav.is-open .mobile-nav__list {
+	opacity: 1;
+	transition-delay: 0.2s;
 }
 
 html:has(body.is-menu-open),
@@ -509,8 +518,22 @@ body.is-menu-open {
 	.site-logo--intro,
 	.site-header,
 	.menu-toggle__bar,
-	.mobile-nav {
+	.mobile-nav,
+	.mobile-nav__list {
 		transition: none;
+	}
+
+	.mobile-nav {
+		clip-path: none;
+		opacity: 0;
+	}
+
+	.mobile-nav.is-open {
+		opacity: 1;
+	}
+
+	.mobile-nav__list {
+		opacity: 1;
 	}
 
 	.site-logo--intro {

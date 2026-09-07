@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: RFS Block Patterns
- * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・AIに聞こう）
+ * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・用語解説・AIに聞こう）
  * Version: 1.0.0
  */
 
@@ -39,14 +39,26 @@ add_action('init', static function () {
 <!-- /wp:image -->',
 	]);
 
+	register_block_pattern('rfs/glossary', [
+		'title'       => '用語解説',
+		'description' => 'うすい背景の用語解説。本のアイコンは CSS で表示されます。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:html -->
+<div class="glossary">
+<p class="glossary__title">用語の名前</p>
+<p>ここに解説を書きます。</p>
+</div>
+<!-- /wp:html -->',
+	]);
+
 	register_block_pattern('rfs/ask', [
-		'title'       => 'AIに聞こう',
+		'title'       => 'AIに指令',
 		'description' => '質問文をコピーするボックス。質問は空のまま挿入されます。',
 		'categories'  => ['rfs'],
 		'content'     => '<!-- wp:html -->
 <section class="article-ask" aria-label="AIに聞こう">
 <div class="article-ask__item">
-<p class="article-ask__heading">AIに聞こう</p>
+<p class="article-ask__heading">AIに指令</p>
 <p class="article-ask__text">＊＊＊</p>
 <div class="article-ask__copy-wrap">
 <button class="article-ask__copy" type="button">コピー</button>

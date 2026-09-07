@@ -3,18 +3,17 @@ import Layout from "../../components/Layout.astro";
 import CategoryListing from "../../components/CategoryListing.astro";
 import ArticlePage from "../../components/ArticlePage.astro";
 import {
-	findArchiveCategory,
 	getArchiveArticlePosts,
 	getArchiveCategories,
 	getArticleDetail,
 	getCategoryPageData,
-	getChildSummaries,
 	toPostRouteParams,
 	toRouteParams,
 	type ArticleDetail,
 	type CategoryPageData,
-	type CategorySummary,
 } from "../../lib/wordpress";
+import { collectionJsonLd, techArticleJsonLd } from "../../lib/structured-data";
+import { categoryListTitle } from "../../lib/seo";
 import "../../styles/category.css";
 
 export async function getStaticPaths() {
@@ -24,18 +23,9 @@ export async function getStaticPaths() {
 		props: Props;
 	}[] = [];
 	const used = new Set<string>();
-	const sidebarBySection = new Map<string, Promise<CategorySummary[]>>();
 
 	function routeKey(section: string, slug: string) {
 		return `${section}/${slug}`;
-	}
-
-	function sidebarFor(section: string) {
-		const cached = sidebarBySection.get(section);
-		if (cached) return cached;
-		const pending = findArchiveCategory(section).then((root) => (root ? getChildSummaries(root) : []));
-		sidebarBySection.set(section, pending);
-		return pending;
 	}
 
 	for (const category of categories) {
@@ -71,7 +61,6 @@ export async function getStaticPaths() {
 			props: {
 				kind: "article",
 				article: await getArticleDetail(post),
-				sidebarCategories: await sidebarFor(route.section),
 			},
 		});
 	}
@@ -81,20 +70,46 @@ export async function getStaticPaths() {
 
 type Props =
 	| { kind: "category"; page: CategoryPageData }
-	| { kind: "article"; article: ArticleDetail; sidebarCategories: CategorySummary[] };
+	| { kind: "article"; article: ArticleDetail };
 
 const props = Astro.props;
-const title = props.kind === "article" ? props.article.title : props.page.title;
+const title = props.kind === "article" ? props.article.title : categoryListTitle(props.page.title);
 const description =
 	props.kind === "article"
 		? props.article.lead || props.article.title
-		: props.page.description || `${props.page.title}の記事一覧`;
+		: props.page.description.trim() || `${props.page.title}の記事一覧`;
+const jsonLd =
+	props.kind === "article"
+		? techArticleJsonLd({
+				origin: Astro.url.origin,
+				headline: props.article.title,
+				description,
+				url: props.article.path,
+				datePublished: props.article.publishedAt,
+				dateModified: props.article.updatedAt,
+				imageUrl: props.article.imageUrl,
+				imageWidth: props.article.imageWidth,
+				imageHeight: props.article.imageHeight,
+			})
+		: collectionJsonLd({
+				origin: Astro.url.origin,
+				name: props.page.title,
+				description,
+				url: props.page.path,
+				items: props.page.latestArticles.map((article) => ({ name: article.title, url: article.href })),
+			});
 ---
 
-<Layout title={title} description={description} skipIntro>
+<Layout
+	title={title}
+	description={description}
+	skipIntro
+	jsonLd={jsonLd}
+	type={props.kind === "article" ? "article" : "website"}
+>
 	{
 		props.kind === "article" ? (
-			<ArticlePage article={props.article} learnCategories={props.sidebarCategories} />
+			<ArticlePage article={props.article} />
 		) : (
 			<CategoryListing category={props.page} />
 		)

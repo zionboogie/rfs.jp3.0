@@ -7,8 +7,6 @@ interface Props {
 }
 
 const { skipIntro = false } = Astro.props;
-const primaryMenus = navMenus.filter((menu) => menu.id !== "archive");
-const archiveMenu = navMenus.find((menu) => menu.id === "archive");
 const searchQuery = Astro.url.searchParams.get("q") ?? "";
 ---
 
@@ -80,22 +78,13 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 	<nav class="mobile-nav" id="mobile-nav" aria-label="カテゴリ" inert>
 		<ul class="mobile-nav__list">
 			{
-				primaryMenus.map((menu) => (
+				navMenus.map((menu) => (
 					<li>
 						<a href={menu.href} class="text-h3 font-bold hover:text-text hover:no-underline">
 							<span>{menu.label}</span>
 						</a>
 					</li>
 				))
-			}
-			{
-				archiveMenu ? (
-					<li class="mobile-nav__archive">
-						<a href={archiveMenu.href} class="text-h3 font-bold hover:text-text hover:no-underline">
-							<span>{archiveMenu.label}</span>
-						</a>
-					</li>
-				) : null
 			}
 		</ul>
 	</nav>
@@ -272,7 +261,16 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 		const { signal } = mobileNavAbort;
 		const desktopQuery = window.matchMedia("(min-width: 768px)");
 
+		const setMenuOrigin = () => {
+			const rect = toggle.getBoundingClientRect();
+			panel.style.setProperty("--menu-origin-x", `${rect.left + rect.width / 2}px`);
+			panel.style.setProperty("--menu-origin-y", `${rect.top + rect.height / 2}px`);
+		};
+
 		const setOpen = (open) => {
+			setMenuOrigin();
+			// 初回は起点の単位が変わるため、半径アニメの前に右上起点を確定する
+			if (open) panel.getBoundingClientRect();
 			toggle.setAttribute("aria-expanded", open ? "true" : "false");
 			toggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
 			panel.classList.toggle("is-open", open);
@@ -281,6 +279,16 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 			document.body.classList.toggle("is-menu-open", open);
 			if (open) header.classList.remove("is-hidden");
 		};
+
+		setMenuOrigin();
+		window.addEventListener(
+			"resize",
+			() => {
+				if (toggle.getAttribute("aria-expanded") === "true") return;
+				setMenuOrigin();
+			},
+			{ signal },
+		);
 
 		toggle.addEventListener(
 			"click",
