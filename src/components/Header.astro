@@ -1,13 +1,24 @@
 ---
 import { navMenus } from "../data/courses";
 import { aboutSlideAssetUrls } from "../data/aboutSlides";
+
+interface Props {
+	skipIntro?: boolean;
+}
+
+const { skipIntro = false } = Astro.props;
+const searchQuery = Astro.url.searchParams.get("q") ?? "";
 ---
 
 <header
-	class="site-header is-intro fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-transparent transition-transform duration-[220ms] ease-in"
+	class:list={[
+		"site-header fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-transparent",
+		skipIntro ? "is-ready is-logo-ready is-no-intro" : "is-intro",
+	]}
+	data-skip-intro={skipIntro ? "" : undefined}
 	data-slide-assets={JSON.stringify(aboutSlideAssetUrls)}
 >
-	<div class="site-header__intro fixed inset-0 z-[200] grid place-items-center" aria-hidden="true">
+	<div class="site-header__intro fixed inset-0 z-[200] grid place-items-center" aria-hidden="true" hidden={skipIntro}>
 		<div class="site-header__intro-content flex flex-col items-center gap-xs text-center">
 			<p class="site-logo site-logo--intro">smart</p>
 			<p
@@ -20,7 +31,7 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 	<div class="site-header__chrome pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 	<div class="site-header__inner container relative z-[2] flex items-center gap-md py-sm">
 		<a href="/" class="site-logo">smart</a>
-		<nav class="global-nav" aria-label="グローバルナビ">
+		<nav class="global-nav hidden md:block" aria-label="グローバルナビ">
 			<ul class="flex list-none flex-wrap gap-y-sm gap-x-md p-0">
 				{
 					navMenus.map((menu) => (
@@ -33,13 +44,14 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 				}
 			</ul>
 		</nav>
-		<form class="header-search ml-auto flex shrink-0 gap-2" action="/search" method="get" role="search">
+		<form class="header-search ml-auto hidden shrink-0 gap-2 md:flex" action="/search/" method="get" role="search">
 			<label class="visually-hidden" for="header-search-input">サイト内検索</label>
 			<input
 				id="header-search-input"
 				class="rounded-sm border border-white/60 bg-white px-3 py-2"
 				type="search"
 				name="q"
+				value={searchQuery}
 				placeholder="キーワードで検索"
 			/>
 			<button
@@ -49,12 +61,66 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 				検索
 			</button>
 		</form>
+		<button
+			type="button"
+			class="menu-toggle ml-auto flex size-11 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 md:hidden"
+			aria-expanded="false"
+			aria-controls="mobile-nav"
+			aria-label="メニューを開く"
+		>
+			<span class="menu-toggle__bars" aria-hidden="true">
+				<span class="menu-toggle__bar"></span>
+				<span class="menu-toggle__bar"></span>
+				<span class="menu-toggle__bar"></span>
+			</span>
+		</button>
 	</div>
+	<nav class="mobile-nav" id="mobile-nav" aria-label="カテゴリ" inert>
+		<ul class="mobile-nav__list">
+			{
+				navMenus.map((menu) => (
+					<li>
+						<a href={menu.href} class="text-h3 font-bold hover:text-text hover:no-underline">
+							<span>{menu.label}</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
 </header>
 
 <script>
 	const COMPACT_DELAY_MS = 1100;
 	const INTRO_FADE_MS = 950;
+	const INTRO_SEEN_KEY = "rfs-intro-seen";
+
+	function hasSeenIntro() {
+		try {
+			return sessionStorage.getItem(INTRO_SEEN_KEY) === "1";
+		} catch {
+			return false;
+		}
+	}
+
+	function markIntroSeen() {
+		try {
+			sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+			document.documentElement.dataset.introSeen = "1";
+		} catch {
+			/* ignore */
+		}
+	}
+
+	function applySkippedIntro(root) {
+		const header = root.querySelector(".site-header");
+		if (!(header instanceof HTMLElement)) return;
+		root.body?.classList.remove("is-intro", "is-intro-leaving");
+		header.classList.add("is-ready", "is-logo-ready", "is-no-intro");
+		header.classList.remove("is-intro");
+		const intro = header.querySelector(".site-header__intro");
+		if (intro instanceof HTMLElement) intro.hidden = true;
+	}
 
 	function preloadImages(urls) {
 		return Promise.all(
@@ -83,10 +149,10 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 	function initHeaderAnimation() {
 		const header = document.querySelector(".site-header");
 		if (!(header instanceof HTMLElement)) return;
-		if (header.dataset.animated === "true") {
-			document.body.classList.remove("is-intro");
-			header.classList.add("is-ready", "is-logo-ready");
-			header.classList.remove("is-intro");
+		if (header.hasAttribute("data-skip-intro") || header.dataset.animated === "true" || hasSeenIntro()) {
+			applySkippedIntro(document);
+			header.dataset.animated = "true";
+			document.dispatchEvent(new CustomEvent("site-intro:complete"));
 			return;
 		}
 
@@ -94,6 +160,7 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 		const slideAssetUrls = getSlideAssetUrls(header);
 
 		const finishIntro = () => {
+			markIntroSeen();
 			document.body.classList.add("is-intro-leaving");
 			document.body.classList.remove("is-intro");
 			document.dispatchEvent(new CustomEvent("site-intro:complete"));
@@ -152,6 +219,10 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 
 		const onScroll = () => {
 			if (!header.classList.contains("is-ready")) return;
+			if (header.classList.contains("is-menu-open")) {
+				header.classList.remove("is-hidden");
+				return;
+			}
 
 			if (window.scrollY <= 8) {
 				header.classList.remove("is-hidden");
@@ -166,8 +237,99 @@ import { aboutSlideAssetUrls } from "../data/aboutSlides";
 		window.addEventListener("scroll", onScroll, { passive: true });
 	}
 
+	document.addEventListener("astro:before-swap", (event) => {
+		if (!hasSeenIntro()) return;
+		const doc = event.newDocument;
+		if (!(doc instanceof Document)) return;
+		doc.documentElement.dataset.introSeen = "1";
+		applySkippedIntro(doc);
+	});
+
+	/** @type {AbortController | null} */
+	let mobileNavAbort = null;
+
+	function initMobileNav() {
+		const header = document.querySelector(".site-header");
+		if (!(header instanceof HTMLElement)) return;
+
+		const toggle = header.querySelector(".menu-toggle");
+		const panel = header.querySelector(".mobile-nav");
+		if (!(toggle instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
+
+		mobileNavAbort?.abort();
+		mobileNavAbort = new AbortController();
+		const { signal } = mobileNavAbort;
+		const desktopQuery = window.matchMedia("(min-width: 768px)");
+
+		const setMenuOrigin = () => {
+			const rect = toggle.getBoundingClientRect();
+			panel.style.setProperty("--menu-origin-x", `${rect.left + rect.width / 2}px`);
+			panel.style.setProperty("--menu-origin-y", `${rect.top + rect.height / 2}px`);
+		};
+
+		const setOpen = (open) => {
+			setMenuOrigin();
+			// 初回は起点の単位が変わるため、半径アニメの前に右上起点を確定する
+			if (open) panel.getBoundingClientRect();
+			toggle.setAttribute("aria-expanded", open ? "true" : "false");
+			toggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+			panel.classList.toggle("is-open", open);
+			panel.inert = !open;
+			header.classList.toggle("is-menu-open", open);
+			document.body.classList.toggle("is-menu-open", open);
+			if (open) header.classList.remove("is-hidden");
+		};
+
+		setMenuOrigin();
+		window.addEventListener(
+			"resize",
+			() => {
+				if (toggle.getAttribute("aria-expanded") === "true") return;
+				setMenuOrigin();
+			},
+			{ signal },
+		);
+
+		toggle.addEventListener(
+			"click",
+			() => {
+				setOpen(toggle.getAttribute("aria-expanded") !== "true");
+			},
+			{ signal },
+		);
+
+		document.addEventListener(
+			"keydown",
+			(event) => {
+				if (event.key !== "Escape") return;
+				if (toggle.getAttribute("aria-expanded") !== "true") return;
+				setOpen(false);
+				toggle.focus();
+			},
+			{ signal },
+		);
+
+		desktopQuery.addEventListener(
+			"change",
+			(event) => {
+				if (event.matches) setOpen(false);
+			},
+			{ signal },
+		);
+	}
+
+	function syncSearchInputs() {
+		const query = new URLSearchParams(window.location.search).get("q");
+		if (query === null) return;
+		for (const input of document.querySelectorAll(".header-search input[name='q']")) {
+			if (input instanceof HTMLInputElement) input.value = query;
+		}
+	}
+
 	document.addEventListener("astro:page-load", () => {
 		initHeaderAnimation();
 		initHeaderScroll();
+		initMobileNav();
+		syncSearchInputs();
 	});
 </script>

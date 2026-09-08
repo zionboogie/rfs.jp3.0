@@ -1,0 +1,187 @@
+/*
+	カテゴリ一覧ページ
+	静的レイアウトは Astro 側の Tailwind utility、
+	記事リストのホバー・状態のみここに置く
+*/
+
+.article-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid rgb(33 5 5 / 18%);
+}
+
+.article-list li {
+	margin: 0;
+}
+
+.article-list__item {
+	position: relative;
+	isolation: isolate;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: baseline;
+	gap: var(--spacing-md);
+	width: 100%;
+	padding-block: clamp(1.75rem, 4vw, 3.25rem);
+	padding-left: 1.75em;
+	border-bottom: 1px solid rgb(33 5 5 / 18%);
+}
+
+.article-list__item::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-color: var(--color-primary);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.article-list__title {
+	min-width: 0;
+}
+
+.article-list__title-text {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+	font-size: var(--text-h2);
+	font-weight: 700;
+	line-height: var(--leading-heading);
+	letter-spacing: 0.02em;
+	transition:
+		color 0.25s ease,
+		transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.article-list__title-text::before {
+	content: "☞";
+	position: absolute;
+	right: 100%;
+	margin-right: 0.35em;
+	color: var(--color-logo);
+	opacity: 0;
+	transform: translate3d(-0.4em, 0, 0);
+	transition:
+		opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.article-list__date {
+	font-size: clamp(0.9375rem, 1.4vw, 1.125rem);
+	letter-spacing: 0.06em;
+	font-variant-numeric: tabular-nums;
+	color: var(--color-muted);
+	white-space: nowrap;
+	transition: color 0.25s ease;
+}
+
+.article-list__item:hover,
+.article-list__item:focus-visible {
+	color: var(--color-logo);
+}
+
+.article-list__item:hover::before,
+.article-list__item:focus-visible::before {
+	transform: scaleX(1);
+}
+
+.article-list__item:hover .article-list__title-text,
+.article-list__item:focus-visible .article-list__title-text {
+	color: var(--color-logo);
+	transform: translate3d(1.25em, 0, 0);
+}
+
+.article-list__item:hover .article-list__title-text::before,
+.article-list__item:focus-visible .article-list__title-text::before {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.article-list__item:hover .article-list__date,
+.article-list__item:focus-visible .article-list__date {
+	color: var(--color-logo);
+}
+
+@media (max-width: 767px) {
+	.article-list__item {
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--spacing-xs);
+	}
+
+	.article-list__item:hover .article-list__title-text,
+	.article-list__item:focus-visible .article-list__title-text {
+		transform: translate3d(1.1em, 0, 0);
+	}
+}
+
+.search-pagination {
+	margin-top: var(--spacing-xl);
+}
+
+.search-pagination__list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: var(--spacing-xs);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.search-pagination__link,
+.search-pagination__current,
+.search-pagination__ellipsis {
+	display: inline-flex;
+	min-width: 2.5rem;
+	min-height: 2.5rem;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 0.75rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-decoration: none;
+	color: inherit;
+}
+
+.search-pagination__ellipsis {
+	border-color: transparent;
+	font-weight: 400;
+}
+
+.search-pagination__current {
+	border-color: var(--color-text);
+	background-color: var(--color-text);
+	color: #fff;
+}
+
+.search-pagination__link:hover,
+.search-pagination__link:focus-visible {
+	border-color: var(--color-logo);
+	color: var(--color-logo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.article-list__item::before,
+	.article-list__title-text,
+	.article-list__title-text::before,
+	.article-list__date {
+		transition: none;
+	}
+
+	.article-list__item:hover .article-list__title-text,
+	.article-list__item:focus-visible .article-list__title-text {
+		transform: none;
+	}
+
+	.article-list__item:hover .article-list__title-text::before,
+	.article-list__item:focus-visible .article-list__title-text::before {
+		opacity: 1;
+		transform: none;
+	}
+}

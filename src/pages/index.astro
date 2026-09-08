@@ -2,12 +2,37 @@
 import Layout from "../components/Layout.astro";
 import AboutIntro from "../components/AboutIntro.astro";
 import CourseListItem from "../components/CourseListItem.astro";
+import CourseTile from "../components/CourseTile.astro";
 import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
-import { languageCourses, webBasicsCourses, aiCourses } from "../data/courses";
+import { hiddenArchiveTitles, navMenus } from "../data/courses";
+import { getLearnCourseSections, getVisibleArchiveGroups } from "../lib/wordpress";
+import { SITE_NAME, websiteJsonLd } from "../lib/structured-data";
 import "../styles/top.css";
+
+const gettingStartedHref = navMenus.find((menu) => menu.id === "getting-started")?.href;
+const aiWebHref = navMenus.find((menu) => menu.id === "ai-web-development")?.href;
+
+const [learnSections, archiveGroups] = await Promise.all([
+	getLearnCourseSections(),
+	getVisibleArchiveGroups(hiddenArchiveTitles),
+]);
+
+const gettingStarted = learnSections.find((section) => section.href === gettingStartedHref);
+const aiWeb = learnSections.find((section) => section.href === aiWebHref);
+
+const pageDescription = "プログラミングとWeb開発の入門コース一覧";
+const jsonLd = websiteJsonLd({
+	origin: Astro.url.origin,
+	description: pageDescription,
+	items: [
+		...(aiWeb?.courses ?? []).map((course) => ({ name: course.title, url: course.href })),
+		...(gettingStarted?.courses ?? []).map((course) => ({ name: course.title, url: course.href })),
+		...archiveGroups.flatMap((group) => group.children.map((child) => ({ name: child.title, url: child.href }))),
+	],
+});
 ---
 
-<Layout title="トップページ" description="プログラミングとWeb開発の入門コース一覧">
+<Layout title={SITE_NAME} description={pageDescription} jsonLd={jsonLd}>
 	<main>
 		<AboutIntro />
 
@@ -68,80 +93,87 @@ import "../styles/top.css";
 			</script>
 		</section>
 
-		<section class="section bg-[#e8ecef]" id="programming-languages" data-parallax="content">
-			<div class="container">
-				<h2
-					class="section-heading mx-auto mb-md w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]"
-				>
-					プログラミング言語
-				</h2>
-				<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">
-					プログラミング言語の入門コースから始めよう
-				</p>
-				<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
-					{
-						languageCourses.map((course, index) => (
-							<CourseListItem
-								index={index + 1}
-								title={course.title}
-								description={course.description}
-								href={course.href}
-							/>
-						))
-					}
-				</div>
-			</div>
-		</section>
+		{
+			aiWeb ? (
+				<section class="section learn learn-accent" data-parallax="content">
+					<div class="container">
+						<h2
+							class:list={[
+								"section-heading mx-auto w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]",
+								aiWeb.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
+							]}
+						>
+							{aiWeb.title}
+						</h2>
+						{aiWeb.description ? (
+							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{aiWeb.description}</p>
+						) : null}
+						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
+							{aiWeb.courses.map((course, index) => (
+								<CourseListItem
+									index={index + 1}
+									title={course.title}
+									description={course.description}
+									href={course.href}
+								/>
+							))}
+						</div>
+					</div>
+				</section>
+			) : null
+		}
 
-		<section class="section bg-[#909ea0] text-white" id="web-basics" data-parallax="content">
-			<div class="container">
-				<h2
-					class="section-heading mx-auto mb-md w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em] text-white"
-				>
-					Web開発の基礎
-				</h2>
-				<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-white">
-					Web制作・開発に必要なツールと環境を学ぼう
-				</p>
-				<div class="course-list border-t border-white/28">
-					{
-						webBasicsCourses.map((course, index) => (
-							<CourseListItem
-								index={index + 1}
-								title={course.title}
-								description={course.description}
-								href={course.href}
-							/>
-						))
-					}
-				</div>
-			</div>
-		</section>
+		{
+			gettingStarted ? (
+				<section class="section learn" data-parallax="content">
+					<div class="container">
+						<h2
+							class:list={[
+								"section-heading mx-auto w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]",
+								gettingStarted.description ? "mb-md" : "mb-[calc(var(--space-lg)*3)]",
+							]}
+						>
+							{gettingStarted.title}
+						</h2>
+						{gettingStarted.description ? (
+							<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">{gettingStarted.description}</p>
+						) : null}
+						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
+							{gettingStarted.courses.map((course, index) => (
+								<CourseListItem
+									index={index + 1}
+									title={course.title}
+									description={course.description}
+									href={course.href}
+								/>
+							))}
+						</div>
+					</div>
+				</section>
+			) : null
+		}
 
-		<section class="section" id="ai" data-parallax="content">
-			<div class="container">
-				<h2
-					class="section-heading mx-auto mb-md w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]"
-				>
-					AIを使う
-				</h2>
-				<p class="section-lead mb-[calc(var(--space-lg)*3)] text-center text-muted">
-					AIツールを活用して、開発を効率的に進めよう
-				</p>
-				<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
-					{
-						aiCourses.map((course, index) => (
-							<CourseListItem
-								index={index + 1}
-								title={course.title}
-								description={course.description}
-								href={course.href}
-							/>
-						))
-					}
-				</div>
-			</div>
-		</section>
+		{
+			archiveGroups.length > 0 ? (
+				<section class="section learn" data-parallax="content">
+					<div class="container">
+						<h2 class="section-heading mx-auto mb-[calc(var(--space-lg)*3)] w-[90%] text-center text-[clamp(2.5rem,8vw,5.75rem)] font-bold leading-tight tracking-[0.04em]">
+							アーカイブ
+						</h2>
+						{archiveGroups.map((group, groupIndex) => (
+							<div class:list={[groupIndex > 0 && "mt-[calc(var(--space-lg)*2)]"]}>
+								<h3 class="mb-md mt-0 text-h3 font-bold tracking-[0.04em]">{group.title}</h3>
+								<div class="tile-grid archive-tiles">
+									{group.children.map((child, index) => (
+										<CourseTile title={child.title} href={child.href} index={index} />
+									))}
+								</div>
+							</div>
+						))}
+					</div>
+				</section>
+			) : null
+		}
 	</main>
 </Layout>
 
@@ -246,6 +278,7 @@ import "../styles/top.css";
 		disposeSoftScroll?.();
 		disposeSoftScroll = null;
 
+		if (window.location.pathname !== "/") return;
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 		if (!window.matchMedia("(pointer: fine)").matches) return;
 
@@ -340,6 +373,12 @@ import "../styles/top.css";
 		};
 	}
 
+	document.addEventListener("astro:before-swap", () => {
+		disposeSoftScroll?.();
+		disposeSoftScroll = null;
+		document.documentElement.classList.add("is-soft-scroll");
+	});
+
 	document.addEventListener("astro:page-load", initSoftScroll);
 </script>
 
@@ -351,9 +390,7 @@ import "../styles/top.css";
 		disposeSectionReveal?.();
 		disposeSectionReveal = null;
 
-		const targets = Array.from(
-			document.querySelectorAll(".section-heading, .tile-grid, .course-list, .top-rhythm"),
-		).filter((el) => el instanceof HTMLElement);
+		const targets = Array.from(document.querySelectorAll(".section-heading, .tile-grid, .course-list, .top-rhythm")).filter((el) => el instanceof HTMLElement);
 		if (targets.length === 0) return;
 
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {

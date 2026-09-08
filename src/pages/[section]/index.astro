@@ -1,0 +1,60 @@
+---
+import Layout from "../../components/Layout.astro";
+import CourseListItem from "../../components/CourseListItem.astro";
+import { hiddenArchiveTitles } from "../../data/courses";
+import { findArchiveCategory, getChildSummaries, getLatestCategoryArticles, toSitePath, wpText, type WpCategory } from "../../lib/wordpress";
+import { collectionJsonLd } from "../../lib/structured-data";
+import { categoryListTitle } from "../../lib/seo";
+
+export async function getStaticPaths() {
+	const sections = ["sb", "server", "learn"] as const;
+	const paths: { params: { section: string }; props: { category: WpCategory } }[] = [];
+
+	for (const section of sections) {
+		const category = await findArchiveCategory(section);
+		if (!category) continue;
+		paths.push({
+			params: { section },
+			props: { category },
+		});
+	}
+
+	return paths;
+}
+
+interface Props {
+	category: WpCategory;
+}
+
+const { category } = Astro.props;
+const [childSummaries, latestArticles] = await Promise.all([getChildSummaries(category), getLatestCategoryArticles(category)]);
+const children = childSummaries.filter(
+	(child) => category.slug === "learn" || !hiddenArchiveTitles.has(child.title),
+);
+const title = wpText(category.name);
+const description = wpText(category.description).trim();
+const pageDescription = description || `${title}の一覧`;
+const jsonLd = collectionJsonLd({
+	origin: Astro.url.origin,
+	name: title,
+	description: pageDescription,
+	url: toSitePath(category.link),
+	items: latestArticles.map((article) => ({ name: article.title, url: article.href })),
+});
+---
+
+<Layout title={categoryListTitle(title)} description={pageDescription} skipIntro jsonLd={jsonLd}>
+	<main>
+		<header class="category-hero pt-xl pb-xl">
+			<div class="container">
+				<h1 class="category-hero__title mb-xl font-bold tracking-[0.04em] text-h1 leading-heading">
+					{title}
+				</h1>
+				{description ? <p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">{description}</p> : null}
+				<div class="course-list mt-xl border-t border-[rgb(33_5_5_/_18%)]">
+					{children.map((child, index) => <CourseListItem index={index + 1} title={child.title} description={child.description} href={child.href} />)}
+				</div>
+			</div>
+		</header>
+	</main>
+</Layout>

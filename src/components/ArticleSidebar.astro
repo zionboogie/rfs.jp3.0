@@ -1,0 +1,141 @@
+---
+import { formatUpdatedAt, type ArchiveGroup, type ArticleTag, type CategoryArticle, type SidebarLearnSection } from "../lib/wordpress";
+
+interface Props {
+	learnSections: SidebarLearnSection[];
+	archiveGroups?: ArchiveGroup[];
+	archiveTitle?: string;
+	archiveHref?: string;
+	popularArticles: CategoryArticle[];
+	tags: ArticleTag[];
+}
+
+const {
+	learnSections,
+	archiveGroups = [],
+	archiveTitle = "過去アーカイブ",
+	archiveHref = "/archive/",
+	popularArticles,
+	tags,
+} = Astro.props;
+---
+
+<aside class="article-side flex flex-col gap-xl lg:sticky lg:top-md">
+	{
+		learnSections.map((section) => {
+			const headingId = `article-side-learn-${section.slug}`;
+			const latestHeadingId = `article-side-learn-latest-${section.slug}`;
+			const courseHeadingId = `article-side-learn-courses-${section.slug}`;
+			return (
+				<section aria-labelledby={headingId}>
+					<h2 class="article-side__heading" id={headingId}>
+						<a class="text-inherit no-underline" href={section.href}>
+							{section.title}
+						</a>
+					</h2>
+					{
+						section.latestArticles.length > 0 ? (
+							<div>
+								<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]" id={latestHeadingId}>
+									最新記事
+								</h3>
+								<ul class="m-0 flex list-none flex-col overflow-hidden rounded-md border border-border p-sm" aria-labelledby={latestHeadingId}>
+									{section.latestArticles.map((article) => (
+										<li>
+											<a class="article-side__link block py-xs no-underline" href={article.href}>
+												<span class="article-side__text">{article.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							</div>
+						) : null
+					}
+					{
+						section.courses.length > 0 ? (
+							<div class="mt-md">
+								<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]" id={courseHeadingId}>
+									講座リスト
+								</h3>
+								<ul class="m-0 flex list-none flex-col p-0" aria-labelledby={courseHeadingId}>
+									{section.courses.map((course) => (
+										<li class="border-b border-[rgb(33_5_5_/_18%)]">
+											<a class="article-side__link block py-sm" href={course.href}>
+												<span class="article-side__text">{course.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							</div>
+						) : null
+					}
+				</section>
+			);
+		})
+	}
+
+	{
+		archiveGroups.length > 0 ? (
+			<section aria-labelledby="article-side-archive-heading">
+				<h2 class="article-side__heading" id="article-side-archive-heading">
+					<a class="text-inherit no-underline" href={archiveHref}>
+						{archiveTitle}
+					</a>
+				</h2>
+				{archiveGroups.map((group, groupIndex) => (
+					<div class:list={[groupIndex > 0 && "mt-md"]}>
+						<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]">{group.title}</h3>
+						<ul class="m-0 flex list-none flex-col p-0">
+							{group.children.map((child) => (
+								<li class="border-b border-[rgb(33_5_5_/_18%)]">
+									<a class="article-side__link block py-sm" href={child.href}>
+										<span class="article-side__text">{child.title}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</section>
+		) : null
+	}
+
+	{
+		popularArticles.length > 0 ? (
+			<section aria-labelledby="article-side-popular-heading">
+				<h2 class="article-side__heading" id="article-side-popular-heading">
+					人気記事
+				</h2>
+				<ul class="m-0 flex list-none flex-col p-0">
+					{popularArticles.map((article) => (
+						<li class="border-b border-[rgb(33_5_5_/_18%)]">
+							<a class="article-side__link block py-sm no-underline" href={article.href}>
+								<span class="article-side__text">{article.title}</span>
+								<time class="mt-xs block text-sm tracking-[0.04em] text-muted" datetime={article.updatedAt}>
+									{formatUpdatedAt(article.updatedAt)}
+								</time>
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		) : null
+	}
+
+	{
+		tags.length > 0 ? (
+			<section aria-labelledby="article-side-tag-heading">
+				<h2 class="article-side__heading" id="article-side-tag-heading">タグ</h2>
+				<ul class="article-side__tags m-0 flex list-none flex-wrap gap-xs p-0">
+					{tags.map((tag) => (
+						<li>
+							<a class="inline-block rounded-sm border border-border px-2 py-0.5 text-sm text-muted" href={tag.href}>
+								{tag.label}
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		) : null
+	}
+</aside>

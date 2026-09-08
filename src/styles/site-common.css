@@ -53,6 +53,95 @@
 	border: 0;
 }
 
+/* ----------------------------------------
+course-list（ホバー・疑似要素）
+---------------------------------------- */
+.course-list__item {
+	transition: color 0.25s ease;
+}
+
+.course-list__index,
+.course-list__description {
+	transition: color 0.25s ease;
+}
+
+.course-list__item:hover,
+.course-list__item:focus-visible {
+	color: var(--color-logo);
+}
+
+.course-list__item:hover .course-list__index,
+.course-list__item:focus-visible .course-list__index {
+	color: var(--color-logo);
+}
+
+.course-list__title::before {
+	content: "☞";
+	position: absolute;
+	right: 100%;
+	margin-right: 0.35em;
+	color: var(--color-logo);
+	opacity: 0;
+	transform: translate3d(-0.4em, 0, 0);
+	transition:
+		opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.course-list__item:hover .course-list__title::before,
+.course-list__item:focus-visible .course-list__title::before {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.course-list__item:hover .course-list__description,
+.course-list__item:focus-visible .course-list__description {
+	color: rgb(217 30 24 / 82%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.course-list__item,
+	.course-list__index,
+	.course-list__title::before,
+	.course-list__description {
+		transition: none;
+	}
+
+	.course-list__item:hover .course-list__title::before,
+	.course-list__item:focus-visible .course-list__title::before {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* ----------------------------------------
+パンくず
+---------------------------------------- */
+.site-breadcrumb {
+	padding-top: calc(var(--header-height) + var(--spacing-md));
+	padding-bottom: var(--spacing-sm);
+}
+
+.site-breadcrumb--bottom {
+	padding-top: var(--spacing-md);
+	padding-bottom: var(--spacing-lg);
+}
+
+.site-breadcrumb__item + .site-breadcrumb__item .site-breadcrumb__sep {
+	flex-shrink: 0;
+	margin-inline: 0.35em;
+	opacity: 0.45;
+}
+
+.site-breadcrumb__home {
+	display: block;
+}
+
+.site-breadcrumb__current {
+	color: var(--color-text);
+	font-weight: 700;
+}
+
 .site-logo {
 	flex-shrink: 0;
 	font-family: var(--font-logo);
@@ -61,11 +150,18 @@
 	color: var(--color-logo);
 }
 
-@media (max-width: 767px) {
-	:root {
-		--header-height: 8rem;
-	}
+a.site-logo {
+	transition:
+		filter 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
+a.site-logo:hover {
+	transform: translate3d(0, -1px, 0);
+	filter: drop-shadow(0 0 1px rgb(255 255 255 / 80%)) drop-shadow(0 0 10px rgb(217 30 24 / 20%));
+}
+
+@media (max-width: 767px) {
 	.grid-2,
 	.grid-3 {
 		grid-template-columns: 1fr;
@@ -79,9 +175,15 @@
 /* ----------------------------------------
 ヘッダー：状態・イントロ
 ---------------------------------------- */
+.site-header {
+	transition: transform 0.2s ease-out;
+}
+
 .site-header.is-hidden {
 	transform: translateY(-100%);
 	pointer-events: none;
+	transition-duration: 0.6s;
+	transition-timing-function: ease-in;
 }
 
 .site-header__chrome {
@@ -118,6 +220,55 @@
 
 .site-header__intro[hidden] {
 	display: none;
+}
+
+.site-header.is-no-intro .site-header__chrome,
+.site-header.is-no-intro .site-header__inner {
+	opacity: 1;
+	animation: none;
+	transition: none;
+}
+
+.site-header.is-no-intro .site-header__inner > .site-logo {
+	opacity: 1;
+	animation: none;
+}
+
+html[data-intro-seen] body.is-intro,
+html[data-intro-seen] body.is-intro-leaving {
+	overflow: auto;
+}
+
+html[data-intro-seen] body.is-intro main,
+html[data-intro-seen] body.is-intro footer,
+html[data-intro-seen] body.is-intro .footer-lead,
+html[data-intro-seen] body.is-intro .gradient-bg,
+html[data-intro-seen] body.is-intro .site-header__inner,
+html[data-intro-seen] body.is-intro-leaving .site-header__inner {
+	visibility: visible;
+	pointer-events: auto;
+}
+
+html[data-intro-seen] body.is-intro .site-header__chrome,
+html[data-intro-seen] body.is-intro-leaving .site-header__chrome {
+	opacity: 1;
+}
+
+html[data-intro-seen] .site-header__intro {
+	display: none;
+}
+
+html[data-intro-seen] .site-header__chrome,
+html[data-intro-seen] .site-header__inner {
+	opacity: 1;
+	animation: none;
+	transition: none;
+}
+
+html[data-intro-seen] .site-header__inner > .site-logo,
+html[data-intro-seen] .site-header.is-logo-ready .site-header__inner > .site-logo {
+	opacity: 1;
+	animation: none;
 }
 
 body.is-intro,
@@ -200,12 +351,14 @@ body.is-intro-leaving .site-header__chrome {
 	transform: none;
 }
 
-.global-nav a span {
+.global-nav a span,
+.mobile-nav a span {
 	position: relative;
 	display: inline-block;
 }
 
-.global-nav a span::after {
+.global-nav a span::after,
+.mobile-nav a span::after {
 	content: "";
 	position: absolute;
 	left: 0;
@@ -218,7 +371,8 @@ body.is-intro-leaving .site-header__chrome {
 	transition: transform 0.4s cubic-bezier(0.77, 0, 0.18, 1);
 }
 
-.global-nav a:hover span::after {
+.global-nav a:hover span::after,
+.mobile-nav a:hover span::after {
 	transform: scaleX(1);
 	transform-origin: left center;
 }
@@ -228,6 +382,7 @@ body.is-intro-leaving .site-header__chrome {
 	transition:
 		width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
 		border-color 0.25s ease;
+	border: 1px solid #efefef;
 }
 
 .header-search input:focus {
@@ -249,26 +404,110 @@ body.is-intro-leaving .site-header__chrome {
 	box-shadow: 0 6px 14px rgb(217 30 24 / 28%);
 }
 
-@media (max-width: 767px) {
-	.site-header__inner {
-		flex-wrap: wrap;
-	}
+.menu-toggle__bars {
+	position: relative;
+	display: block;
+	width: 1.5rem;
+	height: 0.875rem;
+}
 
-	.site-header__inner > .site-logo {
-		margin-right: 0;
-	}
+.menu-toggle__bar {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	height: 2px;
+	margin-top: -1px;
+	background-color: var(--color-text);
+	transition:
+		transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+		opacity 0.25s ease;
+}
 
-	.global-nav {
-		order: 3;
-		width: 100%;
-	}
+.menu-toggle__bar:nth-child(1) {
+	transform: translateY(-7px);
+}
 
-	.header-search input {
-		width: 140px;
-	}
+.menu-toggle__bar:nth-child(3) {
+	transform: translateY(7px);
+}
 
-	.header-search input:focus {
-		width: 220px;
+.menu-toggle:hover:not([aria-expanded="true"]) .menu-toggle__bar:nth-child(1) {
+	transform: translateY(-11px);
+}
+
+.menu-toggle:hover:not([aria-expanded="true"]) .menu-toggle__bar:nth-child(3) {
+	transform: translateY(11px);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(1) {
+	transform: rotate(-135deg);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(2) {
+	opacity: 0;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(3) {
+	transform: rotate(135deg);
+}
+
+.mobile-nav {
+	--menu-origin-x: calc(100vw - var(--container-padding) - 1.375rem);
+	--menu-origin-y: calc(var(--header-height) / 2);
+	position: fixed;
+	inset: 0;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	padding: var(--header-height) var(--container-padding) var(--spacing-xl);
+	overflow: hidden;
+	background-color: var(--color-primary);
+	visibility: hidden;
+	pointer-events: none;
+	clip-path: circle(0px at var(--menu-origin-x) var(--menu-origin-y));
+	transition:
+		clip-path 0.4s cubic-bezier(0.7, 0, 0.84, 0),
+		visibility 0s 0.4s;
+}
+
+.mobile-nav.is-open {
+	visibility: visible;
+	pointer-events: auto;
+	clip-path: circle(150vmax at var(--menu-origin-x) var(--menu-origin-y));
+	transition:
+		clip-path 0.3s cubic-bezier(0.32, 0, 0.67, 0),
+		visibility 0s;
+}
+
+.mobile-nav__list {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: var(--spacing-md);
+	margin: 0;
+	padding: var(--spacing-lg) 0 0;
+	overflow-y: auto;
+	list-style: none;
+	text-align: right;
+	opacity: 0;
+	transition: opacity 0.2s cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+.mobile-nav.is-open .mobile-nav__list {
+	opacity: 1;
+	transition-delay: 0.2s;
+}
+
+html:has(body.is-menu-open),
+body.is-menu-open {
+	overflow: hidden;
+}
+
+@media (min-width: 768px) {
+	.mobile-nav {
+		display: none;
 	}
 }
 
@@ -277,8 +516,24 @@ body.is-intro-leaving .site-header__chrome {
 	.site-header__inner,
 	.site-header__chrome,
 	.site-logo--intro,
-	.site-header {
+	.site-header,
+	.menu-toggle__bar,
+	.mobile-nav,
+	.mobile-nav__list {
 		transition: none;
+	}
+
+	.mobile-nav {
+		clip-path: none;
+		opacity: 0;
+	}
+
+	.mobile-nav.is-open {
+		opacity: 1;
+	}
+
+	.mobile-nav__list {
+		opacity: 1;
 	}
 
 	.site-logo--intro {
@@ -307,6 +562,14 @@ body.is-intro-leaving .site-header__chrome {
 		opacity: 1;
 		animation: none;
 	}
+}
+
+/* ----------------------------------------
+フッター rhythm ロゴ
+下 1/3 はビューポート外（親の overflow で見えない）
+---------------------------------------- */
+.site-footer__rhythm {
+	aspect-ratio: 501 / 54;
 }
 
 /* ----------------------------------------

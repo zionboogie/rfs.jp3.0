@@ -1,0 +1,48 @@
+---
+import Layout from "../components/Layout.astro";
+import CourseListItem from "../components/CourseListItem.astro";
+import { hiddenArchiveTitles, navMenus } from "../data/courses";
+import { getVisibleArchiveGroups, isArchivePageHref } from "../lib/wordpress";
+import { collectionJsonLd } from "../lib/structured-data";
+
+const archiveNav = navMenus.find((menu) => isArchivePageHref(menu.href));
+const title = archiveNav?.label ?? "過去アーカイブ";
+const archiveHref = archiveNav?.href ?? "/archive/";
+const pageDescription = "過去の記事アーカイブ";
+const archiveGroups = await getVisibleArchiveGroups(hiddenArchiveTitles);
+const jsonLd = collectionJsonLd({
+	origin: Astro.url.origin,
+	name: title,
+	description: pageDescription,
+	url: archiveHref,
+	items: archiveGroups.flatMap((group) => group.children.map((child) => ({ name: child.title, url: child.href }))),
+});
+---
+
+<Layout title={title} description={pageDescription} skipIntro jsonLd={jsonLd}>
+	<main>
+		<header class="category-hero pt-xl pb-xl">
+			<div class="container">
+				<h1 class="category-hero__title mb-xl font-bold tracking-[0.04em] text-h1 leading-heading">
+					{title}
+				</h1>
+			</div>
+		</header>
+		{
+			archiveGroups.map((group) => (
+				<section class="pb-xl" aria-labelledby={`archive-group-${group.title}`}>
+					<div class="container">
+						<h2 class="mb-md mt-0 text-h3 font-bold tracking-[0.04em]" id={`archive-group-${group.title}`}>
+							{group.title}
+						</h2>
+						<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
+							{group.children.map((child, index) => (
+								<CourseListItem index={index + 1} title={child.title} description={child.description} href={child.href} />
+							))}
+						</div>
+					</div>
+				</section>
+			))
+		}
+	</main>
+</Layout>

@@ -4,11 +4,34 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+	site: "https://rfs.jp",
 	server: {
 		host: true,
 		open: true,
 	},
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			tailwindcss(),
+			{
+				name: "wp-html-permalinks",
+				configureServer(server) {
+					server.middlewares.use((req, _res, next) => {
+						if (!req.url) {
+							next();
+							return;
+						}
+						const [path, query] = req.url.split("?");
+						if (/\.html\/?$/i.test(path)) {
+							req.url = `${path.replace(/\.html\/?$/i, "/")}${query ? `?${query}` : ""}`;
+						}
+						next();
+					});
+				},
+			},
+		],
+		// @lucide/astro は .ts / .astro のまま公開されるため、Vite に変換させる
+		resolve: {
+			noExternal: ["@lucide/astro"],
+		},
 	},
 });

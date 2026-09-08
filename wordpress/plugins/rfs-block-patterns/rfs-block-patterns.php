@@ -1,0 +1,89 @@
+<?php
+/**
+ * Plugin Name: RFS Block Patterns
+<<<<<<< .mine
+ * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・用語解説・AIに聞こう）
+=======
+ * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・AIに聞こう・サイト内リンク）
+>>>>>>> .theirs
+ * Version: 1.0.0
+ */
+
+add_action('init', static function () {
+	register_block_pattern_category('rfs', [
+		'label' => 'RFS.jp',
+	]);
+
+	register_block_pattern('rfs/column', [
+		'title'       => 'コラム',
+		'description' => '段落のあいだに置くコラム。プロフィール画像は CSS で表示されます。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:html -->
+<div class="column">
+<p>ここにコラムのテキストを書きます。</p>
+</div>
+<!-- /wp:html -->',
+	]);
+
+	register_block_pattern('rfs/polaroid', [
+		'title'       => 'ポラロイド',
+		'description' => 'キャプション付きのポラロイド風画像。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:image {"className":"polaroid"} -->
+<figure class="wp-block-image polaroid"><img alt=""/><figcaption class="wp-element-caption">キャプション</figcaption></figure>
+<!-- /wp:image -->',
+	]);
+
+	register_block_pattern('rfs/illust', [
+		'title'       => '中央イラスト',
+		'description' => '中央揃えのイラスト。公開側ではスクロールでフェードインします。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:image {"className":"illust"} -->
+<figure class="wp-block-image illust"><img alt=""/></figure>
+<!-- /wp:image -->',
+	]);
+
+	register_block_pattern('rfs/glossary', [
+		'title'       => '用語解説',
+		'description' => 'うすい背景の用語解説。本のアイコンは CSS で表示されます。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:html -->
+<div class="glossary">
+<p class="glossary__title">用語の名前</p>
+<p>ここに解説を書きます。</p>
+</div>
+<!-- /wp:html -->',
+	]);
+
+	register_block_pattern('rfs/ask', [
+		'title'       => 'AIに指令',
+		'description' => '質問文をコピーするボックス。質問は空のまま挿入されます。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:html -->
+<section class="article-ask" aria-label="AIに聞こう">
+<div class="article-ask__item">
+<p class="article-ask__heading">AIに指令</p>
+<p class="article-ask__text">＊＊＊</p>
+<div class="article-ask__copy-wrap">
+<button class="article-ask__copy" type="button">コピー</button>
+<dialog class="article-ask__popup" aria-label="コピー完了">
+<p class="article-ask__popup-text">コピーしたよ、お使いのAIに訊いてみて。GeminiはCtrl＋Jだよ。</p>
+</dialog>
+</div>
+</div>
+</section>
+<!-- /wp:html -->',
+	]);
+
+	register_block_pattern('rfs/site-link', [
+		'title'       => 'サイト内リンク',
+		'description' => 'カテゴリ名と記事タイトルで他ページへ誘導。ホバーで背景が変わる。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:html -->
+<a class="article-site-link" href="/">
+<span class="article-site-link__category">カテゴリ名</span>
+<span class="article-site-link__title">記事タイトル</span>
+</a>
+<!-- /wp:html -->',
+	]);
+});

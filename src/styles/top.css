@@ -308,7 +308,27 @@ About イントロ
 
 @media (max-width: 767px) {
 	.about-intro {
-		--about-panel-width: 46%;
+		--about-panel-width: 100%;
+		--about-photo-focus: center;
+	}
+
+	.about-intro__photo {
+		background-size: cover;
+	}
+
+	.about-intro__panel {
+		background-color: transparent;
+		width: 100%;
+	}
+
+	.about-intro__copy {
+		max-width: none;
+	}
+
+	.about-intro__slide.is-expanding .about-intro__panel,
+	.about-intro__slide.is-expanded .about-intro__panel {
+		animation: none;
+		width: 100%;
 	}
 
 	.about-intro__nav {
@@ -347,6 +367,71 @@ About イントロ
 /* ----------------------------------------
 セクション見出し / 視差
 ---------------------------------------- */
+.section.learn {
+	padding-top: calc(var(--section-padding) / 2);
+}
+
+.section.learn.learn-accent {
+	padding-top: var(--section-padding);
+	background-color: #909ea0;
+	color: #fff;
+}
+
+.section.learn.learn-accent .section-heading,
+.section.learn.learn-accent .section-lead {
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list {
+	border-top-color: rgb(255 255 255 / 28%);
+}
+
+.section.learn.learn-accent .course-list__item {
+	position: relative;
+	isolation: isolate;
+	border-bottom-color: rgb(255 255 255 / 28%);
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__item::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-color: var(--color-primary);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section.learn.learn-accent .course-list__index,
+.section.learn.learn-accent .course-list__description {
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__item:hover,
+.section.learn.learn-accent .course-list__item:focus-visible,
+.section.learn.learn-accent .course-list__item:hover .course-list__index,
+.section.learn.learn-accent .course-list__item:focus-visible .course-list__index,
+.section.learn.learn-accent .course-list__item:hover .course-list__description,
+.section.learn.learn-accent .course-list__item:focus-visible .course-list__description {
+	color: var(--color-logo);
+}
+
+.section.learn.learn-accent .course-list__item:hover::before,
+.section.learn.learn-accent .course-list__item:focus-visible::before {
+	transform: scaleX(1);
+}
+
+.section.learn.learn-accent .course-list__title::before {
+	color: #fff;
+}
+
+.section.learn.learn-accent .course-list__item:hover .course-list__title::before,
+.section.learn.learn-accent .course-list__item:focus-visible .course-list__title::before {
+	color: var(--color-logo);
+}
+
 .section[data-parallax] {
 	overflow: hidden;
 }
@@ -367,15 +452,6 @@ About イントロ
 .section-heading.is-inview {
 	opacity: 1;
 	transform: translate3d(0, 0, 0);
-}
-
-#programming-languages .section-heading {
-	color: #fff;
-	text-shadow: 0 0 1px rgb(0 0 0 / 100%);
-}
-
-#programming-languages .section-lead {
-	color: rgb(33 5 5 / 55%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -401,7 +477,8 @@ course-list
 	transition:
 		opacity 2.2s cubic-bezier(0.05, 0.85, 0.05, 1),
 		transform 2.2s cubic-bezier(0.05, 0.85, 0.05, 1),
-		color 0.25s ease;
+		color 0.25s ease,
+		padding-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 	transition-delay: calc(var(--item-index, 0) * 0.16s);
 }
 
@@ -410,54 +487,9 @@ course-list
 	transform: translate3d(0, 0, 0);
 }
 
-.course-list__item:hover {
-	color: var(--color-logo);
-}
-
-.course-list__index {
-	transition: color 0.25s ease;
-}
-
-.course-list__item:hover .course-list__index {
-	color: var(--color-logo);
-}
-
-.course-list__title::before {
-	content: "☞";
-	position: absolute;
-	right: 100%;
-	margin-right: 0.35em;
-	color: var(--color-logo);
-	opacity: 0;
-	transform: translate3d(-0.4em, 0, 0);
-	transition:
-		opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-		transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.course-list__item:hover .course-list__title::before {
-	opacity: 1;
-	transform: translate3d(0, 0, 0);
-}
-
-.course-list__description {
-	transition: color 0.25s ease;
-}
-
-.course-list__item:hover .course-list__description {
-	color: rgb(217 30 24 / 82%);
-}
-
-@media (max-width: 767px) {
-	.course-list__item {
-		grid-template-columns: 2.75rem minmax(0, 1fr);
-		row-gap: var(--spacing-sm);
-		column-gap: var(--spacing-sm);
-	}
-
-	.course-list__description {
-		grid-column: 2 / -1;
-	}
+.course-list__item:hover,
+.course-list__item:focus-visible {
+	padding-left: 1.75em;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -466,33 +498,10 @@ course-list
 		transform: none;
 		transition: none;
 	}
-}
 
-#web-basics .course-list {
-	border-top-color: rgb(255 255 255 / 28%);
-}
-
-#web-basics .course-list__item {
-	border-bottom-color: rgb(255 255 255 / 28%);
-	color: #fff;
-}
-
-#web-basics .course-list__index {
-	color: rgb(255 255 255 / 55%);
-}
-
-#web-basics .course-list__description {
-	color: rgb(255 255 255 / 82%);
-}
-
-#web-basics .course-list__item:hover,
-#web-basics .course-list__item:hover .course-list__index,
-#web-basics .course-list__item:hover .course-list__description {
-	color: #fff;
-}
-
-#web-basics .course-list__title::before {
-	color: #fff;
+	.section.learn.learn-accent .course-list__item::before {
+		transition: none;
+	}
 }
 
 /* ----------------------------------------
@@ -546,4 +555,35 @@ tile-card（未使用でも互換維持）
 
 .tile-grid.is-inview .tile-card:hover {
 	transform: translate3d(0, -2px, 0);
+}
+
+.archive-tiles .tile-card {
+	align-items: center;
+	justify-content: center;
+	min-height: calc(var(--spacing-2xl) + var(--spacing-md));
+	padding: var(--spacing-md);
+	border-color: rgb(33 5 5 / 10%);
+	border-radius: var(--radius-md);
+	background-color: var(--color-background);
+	text-align: center;
+	box-shadow: 0 1px 0 rgb(33 5 5 / 4%);
+	transition:
+		opacity 2.4s cubic-bezier(0.05, 0.85, 0.05, 1),
+		transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+		border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+		box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.archive-tiles .tile-card__title {
+	font-size: var(--text-body);
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	line-height: var(--leading-heading);
+}
+
+.archive-tiles.tile-grid.is-inview .tile-card:hover,
+.archive-tiles.tile-grid.is-inview .tile-card:focus-visible {
+	transform: translate3d(0, -0.4rem, 0);
+	border-color: rgb(33 5 5 / 12%);
+	box-shadow: 0 14px 32px rgb(33 5 5 / 8%);
 }

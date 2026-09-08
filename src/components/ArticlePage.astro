@@ -1,0 +1,558 @@
+---
+import ChevronLeft from "@lucide/astro/icons/chevron-left";
+import ChevronRight from "@lucide/astro/icons/chevron-right";
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import ArticleSidebar from "./ArticleSidebar.astro";
+import { hiddenArchiveTitles, navMenus } from "../data/courses";
+import {
+	formatDateJa,
+	getPopularArticles,
+	getRelatedArticles,
+	getSidebarLearnSections,
+	getSidebarTags,
+	getVisibleArchiveGroups,
+	isArchivePageHref,
+	toDateTimeValue,
+	type ArticleDetail,
+} from "../lib/wordpress";
+import "../styles/category.css";
+import "../styles/article.css";
+
+interface Props {
+	article: ArticleDetail;
+}
+
+const { article } = Astro.props;
+const learnHrefs = navMenus.filter((menu) => !isArchivePageHref(menu.href)).map((menu) => menu.href);
+const archiveNav = navMenus.find((menu) => isArchivePageHref(menu.href));
+const [popularArticles, sidebarTags, archiveGroups, relatedArticles, learnSections] = await Promise.all([
+	getPopularArticles(),
+	getSidebarTags(),
+	getVisibleArchiveGroups(hiddenArchiveTitles),
+	getRelatedArticles(article.id),
+	getSidebarLearnSections(learnHrefs),
+]);
+const previousArticle = article.previousArticle;
+const nextArticle = article.nextArticle;
+
+const articleTitle = article.title;
+const articleTitleChars = [...articleTitle];
+const publishedAt = toDateTimeValue(article.publishedAt);
+const updatedAt = toDateTimeValue(article.updatedAt);
+const publishedLabel = formatDateJa(article.publishedAt);
+const updatedLabel = formatDateJa(article.updatedAt);
+const lead = article.lead;
+const tags = article.tags;
+const authorName = "あおいパスタ"; // article.authorName
+const authorAvatar = "/common/img/common/profile_aoipasta.jpg"; // article.authorAvatar
+const authorAvatarHover = "/common/img/common/profile_aoipasta02.jpg";
+const toc = article.toc;
+const shareUrl = new URL(article.path, Astro.url.origin).href;
+const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+const xHref = `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(articleTitle)}`;
+const hatenaHref = `https://b.hatena.ne.jp/entry/${shareUrl}`;
+const shareTarget = "_blank";
+const shareRel = "noopener noreferrer";
+---
+
+<link rel="stylesheet" href="/common/css/article-body.css" />
+<link rel="stylesheet" href="/common/css/prism.css" />
+<main>
+	<div class="container grid items-start gap-xl pb-xl lg:grid-cols-[minmax(0,1fr)_16rem]">
+		<div class="article-layout__main min-w-0">
+			<article>
+				<header class="article-hero">
+					<p class="article-hero__lesson mx-auto mt-[calc(var(--spacing-lg)*2)] mb-md flex w-fit flex-col items-center">
+						<span class="text-sm tracking-[0.12em]">LESSON</span>
+						<span class="mt-xs flex flex-col items-center">
+							<span class="article-hero__lesson-mask overflow-hidden">
+								<span class="article-hero__lesson-digit block font-logo text-[length:calc(var(--text-h1)*2)] font-bold leading-none"
+									>{article.lessonNumber}</span
+								>
+							</span>
+							<span class="h-1 w-full bg-text" aria-hidden="true"></span>
+						</span>
+					</p>
+					<div class="article-hero__title-wrap" style={`--article-title-chars: ${articleTitleChars.length}`}>
+						<div class="article-hero__mugcup">
+							<img class="article-hero__mugcup-img" src="/common/img/common/mugcup1.jpg" alt="" width="80" height="175" />
+							<img class="article-hero__mugcup-balloon" src="/common/img/common/baloon_a_1.gif" alt="" width="100" />
+						</div>
+						<h1 class="article-hero__title mb-xl text-center font-bold tracking-[0.04em] text-h2 leading-heading" aria-label={articleTitle}>
+							{
+								articleTitleChars.map((char, index) => (
+									<span class="article-hero__title-char inline-block" style={`--char-index: ${index}`} aria-hidden="true">
+										{char}
+									</span>
+								))
+							}
+						</h1>
+					</div>
+					{
+						tags.length > 0 ? (
+							<ul class="article-hero__tags mb-md flex list-none flex-wrap gap-xs p-0">
+								{tags.map((tag) => (
+									<li>
+										<a class="inline-block rounded-sm border border-border px-2 py-0.5 text-sm text-muted" href={tag.href}>
+											{tag.label}
+										</a>
+									</li>
+								))}
+							</ul>
+						) : null
+					}
+					{lead ? <p class="article-hero__lead m-0 max-w-[40rem] text-muted leading-body">{lead}</p> : null}
+
+					<div class="article-meta mt-lg flex flex-wrap items-start justify-between gap-sm border-t border-[rgb(33_5_5_/_18%)] pt-md">
+						<div class="flex min-w-0 flex-wrap items-start gap-x-lg gap-y-sm">
+							<div class="flex flex-col gap-sm">
+								<p class="m-0 whitespace-nowrap leading-none">
+									<span class="mr-sm align-top text-sm leading-none tracking-[0.04em] text-muted">公開日</span>
+									<time class="align-top text-sm leading-none text-muted" datetime={publishedAt}>{publishedLabel}</time>
+								</p>
+								<p class="m-0 whitespace-nowrap leading-none">
+									<span class="mr-sm align-top text-sm leading-none tracking-[0.04em] text-muted">更新日</span>
+									<time class="align-top text-sm leading-none text-muted" datetime={updatedAt}>{updatedLabel}</time>
+								</p>
+							</div>
+							<a class="article-author flex items-center gap-sm text-inherit no-underline" href="/author/">
+								<span class="article-author__photo size-12 shrink-0 overflow-hidden rounded-full">
+									<img class="article-author__photo-default size-full object-cover" src={authorAvatar} alt="" width="48" height="48" />
+									<img class="article-author__photo-hover size-full object-cover" src={authorAvatarHover} alt="" width="48" height="48" />
+								</span>
+								<span>
+									<span class="block font-bold leading-none">{authorName}</span>
+									<span class="mt-0 block text-sm text-muted">プロフィール</span>
+								</span>
+							</a>
+						</div>
+						<nav class="article-share ml-auto shrink-0" aria-label="SNSでシェア">
+							<ul class="m-0 flex list-none items-center justify-end gap-sm p-0">
+								<li>
+									<a class="article-share__link" href={facebookHref} target={shareTarget} rel={shareRel} aria-label="Facebookでシェア">
+										<img src="/common/img/common/facebook-app-round-icon.svg" alt="" width="24" height="24" />
+									</a>
+								</li>
+								<li>
+									<a class="article-share__link" href={xHref} target={shareTarget} rel={shareRel} aria-label="Xでシェア">
+										<img src="/common/img/common/x-social-media-black-icon.svg" alt="" width="24" height="24" />
+									</a>
+								</li>
+								<li>
+									<a class="article-share__link" href={hatenaHref} target={shareTarget} rel={shareRel} aria-label="はてなブックマークでシェア">
+										<span class="article-share__hatena" aria-hidden="true">B</span>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</header>
+
+				{
+					toc.length > 0 ? (
+						<nav class="article-toc mb-xl" aria-labelledby="article-toc-heading">
+							<h2 class="article-toc__heading" id="article-toc-heading">
+								目次
+							</h2>
+							<ol class="article-toc__list m-0 flex list-decimal flex-col gap-xs pl-[1.5em]">
+								{toc.map((item) => (
+									<li>
+										<a href={`#${item.id}`}>{item.label}</a>
+									</li>
+								))}
+							</ol>
+						</nav>
+					) : null
+				}
+
+				<div class="article-body" set:html={article.body} />
+			</article>
+
+			<nav class="article-share mb-xl flex justify-end" aria-label="SNSでシェア（記事下部）">
+				<ul class="m-0 flex list-none items-center gap-sm p-0">
+					<li>
+						<a class="article-share__link" href={facebookHref} target={shareTarget} rel={shareRel} aria-label="Facebookでシェア">
+							<img src="/common/img/common/facebook-app-round-icon.svg" alt="" width="24" height="24" />
+						</a>
+					</li>
+					<li>
+						<a class="article-share__link" href={xHref} target={shareTarget} rel={shareRel} aria-label="Xでシェア">
+							<img src="/common/img/common/x-social-media-black-icon.svg" alt="" width="24" height="24" />
+						</a>
+					</li>
+					<li>
+						<a class="article-share__link" href={hatenaHref} target={shareTarget} rel={shareRel} aria-label="はてなブックマークでシェア">
+							<span class="article-share__hatena" aria-hidden="true">B</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+
+			{
+				nextArticle ? (
+					<section class="article-continue overflow-hidden pb-xl" data-parallax="content" aria-labelledby="article-continue-heading">
+						<div class="article-continue__layer">
+							<h2 class="article-continue__heading mb-md mt-0 text-h3 font-bold tracking-[0.02em]" id="article-continue-heading">つづけて読む</h2>
+							<p class="mb-md mt-0">続きの記事もあわせてどうぞ。</p>
+							<p class="mb-md">
+								<a class="article-continue__link flex items-center gap-sm rounded-md border border-border p-md" href={nextArticle.href}>
+									<ArrowRight class="shrink-0" size={20} aria-hidden="true" />
+									<span class="underline underline-offset-[0.2em]">{nextArticle.title}</span>
+								</a>
+							</p>
+							<p class="m-0">エンジョイ！</p>
+						</div>
+					</section>
+				) : null
+			}
+
+			{
+				previousArticle || nextArticle ? (
+					<nav class="article-pager pb-xl" aria-label="前後の記事">
+						<div class="grid gap-md md:grid-cols-2">
+							{previousArticle ? (
+								<a
+									class="article-pager__link flex items-center gap-sm no-underline"
+									href={previousArticle.href}
+									aria-label={`前の記事：${previousArticle.title}`}
+								>
+									<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
+										<ChevronLeft size={20} />
+									</span>
+									<span class="font-bold tracking-[0.02em] text-h4 leading-heading">{previousArticle.title}</span>
+								</a>
+							) : (
+								<span class="hidden md:block"></span>
+							)}
+							{nextArticle ? (
+								<a
+									class="article-pager__link flex items-center justify-start gap-sm text-left no-underline md:justify-self-end md:text-right"
+									href={nextArticle.href}
+									aria-label={`次の記事：${nextArticle.title}`}
+								>
+									<span class="font-bold tracking-[0.02em] text-h4 leading-heading">{nextArticle.title}</span>
+									<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
+										<ChevronRight size={20} />
+									</span>
+								</a>
+							) : null}
+						</div>
+					</nav>
+				) : null
+			}
+
+			{
+				relatedArticles.length > 0 ? (
+					<section class="article-related pt-xl pb-xl" aria-labelledby="article-related-heading">
+						<h2 class="article-related__heading mb-lg mt-0 text-center text-h3 font-bold tracking-[0.02em]" id="article-related-heading">興味があるかも</h2>
+						<ul class="m-0 grid list-none gap-md p-0 md:grid-cols-3">
+							{
+								relatedArticles.map((related) => (
+									<li>
+										<a class="article-related__card flex h-full flex-col gap-sm rounded-md border border-border p-md text-inherit no-underline" href={related.href}>
+											{related.category ? <span class="text-sm tracking-[0.04em] text-muted">{related.category}</span> : null}
+											<span class="font-bold tracking-[0.02em] text-body leading-heading">{related.title}</span>
+										</a>
+									</li>
+								))
+							}
+						</ul>
+					</section>
+				) : null
+			}
+		</div>
+
+		<ArticleSidebar
+			learnSections={learnSections}
+			archiveGroups={archiveGroups}
+			archiveTitle={archiveNav?.label ?? "過去アーカイブ"}
+			archiveHref={archiveNav?.href ?? "/archive/"}
+			popularArticles={popularArticles}
+			tags={sidebarTags}
+		/>
+	</div>
+</main>
+
+<script>
+	function syncArticleMugOrigin() {
+		const wrap = document.querySelector(".article-hero__title-wrap");
+		if (!(wrap instanceof HTMLElement)) return;
+		wrap.style.setProperty("--mug-origin", `${-Math.round(wrap.getBoundingClientRect().left)}px`);
+	}
+
+	function randomizeMugBalloon() {
+		const balloon = document.querySelector(".article-hero__mugcup-balloon");
+		if (!(balloon instanceof HTMLImageElement)) return;
+		const index = Math.floor(Math.random() * 6) + 1;
+		balloon.src = `/common/img/common/baloon_a_${index}.gif`;
+	}
+
+	function randomizeMugcupImage() {
+		const mugcup = document.querySelector(".article-hero__mugcup-img");
+		if (!(mugcup instanceof HTMLImageElement)) return;
+		const index = Math.floor(Math.random() * 5) + 1;
+		mugcup.src = `/common/img/common/mugcup${index}.jpg`;
+	}
+
+	syncArticleMugOrigin();
+	randomizeMugBalloon();
+	randomizeMugcupImage();
+	window.addEventListener("resize", syncArticleMugOrigin);
+	document.addEventListener("astro:page-load", () => {
+		syncArticleMugOrigin();
+		randomizeMugBalloon();
+		randomizeMugcupImage();
+	});
+</script>
+
+<script>
+	const LERP = 0.08;
+	const CONTENT_RANGE = 28;
+
+	/** @type {null | (() => void)} */
+	let disposeContinueParallax = null;
+
+	function initContinueParallax() {
+		disposeContinueParallax?.();
+		disposeContinueParallax = null;
+
+		const section = document.querySelector(".article-continue[data-parallax]");
+		const layer = section?.querySelector(".article-continue__layer");
+		if (!(section instanceof HTMLElement) || !(layer instanceof HTMLElement)) return;
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			section.classList.add("is-inview");
+			return;
+		}
+
+		section.classList.add("is-parallax-ready");
+
+		let currentY = 0;
+		let ticking = false;
+		let frameId = 0;
+
+		const progressOf = () => {
+			const rect = section.getBoundingClientRect();
+			const span = window.innerHeight + rect.height;
+			if (span <= 0) return 0.5;
+			return Math.min(1, Math.max(0, (window.innerHeight - rect.top) / span));
+		};
+
+		const targetOffset = (progress, range) => {
+			const eased = progress * progress * (3 - 2 * progress);
+			return (0.5 - eased) * range * 2;
+		};
+
+		const update = () => {
+			ticking = false;
+			const next = targetOffset(progressOf(), CONTENT_RANGE);
+			currentY += (next - currentY) * LERP;
+			layer.style.setProperty("--parallax-y", `${currentY.toFixed(2)}px`);
+
+			if (Math.abs(next - currentY) > 0.05) {
+				ticking = true;
+				frameId = requestAnimationFrame(update);
+			}
+		};
+
+		const requestUpdate = () => {
+			if (ticking) return;
+			ticking = true;
+			frameId = requestAnimationFrame(update);
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					section.classList.add("is-inview");
+					observer.unobserve(section);
+				}
+			},
+			{ threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
+		);
+
+		observer.observe(section);
+		window.addEventListener("scroll", requestUpdate, { passive: true });
+		window.addEventListener("resize", requestUpdate);
+		requestUpdate();
+
+		disposeContinueParallax = () => {
+			observer.disconnect();
+			window.removeEventListener("scroll", requestUpdate);
+			window.removeEventListener("resize", requestUpdate);
+			cancelAnimationFrame(frameId);
+			ticking = false;
+		};
+	}
+
+	initContinueParallax();
+	document.addEventListener("astro:page-load", initContinueParallax);
+</script>
+
+<script>
+	const POPUP_MS = 2500;
+
+	/** @type {null | (() => void)} */
+	let disposeAskCopy = null;
+
+	/** @param {string} text */
+	async function copyQuestion(text) {
+		try {
+			await navigator.clipboard.writeText(text);
+			return;
+		} catch {
+			/* 権限がない場合は textarea 経由でコピーする */
+		}
+
+		const input = document.createElement("textarea");
+		input.value = text;
+		input.setAttribute("readonly", "");
+		input.style.position = "fixed";
+		input.style.left = "-9999px";
+		document.body.append(input);
+		input.select();
+		document.execCommand("copy");
+		input.remove();
+	}
+
+	function wrapAskTextMarks() {
+		for (const textEl of document.querySelectorAll(".article-body .article-ask__text")) {
+			if (!(textEl instanceof HTMLElement)) continue;
+			if (textEl.querySelector(".article-ask__mark")) continue;
+			const mark = document.createElement("span");
+			mark.className = "article-ask__mark";
+			while (textEl.firstChild) mark.append(textEl.firstChild);
+			textEl.append(mark);
+		}
+	}
+
+	function initAskCopy() {
+		disposeAskCopy?.();
+		disposeAskCopy = null;
+		wrapAskTextMarks();
+
+		const sections = [...document.querySelectorAll(".article-body .article-ask")].filter(
+			(el) => el instanceof HTMLElement,
+		);
+		/** @type {(() => void)[]} */
+		const disposers = [];
+
+		for (const section of sections) {
+			const button = section.querySelector(".article-ask__copy");
+			const textEl = section.querySelector(".article-ask__text");
+			const popup = section.querySelector(".article-ask__popup");
+			if (!(button instanceof HTMLButtonElement) || !(textEl instanceof HTMLElement) || !(popup instanceof HTMLDialogElement)) {
+				continue;
+			}
+
+			let hideTimer = 0;
+
+			const hidePopup = () => {
+				window.clearTimeout(hideTimer);
+				if (popup.open) popup.close();
+			};
+
+			const onCopy = async () => {
+				const text = textEl.textContent?.trim() ?? "";
+				if (!text) return;
+				await copyQuestion(text);
+				if (!popup.open) popup.show();
+				window.clearTimeout(hideTimer);
+				hideTimer = window.setTimeout(hidePopup, POPUP_MS);
+			};
+
+			/** @param {MouseEvent} event */
+			const onPopupClick = (event) => {
+				if (event.target === popup) hidePopup();
+			};
+
+			button.addEventListener("click", onCopy);
+			popup.addEventListener("click", onPopupClick);
+
+			/** @type {null | IntersectionObserver} */
+			let popupObserver = null;
+			if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+				section.classList.add("is-inview");
+			} else {
+				popupObserver = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							if (!entry.isIntersecting) continue;
+							section.classList.add("is-inview");
+							popupObserver?.unobserve(section);
+						}
+					},
+					{ threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
+				);
+				section.classList.add("is-popup-ready");
+				popupObserver.observe(section);
+			}
+
+			disposers.push(() => {
+				hidePopup();
+				popupObserver?.disconnect();
+				button.removeEventListener("click", onCopy);
+				popup.removeEventListener("click", onPopupClick);
+			});
+		}
+
+		disposeAskCopy = () => {
+			for (const dispose of disposers) dispose();
+		};
+	}
+
+	initAskCopy();
+	document.addEventListener("astro:page-load", initAskCopy);
+</script>
+
+<script is:inline src="/common/js/prism.js" data-manual></script>
+<script>
+	function highlightArticleBody() {
+		const body = document.querySelector(".article-body");
+		const prism = window.Prism;
+		if (!(body instanceof HTMLElement) || !prism) return;
+		prism.highlightAllUnder(body);
+	}
+
+	document.addEventListener("astro:page-load", highlightArticleBody);
+</script>
+
+<script>
+	/** @type {null | (() => void)} */
+	let disposeIllustFade = null;
+
+	function initIllustFade() {
+		disposeIllustFade?.();
+		disposeIllustFade = null;
+
+		const items = [...document.querySelectorAll(".article-body .illust")].filter((el) => el instanceof HTMLElement);
+		if (items.length === 0) return;
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			for (const item of items) item.classList.add("is-inview");
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					entry.target.classList.add("is-inview");
+					observer.unobserve(entry.target);
+				}
+			},
+			{ threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
+		);
+
+		for (const item of items) {
+			item.classList.add("is-fade-ready");
+			observer.observe(item);
+		}
+
+		disposeIllustFade = () => observer.disconnect();
+	}
+
+	initIllustFade();
+	document.addEventListener("astro:page-load", initIllustFade);
+</script>

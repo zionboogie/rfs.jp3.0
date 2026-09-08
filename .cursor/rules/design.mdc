@@ -27,7 +27,7 @@ alwaysApply: true
 
 - Layout / Header / Footer
 - AboutIntro / RhythmFactoryLogo
-- CourseListItem / CourseTile / Button
+- CourseListItem / CourseTile
 
 同じ UI が複数箇所にある場合は共通化を検討する。新規作成の前に既存を確認する。
 

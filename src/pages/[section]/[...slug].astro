@@ -1,0 +1,117 @@
+---
+import Layout from "../../components/Layout.astro";
+import CategoryListing from "../../components/CategoryListing.astro";
+import ArticlePage from "../../components/ArticlePage.astro";
+import {
+	getArchiveArticlePosts,
+	getArchiveCategories,
+	getArticleDetail,
+	getCategoryPageData,
+	toPostRouteParams,
+	toRouteParams,
+	type ArticleDetail,
+	type CategoryPageData,
+} from "../../lib/wordpress";
+import { collectionJsonLd, techArticleJsonLd } from "../../lib/structured-data";
+import { categoryListTitle } from "../../lib/seo";
+import "../../styles/category.css";
+
+export async function getStaticPaths() {
+	const categories = await getArchiveCategories();
+	const paths: {
+		params: { section: string; slug: string };
+		props: Props;
+	}[] = [];
+	const used = new Set<string>();
+
+	function routeKey(section: string, slug: string) {
+		return `${section}/${slug}`;
+	}
+
+	for (const category of categories) {
+		const route = toRouteParams(category);
+		if (!route?.slug) continue;
+		const key = routeKey(route.section, route.slug);
+		if (used.has(key)) continue;
+		used.add(key);
+		paths.push({
+			params: {
+				section: route.section,
+				slug: route.slug,
+			},
+			props: {
+				kind: "category",
+				page: await getCategoryPageData(category),
+			},
+		});
+	}
+
+	const articles = await getArchiveArticlePosts();
+	for (const post of articles) {
+		const route = toPostRouteParams(post);
+		if (!route) continue;
+		const key = routeKey(route.section, route.slug);
+		if (used.has(key)) continue;
+		used.add(key);
+		paths.push({
+			params: {
+				section: route.section,
+				slug: route.slug,
+			},
+			props: {
+				kind: "article",
+				article: await getArticleDetail(post),
+			},
+		});
+	}
+
+	return paths;
+}
+
+type Props =
+	| { kind: "category"; page: CategoryPageData }
+	| { kind: "article"; article: ArticleDetail };
+
+const props = Astro.props;
+const title = props.kind === "article" ? props.article.title : categoryListTitle(props.page.title);
+const description =
+	props.kind === "article"
+		? props.article.lead || props.article.title
+		: props.page.description.trim() || `${props.page.title}の記事一覧`;
+const jsonLd =
+	props.kind === "article"
+		? techArticleJsonLd({
+				origin: Astro.url.origin,
+				headline: props.article.title,
+				description,
+				url: props.article.path,
+				datePublished: props.article.publishedAt,
+				dateModified: props.article.updatedAt,
+				imageUrl: props.article.imageUrl,
+				imageWidth: props.article.imageWidth,
+				imageHeight: props.article.imageHeight,
+			})
+		: collectionJsonLd({
+				origin: Astro.url.origin,
+				name: props.page.title,
+				description,
+				url: props.page.path,
+				items: props.page.latestArticles.map((article) => ({ name: article.title, url: article.href })),
+			});
+---
+
+<Layout
+	title={title}
+	description={description}
+	skipIntro
+	jsonLd={jsonLd}
+	type={props.kind === "article" ? "article" : "website"}
+>
+	{
+		props.kind === "article" ? (
+			<ArticlePage article={props.article} />
+		) : (
+			<CategoryListing category={props.page} />
+		)
+	}
+</Layout>
