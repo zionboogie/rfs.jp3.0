@@ -1,6 +1,7 @@
 ---
 import Layout from "../../components/Layout.astro";
 import CourseListItem from "../../components/CourseListItem.astro";
+import { hiddenArchiveTitles } from "../../data/courses";
 import { findArchiveCategory, getChildSummaries, wpText, type WpCategory } from "../../lib/wordpress";
 
 export async function getStaticPaths() {
@@ -24,7 +25,9 @@ interface Props {
 }
 
 const { category } = Astro.props;
-const children = await getChildSummaries(category);
+const children = (await getChildSummaries(category)).filter(
+	(child) => category.slug === "learn" || !hiddenArchiveTitles.has(child.title),
+);
 const title = wpText(category.name);
 const description = wpText(category.description);
 ---

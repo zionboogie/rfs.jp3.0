@@ -22,7 +22,7 @@ export const navMenus: NavMenu[] = [
 	},
 ];
 
-/** トップのアーカイブ一覧で出さないカテゴリ（記事サイドバーでも同じ） */
+/** トップ／アーカイブ一覧／記事サイドバーで出さないカテゴリ */
 export const hiddenArchiveTitles = new Set([
 	"ActionScript講座",
 	"Atom講座",

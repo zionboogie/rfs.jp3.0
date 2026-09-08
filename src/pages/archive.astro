@@ -1,21 +1,10 @@
 ---
 import Layout from "../components/Layout.astro";
 import CourseListItem from "../components/CourseListItem.astro";
-import { findArchiveCategory, toSitePath, wpText } from "../lib/wordpress";
+import { hiddenArchiveTitles } from "../data/courses";
+import { getVisibleArchiveGroups } from "../lib/wordpress";
 
-const archiveRoots = ["sb", "server"] as const;
-const items: { title: string; description: string; href: string }[] = [];
-
-for (const slug of archiveRoots) {
-	const category = await findArchiveCategory(slug);
-	if (!category) continue;
-	const path = toSitePath(category.link);
-	items.push({
-		title: wpText(category.name),
-		description: wpText(category.description),
-		href: path.endsWith("/") ? path : `${path}/`,
-	});
-}
+const archiveGroups = await getVisibleArchiveGroups(hiddenArchiveTitles);
 ---
 
 <Layout title="アーカイブ" description="過去の記事アーカイブ" skipIntro>
@@ -23,11 +12,18 @@ for (const slug of archiveRoots) {
 		<header class="category-hero pt-xl pb-xl">
 			<div class="container">
 				<h1 class="category-hero__title mb-xl font-bold tracking-[0.04em] text-h1 leading-heading">アーカイブ</h1>
-				<div class="course-list mt-xl border-t border-[rgb(33_5_5_/_18%)]">
-					{items.map((item, index) => (
-						<CourseListItem index={index + 1} title={item.title} description={item.description} href={item.href} />
-					))}
-				</div>
+				{
+					archiveGroups.map((group, groupIndex) => (
+						<div class:list={[groupIndex > 0 && "mt-xl"]}>
+							<h2 class="mb-md mt-0 text-h3 font-bold tracking-[0.04em]">{group.title}</h2>
+							<div class="course-list border-t border-[rgb(33_5_5_/_18%)]">
+								{group.children.map((child, index) => (
+									<CourseListItem index={index + 1} title={child.title} description={child.description} href={child.href} />
+								))}
+							</div>
+						</div>
+					))
+				}
 			</div>
 		</header>
 	</main>
