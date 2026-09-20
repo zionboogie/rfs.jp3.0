@@ -22,14 +22,16 @@
 	h2 {
 		margin: var(--spacing-2xl, 96px) 0 var(--spacing-md, 24px);
 		scroll-margin-top: calc(var(--header-height, 5.5rem) + var(--spacing-sm, 16px));
-		font-size: var(--text-h3, clamp(1.5rem, 2vw, 2rem));
+		/* 記事内 H2: 28〜32px（サイト共通トークンとは独立） */
+		font-size: clamp(1.75rem, 2.2vw, 2rem);
 		font-weight: 700;
 		letter-spacing: 0.02em;
 	}
 
 	h3 {
 		margin: var(--spacing-xl, 64px) 0 var(--spacing-md, 24px);
-		font-size: var(--text-h3, clamp(1.5rem, 2vw, 2rem));
+		/* 記事内 H3: 22〜24px */
+		font-size: clamp(1.375rem, 1.6vw, 1.5rem);
 		font-weight: 700;
 		letter-spacing: 0.02em;
 	}
@@ -121,6 +123,8 @@
 	pre {
 		margin: 0 0 var(--spacing-md, 24px);
 		overflow-x: auto;
+		/* 記事内コード: 16px（本文 18px より一段小さく） */
+		font-size: 1rem;
 	}
 
 	pre:not([class*="language-"]) {
@@ -140,7 +144,12 @@
 
 	code {
 		font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
-		font-size: 0.9375em;
+		font-size: 1rem;
+	}
+
+	code[class*="language-"],
+	pre[class*="language-"] {
+		font-size: 1rem;
 	}
 
 	p code,
@@ -266,7 +275,8 @@
 		overflow-wrap: anywhere;
 		word-break: break-word;
 		color: var(--color-muted, rgb(100 90 90));
-		font-size: var(--text-body, 1rem);
+		/* 注釈・補足: 14〜15px */
+		font-size: 0.9375rem;
 		text-align: center;
 		line-height: 1.5;
 	}
@@ -295,7 +305,8 @@
 	.illust figcaption {
 		margin: var(--spacing-sm, 16px) 0 0;
 		color: var(--color-muted, rgb(100 90 90));
-		font-size: var(--text-body, 1rem);
+		/* 注釈・補足: 14〜15px */
+		font-size: 0.9375rem;
 		text-align: center;
 		line-height: 1.5;
 	}
@@ -448,7 +459,8 @@
 	.article-ask__heading {
 		margin: 0;
 		flex-shrink: 0;
-		font-size: 0.875rem;
+		/* 注釈・補足: 14〜15px */
+		font-size: 0.9375rem;
 		font-weight: 700;
 		letter-spacing: 0.04em;
 	}
@@ -495,7 +507,8 @@
 		border-radius: var(--radius-sm, 4px);
 		background-color: transparent;
 		cursor: pointer;
-		font-size: 0.875rem;
+		/* ボタン・UI: 15〜16px */
+		font-size: 0.9375rem;
 		font-weight: 700;
 	}
 
@@ -539,7 +552,8 @@
 	}
 
 	.article-site-link__category {
-		font-size: 0.875rem;
+		/* 注釈・補足: 14〜15px */
+		font-size: 0.9375rem;
 		font-weight: 700;
 		letter-spacing: 0.04em;
 		color: var(--color-muted, rgb(100 90 90));
