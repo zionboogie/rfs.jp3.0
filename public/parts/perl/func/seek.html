@@ -1,0 +1,75 @@
+<div class="func-header">
+	<div class="func-format">
+seek FILEHANDLE, OFFSET, WHENCE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>seek</code>を使えば、ファイルの任意のレコードにアクセスできます。この関数は、<code>FILEHANDLE</code>の<code>OFFSET</code>位置にファイルポインタをセットします。成功すると 1、失敗すると 0 を返します。</p>
+	<dl>
+		<dt>FILEHANDLE</dt>
+		<dd>FILEHANDLE 
+		は、ファイルハンドル名またはファイルハンドルオブジェクトへのリファレンスになるような式でもかまいません。</dd>
+		<dt>OFFSET</dt>
+		<dd>OFFSET はバイト単位で位置を指定します。</dd>
+		<dt>WHENCE</dt>
+		<dd>WHENCE によって、OFFSET がファイルのどこを基点とするかを指定します。WHENCE 
+		の値が、0 ならば、ファイルポインタを OFFSET の位置へ、1 ならば、現在位置から OFFSET 
+		離れた位置へ、2 ならば、EOF から OFFSET だけ離れた位置へ、ファイルポインタを設定します。</dd>
+	</dl>
+
+	<h3>WHENCE</h3>
+
+	<table class="table-format01">
+		<tr>
+			<th>WHENCE</th>
+			<th>意味</th>
+		</tr>
+		<tr>
+
+			<td class="td_strong">0</td>
+			<td>ファイルの先頭</td>
+		</tr>
+		<tr>
+			<td class="td_strong">1</td>
+			<td>現在の位置</td>
+		</tr>
+
+		<tr>
+			<td class="td_strong">2</td>
+			<td>ファイルの末尾</td>
+		</tr>
+	</table>
+
+	<h2 class="func-sample">seekの使い方</h2>
+
+
+<pre class="brush: perl;">
+open (FH, $log);
+# ファイルの末尾に移動
+seek(FH, 2, 0); 
+</pre>
+
+	<h3>他のプロセスによって長さが増えるようなファイルに追随</h3>
+
+<pre class="brush: perl;">
+for ( ;; ){
+while ( &lt;LOG&gt; ){
+...
+}
+sleep 15;
+seek LOG, 0, 1;
+}
+</pre>
+
+	<p>プロセスについては用語集「プロセス」を参照してください。</p>
+
+</div>

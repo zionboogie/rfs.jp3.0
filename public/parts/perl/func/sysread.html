@@ -1,0 +1,25 @@
+<div class="func-header">
+	<div class="func-format">
+sysread FILEHANDLE, SCALAR, LENGTH, [OFFSET] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>システムコマンドの<code>read</code>を用いて、指定した<code>FILEHANDLE</code>から、変数<code>SCALAR</code>へ、<code>LENGTH</code>バイトのデータの読み込みを試みます。実際に読み込まれたデータの長さか、エラー時には<code>undef</code>が返されます。　</p>
+
+	<ul class="ul-list">
+		<li><code>SCALAR</code>は、実際に読み込んだ長さに応じて、伸び縮みします。</li>
+		<li><code>OFFSET</code>を指定すると、<code>SCALAR</code>の先頭以外の場所から、読み込みを行ないうことができます。</li>
+	</ul>
+
+	<p>これは、<code>stdio</code>ルーティンを通りませんから、他の入力関数と混ぜて使うと、入力がおかしくなるかもしれません。</p>
+
+</div>

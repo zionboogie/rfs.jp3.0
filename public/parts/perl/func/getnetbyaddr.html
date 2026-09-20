@@ -1,0 +1,31 @@
+<div class="func-header">
+	<div class="func-format">
+getnetbyaddr IPADDR, ADDR_TYPE
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p><code>getnetbyaddr</code>は、ネットワークファイル(<code>/etc/naeworks</code>)、もしくは、同等の機構から、引数<code>IPADDR</code>にマッチしたネットワーク情報（ネットワーク名/エイリアス/アドレスタイプ/ネットワークアドレスの構造体）のリストを返します。</p>
+
+	<p>引数<code>IPADDR</code>には、IPアドレスを表す構造体、<code>ADDR_TYPE</code>には、<code>Socket</code>モジュールからインポートできる定数<code>AF_INET</code>を指定します。</p>
+
+	<h2 class="func-sample">getnetbyaddrの使い方</h2>
+
+<pre class="brush: perl;">
+use Socket;
+# ネットワーク情報の取得
+@network = getnetbyaddr(unpack(N, pack('C4',192.168.0.10)), &AF_INET);
+
+# ネットワークアドレスの構造体は以下のようにして戻すことができます
+@address = unpack('C4', pack("N", $network[3]));
+printf "%d.%d.%d.%d\n", @address;
+</pre>
+
+</div>

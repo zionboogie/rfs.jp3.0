@@ -1,0 +1,66 @@
+@charset "UTF-8";
+@import "bourbon";	// CompassのHTML5用リセットCSS読み込み
+
+// レスポンシブ用横幅指定
+$w-entry: 600px;
+$w-sub: 300px;
+$w-margin: 10px;
+
+// 簡易なCSSリセット
+*, *:before, *:after {
+	box-sizing: border-box;
+	margin: 0; padding: 0;
+}
+
+/* ========================================================
+レイアウト
+=========================================================*/
+main{
+	// FlexBox指定
+	@include display(flex);
+	@include flex-flow(row wrap);
+
+	.entry{
+		// flex-growを1に指定
+		// 余白をflexアイテムで分け合い、自動的に横幅が調整されます。
+		@include flex(1);
+
+		margin-right: $w-margin;
+		min-width: $w-entry;
+
+		// ▼下記2行は見栄えを整えるためで必須ではない
+		background: #efefef;
+		padding: 20px;
+	}
+	.sub{
+		width: $w-sub;
+
+		// ▼下記2行は見栄えを整えるためで必須ではない
+		background: #efefef;
+		padding: 20px;
+	}
+}
+
+/* ========================================================
+レスポンシブ用（カラム落ちした際の処理）
+=========================================================*/
+// ウインドウサイズが .entry の min-width ＋ 余白 ＋ .sub の横幅以下になった場合の処理です
+@media only screen and (max-width: $w-entry + $w-sub + $w-margin) {
+	main{
+		.entry{
+			// 横幅を100%
+			width: 100%;
+
+			// ▼min-width、余白をリセット
+			min-width: inherit;
+			margin-right: 0;
+		}
+		.sub{
+			// 横幅を100%
+			width: 100%;
+
+			// 見栄えを整えるためで必須ではない
+			margin-top: 10px;
+		}
+	}
+}

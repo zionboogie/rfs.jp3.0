@@ -1,0 +1,27 @@
+<div class="func-header">
+	<div class="func-format">
+substr STRING, OFFSET, [LEN, REPLACEMENT] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>文字列から指定した部分の文字列を返します。文字列<code>STRING</code>の<code>OFFSET</code>バイトから、<code>LEN</code>バイト取り出して返します。<code>OFFSET</code>は、0 から数えます。<code>LEN</code>を省略すると、<code>OFFSET</code>から最後まで返します。<code>OFFSET</code>に負の数を指定すると、<code>STRING</code>の末尾から<code>LEN</code>分が返されます。<code>REPLACEMENT</code>を指定すると、取り出した文字列と置き換えられます。</p>
+
+	<h2 class="func-sample">substrの使い方</h2>
+
+<pre class="brush: perl;">
+$date = '96/08/09';
+
+# $month に"08"が代入される
+$month = substr($date,3,2);
+</pre>
+
+</div>

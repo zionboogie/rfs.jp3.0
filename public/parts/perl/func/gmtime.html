@@ -1,0 +1,30 @@
+<div class="func-header">
+	<div class="func-format">
+gmtime EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code><a href="time.html">time</a></code>関数が返す時刻をグリニッジ標準時（<code>GMT</code>）に変換し、8 要素の配列として返します。スカラコンテキストでは<code>GMT</code>に基づいて、<code>ctime</code>システムコールのような文字列を返します。</p>
+
+	<h2 class="func-sample"><code>gmtime</code>の使い方</h2>
+
+
+<pre class="brush: perl;">
+($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) 
+= gmtime(time); 
+</pre>
+
+	<p>すべての配列要素は数値です。注意する点は、<code>$mon</code>が 0..11 の範囲で、0 が1月を表し、<code>$wday</code>が 0..6 の範囲、0 が月曜日を表します。また、<code>$year</code>には西暦から 1900 を引いた値がセットされています。引数が省略されると、現在の時刻を使います（<code>gmtime(time)</code>と同様）。</p>
+
+	<p><code>Perl</code>ライブラリモジュール<code>Time::Local</code>には<code>timegm</code>サブルーチンが用意されていて、<code>gmtime</code>の逆変換が可能です。</p>
+
+</div>

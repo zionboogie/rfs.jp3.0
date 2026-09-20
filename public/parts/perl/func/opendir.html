@@ -1,0 +1,25 @@
+<div class="func-header">
+	<div class="func-format">
+opendir DIRHANDLE, DIRECTORY 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>第2引数<code>DIRECTORY</code>で指定したディレクトリをオープンし、第1引数<code>DIRHANDLE</code>に対応させます。<code>DIRHANDLE</code>を利用して、<a href="readdir.html"><code>readdir</code></a>、<a href="telldir.html"><code>telldir</code></a>、<a href="seekdir.html"><code>seekdir</code></a>、<a href="rewinddir.html"><code>rewinddir</code></a>、<a href="closedir.html"><code>closedir</code></a>が使えます。成功すれば&quot;真&quot;を返します。</p>
+
+	<h2 class="func-sample">opendirの使い方</h2>
+
+<pre class="brush: perl;">
+opendir ( DIR, "." ) || die "Can't open dir. $!\n";
+@file = grep /\.html/, readdir(DIR);closedir( DIR ); 
+</pre>
+
+</div>

@@ -1,0 +1,24 @@
+<div class="func-header">
+	<div class="func-format">
+getgrgid GROUP_ID
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p><code>getgrgid</code>は、引数<code>GROUP_ID</code>に指定されたグループIDの値を使って、グループファイル（<code>/etc/group</code>）からマッチしたグループ情報（グループ名/パスワード/グループID/メンバ）を返します。スカラコンテキストの場合は、グループ名を返します。</p>
+
+	<h2 class="func-sample">getgrgidの使い方</h2>
+
+<pre class="brush: perl;">
+# グループIDが 500 のグループ情報を取得する
+@group = getgrgid(500);
+</pre>
+
+</div>

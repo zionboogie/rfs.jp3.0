@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+<title>経度・緯度を調べる</title>
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAISaqxyviRu2ZdPokB6DyURQUmdxOOAs9gZKiURYEsRKKeB07FhRAvRkIHfRhGOpE3D7NkS4csznM9g" type="text/javascript"></script> 
+</head>
+<body>
+
+<div id="map" style="width: 500px; height: 400px"></div>
+<script type="text/javascript">
+//<![CDATA[
+
+var map;
+if (GBrowserIsCompatible()) {
+	map	= new GMap(document.getElementById("map"));
+	map.addControl(new GLargeMapControl());
+	map.addControl(new GMapTypeControl());
+	map.setCenter(new GLatLng(35.644934,139.699166), 13); 
+
+	//センターポイントの座標を表示
+	showLatLonInfo	= function (){
+		var point	= map.getCenterLatLng();
+		document.getElementById("lat-info").innerHTML = point.x;
+		document.getElementById("lon-info").innerHTML = point.y;
+		map.addOverlay(new GMarker(point));
+	};
+	
+	// イベント処理
+	GEvent.addListener(map, "moveend", function() {
+		showLatLonInfo();
+	});
+	
+	// ONLOAD時のイベント処理
+	window.onload = function(){ showLatLonInfo(); }
+}
+
+
+//]]>
+</script>
+経度：<span id="lat-info"></span><br />
+
+緯度：<span id="lon-info"></span>
+
+<p>ドラッグして地図を移動すると、地図の中心点の経度、緯度が表示されます。</p>
+
+  </body>
+</html>

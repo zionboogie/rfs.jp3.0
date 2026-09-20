@@ -1,0 +1,38 @@
+<div class="func-header">
+	<div class="func-format">
+ref EXPR 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数がリファレンスならリファレンスが参照する型を返します。それ以外は空文字を返します。組み込みの型には、次のものがあります。</p>
+
+	<ul class="ul-list">
+		<li>REF</li>
+		<li>SCALAR</li>
+		<li>ARRAY</li>
+		<li>HASH</li>
+		<li>CODE</li>
+		<li>GLOB</li>
+	</ul>
+
+	<p>参照元オブジェクトがパッケージに<code><a href="bless.html">bless</a></code>されたものであれば、代わりにパッケージ名を返します。<!--webbot bot="PurpleText" PREVIEW="perlref manpage も参照してください。" --></p>
+
+	<h2 class="func-sample">refの使い方</h2>
+
+
+<pre class="brush: perl;">
+if ( ref($r) eq &quot;HASH&quot; ) {
+	print &quot;\$r はハッシュのリファレンスです。\n&quot;;
+}
+</pre>
+
+</div>

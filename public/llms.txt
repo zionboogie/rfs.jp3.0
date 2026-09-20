@@ -1,0 +1,57 @@
+# RFS.jp
+
+> 初心者向けプログラミング学習 Smartは、Web制作を学び始めた人向けの日本語学習サイトです。AIと一緒にHTML、CSS、JavaScript、WordPressなどを学びます。運営はrhythmfactory Ltd.です。
+
+このファイルはRFS.jpの目次です。全記事の一覧ではありません。学習の入口となるコースとカテゴリだけを案内します。詳細が必要なときは、該当するリンク先を読んでください。
+
+記事は日本語です。暗記より「なぜそうするのか」の理解と、コードを実際に試すことを重視しています。過去アーカイブは現行コースより古い内容を含みます。サイト内検索（/search/）は学習の目次ではありません。
+
+## サイト
+
+- [トップ](https://rfs.jp/): 現行コースとアーカイブの一覧
+- [著者](https://rfs.jp/author/): あおいパスタ
+- [過去アーカイブ](https://rfs.jp/archive/): 旧講座のカテゴリ一覧
+
+## AIと学ぶWeb言語
+
+- [AIと学ぶWeb言語](https://rfs.jp/learn/ai-web-development/): 「書いてみる」から始める、AI時代のWeb言語入門。
+- [ガイドライン集](https://rfs.jp/learn/guidline/): Web制作をスムーズに進めるための、ルールと知識。
+
+## 学習方法と便利なツール
+
+- [学習方法と便利なツール](https://rfs.jp/learn/getting-started/): 無料・低コストで使える、Web開発の便利な道具たち。
+- [Cursor入門](https://rfs.jp/learn/lerning-cursor/): AIコードエディタ「Cursor」を使って、AIと一緒にコードを書くための基本を学びます。設定からモデル、トークン、Agentまで、Cursorの仕組みをひとつずつ見ていきましょう。
+- [オトクな学習方法](https://rfs.jp/learn/learning-tip/): 少しの工夫で、Web制作の学び方はもっと効率的に。
+- [初めてのAI＆Web制作](https://rfs.jp/learn/ai-web-basic/): AIを相棒に、Web制作の最初の一歩を踏み出そう。
+
+## 過去アーカイブ（Programming）
+
+- [AIエディタ](https://rfs.jp/sb/ai-editor/)
+- [HTML/CSS](https://rfs.jp/sb/html-css/): HTML/CSS講座では、ホームページを作成するためのリファレンスと、CSSを拡張するSass、コーディングガイドライン、CSSやJavaScriptといった関連技術の紹介、スマートフォン対応などを詳しく説明しています。
+- [JavaScript講座](https://rfs.jp/sb/javascript/): JavaScriptの概要から始まって、フレームワークやオブジェクトなど仕様の隅々まで解説しています。 沢山のサンプルコードとテクニック集もご用意、遠慮なくご利用ください。
+- [Perl講座](https://rfs.jp/sb/perl/): Perlはテキスト整形が強力な言語で、CGI言語としても根強い人気があります。この講座では言語リファレンスから応用、スタイルガイドまで広範囲をサポートします。書籍化されましたが、そのまま公開中です！
+- [PHP講座](https://rfs.jp/sb/php/): PHPはPerlと同じようにCGIとして動作するスクリプト言語です。PHPを使った際の記録を掲載しています。
+- [SQL講座](https://rfs.jp/sb/sql/): 標準SQLを押さえつつ、MySQLにそのまま使える講座です。講座内容が書籍化されましたが、そのまま公開中です！
+- [Visual Studio Code](https://rfs.jp/sb/vsc/): Visual Studio Codeは様々なプログラミング言語に対応したエディタです。モダンな機能を搭載し、なおかつ軽快に動作するので、今最も人気を集めています。
+- [WordPress講座](https://rfs.jp/sb/wordpress/): WordPressは世界で圧倒的なシェアを誇るブログ用のオープンソースソフトウエアです。開発時によく使うコードやプラグインなどを紹介しています。
+- [注目技術＆アクセス向上](https://rfs.jp/sb/business/)
+- [科学的に正しい学習法](https://rfs.jp/sb/learning/)
+
+## 過去アーカイブ（Server）
+
+- [Apache講座](https://rfs.jp/server/apache/): Apacheのインストールから、ユーザ認証、セキュリティなどの設定を詳しく解説しています。
+- [AWS講座](https://rfs.jp/server/aws/)
+- [BIND-DNS講座](https://rfs.jp/server/bind/): DNS(Domain Name System)は、インターネットの名前解決サービスです。ネームサーバーで最もポピュラーなBINDの設定方法を紹介しています。
+- [Git講座](https://rfs.jp/server/git/): Gitは開発に必須のバージョン管理システムです。プロの現場ではバージョン管理システムとしてはほぼ1択状態のため、必修の技術といえます。Gitの用語集から、Gitを使った運用方法などを紹介しています。
+- [MySQL講座](https://rfs.jp/server/mysql/): MySQLでデータベースを構築、運営するためのノウハウを公開中です。
+- [netatalkの導入](https://rfs.jp/server/netatalk01/)
+- [Sendmail講座](https://rfs.jp/server/sendmail/)
+- [コマンドライン](https://rfs.jp/server/cline/)
+- [セキュリティ](https://rfs.jp/server/security/)
+- [各種サーバ設定](https://rfs.jp/server/setting/)
+
+## Optional
+
+- [運営会社](https://rhythmfactory.jp/): rhythmfactory Ltd.
+- [sitemap.xml](https://rfs.jp/sitemap.xml): 公開ページの全URL
+- [robots.txt](https://rfs.jp/robots.txt): クローラ向けの許可範囲

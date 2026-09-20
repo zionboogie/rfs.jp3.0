@@ -1,0 +1,27 @@
+<div class="func-header">
+	<div class="func-format">
+join EXPR,LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p><code>LIST</code>の要素を<code>EXPR</code>で結合し、その文字列を返します。</p>
+
+	<h2 class="func-sample">joinの使い方</h2>
+
+<pre class="brush: perl;">
+@list = (One, Tow, Three);
+print join( ":" , @list);
+> One:Tow:Three 
+</pre>
+
+	<p>逆変換には<a href="split.html"><code>split</code></a>を使います。</p>
+
+</div>

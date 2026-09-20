@@ -1,0 +1,27 @@
+<div class="func-header">
+	<div class="func-format">
+tell FILEHANDLE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>tell</code>関数は、<code>FILEHANDLE</code>の現在のファイルポジション（バイト単位）を返します。<code>FILEHANDLE</code>は、実際のファイルハンドル名を示す式でもかまいません。<code>FILEHANDLE</code>が省略された場合には、最後に読み込みを行なったファイルポジションを返します。</p>
+
+	<h2 class="func-sample">tellの使い方</h2>
+
+<pre class="brush: perl;">
+open ( FH, $file );
+seek FH, 10, 0;
+print tell FH;
+> 10
+</pre>
+
+</div>

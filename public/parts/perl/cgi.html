@@ -1,0 +1,1362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja" id="sixapart-standard">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <title>CGIモジュール | Perl講座 [Smart]</title>
+<script type="text/javascript" src="/js/main.js"></script>
+<script type="text/javascript">
+SyntaxHighlighter.config.clipboardSwf = '/js/syntaxhighlighter/scripts/clipboard.swf';
+SyntaxHighlighter.all();
+</script>
+    
+
+    
+        
+        
+        
+        
+        
+        
+        <link rel="stylesheet" href="http://rfs.jp/styles.css" type="text/css" />
+        <link rel="alternate" type="application/atom+xml" title="Atom" href="http://rfs.jp/atom.xml" />
+        <link rel="start" href="http://rfs.jp/" title="Home" />
+        <script type="text/javascript" src="http://rfs.jp/mt.js"></script>
+        
+    
+
+
+    <link rel="prev bookmark" href="http://rfs.jp/sb/perl/07/01.html" title="標準モジュール一覧" />
+    <link rel="next bookmark" href="http://rfs.jp/sb/perl/08/01.html" title="Perlのインストール(UNIX版)" />
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://rfs.jp/sb/perl/07/cgi.html"
+    trackback:ping="http://rfs.jp/p/mt/mt-tb.cgi/37"
+    dc:title="CGIモジュール"
+    dc:identifier="http://rfs.jp/sb/perl/07/cgi.html"
+    dc:subject="7部 モジュール"
+    dc:description="概要 CGI.pmは、簡単にHTMLページを生成し、その内容を解析するためのPe..."
+    dc:creator="リズムファクトリー"
+    dc:date="2009-07-06T20:31:12+09:00" />
+</rdf:RDF>
+-->
+
+
+<meta name="keywords" content="Perl,DBI,chomp,sprintf,foreach,win32,use,programming,command,scripts">
+<link href="/c/page.css" rel="stylesheet" type="text/css" />
+
+    
+    <script type="text/javascript">
+    /* <![CDATA[ */
+    mtAttachEvent('load', mtUpdateScores);
+    mtAttachEvent('usersignin', mtUpdateScores);
+    /* ]]> */
+    </script>
+
+</head>
+<body id="mt-community-blog" class="mt-entry-archive layout-wtt">
+<div id="wrapper">
+<div id="main">
+
+
+<h1>CGIモジュール</h1>
+<div id="lnav-top">
+	
+	<span id="category-perl" class="sprite-etc"></span>
+	
+	<ul>
+			
+		<li class="sprite-etc"><a class="pre" href="http://rfs.jp/sb/perl/07/01.html" title="前のページ">前のページ</a></li>
+	</ul>
+</div>
+<div id="content">
+
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <h2><a name="概要">概要</a></h2>
+
+<p><code>CGI.pm</code>は、簡単にHTMLページを生成し、その内容を解析するための<code>Perl</code>標準ライブラリです。</p>
+
+<p>このライブラリのメソッドを使って、フォームから送信されたデータをチェックしたり、その値を使ってフォームを作成するといったようなことが出来ます。また、ファイルのアップロード、スタイルシート、サーバ・プッシュなどを実現する機能も用意されています。</p>
+
+<p><code>CGI.pm</code>はオブジェクト指向と、メソッド指向のプログラミング・スタイルがあります。このドキュメントでは、オブジェクト指向スタイルを使って説明していきます。</p>
+
+<p>以下は、<code>CGI.pm</code>を使って、簡単な<code>HTML</code>ページを出力する例です。</p>
+
+<pre class="brush: perl;">
+# CGI.pmの読み込み
+use CGI;
+
+# 新しいCGIオブジェクトの作成
+$obj = new CGI;
+
+print $obj-&gt;header,                        # HTTPヘッダの作成
+$obj-&gt;start_html('hello world'), "\n", # HTMLの開始
+"hello world\n",                          # ボディ部分の出力
+$obj-&gt;end_html;                        # HTMLの終わり
+</pre>
+
+<p>出力結果は以下のとおりです。</p>
+
+<p class="box-shell">
+Content-Type: text/html; charset=ISO-8859-1<br />
+
+<br />
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br />
+&lt;!DOCTYPE html<br />
+PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;<br />
+
+&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;<br />
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; lang=&quot;en-US&quot; 
+xml:lang=&quot;en-US&quot;&gt;&lt;head&gt;&lt;<br />
+title&gt;hello world&lt;/title&gt;<br />
+
+&lt;/head&gt;&lt;body&gt;<br />
+&lt;h1&gt;hello world&lt;/h1&gt;<br />
+&lt;/body&gt;&lt;/html&gt;
+<p>
+
+<p>ブラウザでは、単純に次のように表示されます。</p>
+
+<p class="box-browser">hello world</p>
+
+<hr>
+
+<h2><a name="CGI.pmの使い方">CGI.pmの使い方</a></h2>
+<h3>CGI.pmの読み込み</h3>
+<p>はじめに、<code>use</code>を使って、<code>CGI.pm</code>を呼び出します。</p>
+
+<pre class="brush: perl;">
+use CGI;
+</pre>
+
+<p>次に、オブジェクトを作成します。</p>
+
+<pre class="brush: perl;">
+$obj = new CGI;
+</pre>
+
+<p>ここで作成したオブジェクト（上記では$obj）は、メソッド（関数）を呼ぶ際に使うことになります。詳細は後述をご覧ください。</p>
+<h3>メソッドの呼び出し方</h3>
+
+<p>オブジェクト指向でのメソッドの呼び出しは、newで作成したオブジェクトを使って、下記のように行います。</p>
+
+<pre class="brush: perl;">
+$obj-&gt;header();
+</pre>
+
+<p><code>CGI.pm</code>に用意されたメソッドは、さまざまな引数を受け取ります。
+このインターフェースを簡単にするため、すべてのメソッドは以下のような名前付き引数呼び出しスタイルを使います。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;header(-type=&gt;'image/gif', -expires=&gt;'+3d');
+</pre>
+
+<p>各引数の名前の前には、ハイフン( - )をつけます。実際は、最初の引数につけておけば、それ以降に続く引数はハイフン( - 
+)を省略することができます。引数リストでは、大文字・小文字の区別がないので、<code>-type</code>、<code>-Type</code>、<code>-TYPE</code>は同様の意味となります。また、どの順番に引数を指定しても、問題ありません。</p>
+
+<p>名前付き引数の値には、必要であればスカラ以外にも、配列へのリファレンス、ハッシュへのリファレンスを指定できます。</p>
+
+<p>例えば、<code>param</code>メソッドは、ひとつの値と、複数の値を指定することができます。</p>
+
+<pre class="brush: perl;">
+$obj-&gt;param(-name=&gt;'nickname',-value=&gt;'gaki');
+$obj-&gt;param(
+　　-name=&gt;'nickname',
+　　-value=&gt;['gaki','warumono','akuma','kenzo']
+);
+</pre>
+
+<p>1つの引数だけを受け取るメソッドの場合、引数名なしに1つの引数を与えることが出来ます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;header('text/html');
+</pre>
+
+<h3>未定義のメソッド</h3>
+
+<p><code>CGI.pm</code>には、定義していないメソッドを、必要に応じて自動的に生成する機能があります。</p>
+
+<p><code>HTML</code>タグは、属性と内容を持ちます。たとえば、<code>H1</code>の属性として<code>align=center</code>を指定し、内容として<code>&quot;table of 
+contents&quot;</code>を指定する場合、以下のように表記します。</p>
+
+<p class="box-config">&lt;h1 align=center&gt;table of contents&lt;/h1&gt;</p>
+
+<p>CGI.pmで同様の出力を得るには、<code>HTML</code>属性をハッシュ・リファレンスで最初の引数、内容があればその後の引数として渡します。</p>
+
+<pre class="brush: perl;">
+h1({-align=&gt;center}, 'table of contents');
+</pre>
+
+<p>属性を指定しない場合、内容を指定しない場合の表記の仕方と、その出力結果は以下のようになります。</p>
+
+<table class="table-format01">
+	<tr>
+		<th nowrap>コード</th>
+		<th nowrap>出力結果</th>
+	</tr>
+
+	<tr>
+		<td nowrap class="td_strong">h1()</td>
+		<td nowrap>&lt;H1&gt;</td>
+	</tr>
+	<tr>
+		<td nowrap class="td_strong">h1('Level1', 'Header');</td>
+		<td nowrap>&lt;H1&gt;Level 1 Header&lt;/H1&gt;</td>
+
+	</tr>
+	<tr>
+		<td nowrap class="td_strong">h1({-align=&gt;left});</td>
+		<td nowrap>&lt;H1 ALIGN=&quot;LEFT&quot;&gt;</td>
+	</tr>
+	<tr>
+		<td nowrap class="td_strong">h1({-align=&gt;left}, 'Header');</td>
+
+		<td nowrap>&lt;H1 ALIGN=&quot;LEFT&quot;&gt;Header&lt;/H1&gt;</td>
+	</tr>
+</table>
+
+<h3>開始タグと終了タグを出力するための詳細</h3>
+
+<p>HTMLタグを生成するメソッドのほとんどは、自動的に開始タグと終了タグを自動的に作成します。</p>
+
+<pre class="brush: perl;">
+print h1('Level 1 Header');
+</pre>
+
+<p>上記コマンドの出力は以下のようになります。</p>
+
+<p class="box-browser">
+&lt;H1&gt;Level 1 Header&lt;/H1&gt;
+
+</p>
+
+<p>開始タグと終了タグを任意に出力したいような場合は、以下のように<code>start_タグ名</code>と<code>end_タグ名</code>の形式を使うことができます。</p>
+
+<pre class="brush: perl;">
+print start_h1, 'Level 1 Header', end_h1;
+</pre>
+
+<p>いくつかの例外を除いて、<code>start_タグ名</code>と<code>end_タグ名</code>メソッドは<code>use CGI</code>したときに自動的に作成されません。
+以下のように、名前の前にアスタリスクを置くか、あるいは代わりに<code>start_タグ名</code>または<code>end_タグ名</code>を
+指定する必要があります。</p>
+
+<pre class="brush: perl;">
+use CGI qw/:standard *table start_ul/;
+</pre>
+
+<p>上記では、<code>start_table</code>、<code>end_table</code>、<code>start_ul</code>、<code>end_ul</code>メソッドを作成します。</p>
+
+<hr>
+
+<h2><a name="HTTPヘッダの出力機能">HTTPヘッダの出力機能</a></h2>
+<h3>標準HTTPヘッダの出力</h3>
+<p><code>CGI</code>で<code>HTML</code>ページを出力する際には、最初に標準HTTPヘッダを出力します。</p>
+<p><code>header</code>メソッドを使って簡単に出力することができます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;header;
+</pre>
+
+<p>出力結果は以下のとおりです。</p>
+<p class="box-shell">Content-Type: text/html</p>
+<p>名前付引数を使って、<code>Content-Type</code>や<code>charset</code>、<code>expires</code>など
+さまざまな属性を指定することができます。理解されるパラメータは<code>-type</code>、<code>-status</code>、<code>-expires</code>、<code>-cookie</code>で、他の名前がついたパラメータはすべて、最初のハイフンを落とされて、ヘッダ・フィールドに変えられます</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;header(
+　　-type=&gt;'image/gif',
+　　-nph=&gt;1,
+　　-status=&gt;'402 Payment required',
+　　-expires=&gt;'+1d',
+　　-cookie=&gt;$cookie,
+　　-charset=&gt;'utf-7',
+　　-attachment=&gt;'foo.gif',
+);
+</pre>
+
+<p>出力結果は以下のとおりです。</p>
+
+<p class="box-shell">HTTP/1.0 402 Payment required<br />
+Status: 402 Payment required<br />
+Set-Cookie:&nbsp;<br />
+Expires: Tue, 06 Mar 2001 09:26:31 GMT<br />
+Date: Sat, 03 Mar 2001 09:26:31 GMT<br />
+Attachment: foo.gif<br />
+
+Charset: utf-7<br />
+Content-Type: image/gif</p>
+<h2><a name="HTMLドキュメントの出力機能">HTMLドキュメントの出力機能</a></h2>
+
+<h3><code>&lt;HTML&gt;</code>、<code>&lt;HEAD&gt;</code>、<code>&lt;TITLE&gt;</code>、<code>&lt;BODY&gt;</code>タグの出力</h3>
+
+<p><code>start_html</code>メソッドは、<code>&lt;HTML&gt;</code>、<code>&lt;HEAD&gt;</code>、<code>&lt;TITLE&gt;</code>、<code>&lt;BODY&gt;</code>タグを出力します。</p>
+<p>なにも引数を指定しない場合は、下記のように<code>&lt;TITLE&gt;</code>タグや<code>&lt;BODY&gt;</code>タグはデフォルトの状態で出力されます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;start_html;
+</pre>
+
+<p>出力結果は以下のとおりです。</p>
+
+<p class="box-shell">&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML//EN&quot;&gt;<br />
+&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Untitled Document&lt;/TITLE&gt;<br />
+
+&lt;/HEAD&gt;&lt;BODY&gt;</p>
+
+<p>引数に指定した場合です。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;start_html(-title=&gt;'----', -BGCOLOR=&gt;'#FFFFFF');
+</pre>
+
+<p>出力結果は以下のとおりで、<code>&lt;TITLE&gt;</code>タグと<code>BGCOLOR</code>属性に指定した値が挿入されています。</p>
+
+<p class="box-shell">&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML//EN&quot;&gt;<br />
+&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;----&lt;/TITLE&gt;<br />
+&lt;/HEAD&gt;&lt;BODY BGCOLOR=&quot;#FFFFFF&quot;&gt;</p>
+
+<h3><code>&lt;/BODY&gt;</code>、<code>&lt;/HTML&gt;</code>タグの出力</h3>
+
+<p><code>end_html</code>メソッドは、<code>&lt;/BODY&gt;</code>、<code>&lt;/HTML&gt;</code>タグを出力します。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;end_html;
+</pre>
+
+<p>出力結果は以下のとおりです。</p>
+
+<p class="box-shell">&lt;/BODY&gt;&lt;/HTML&gt;</p>
+<h3>基本HTMLタグの出力</h3>
+<p><code>CGI.pm</code>は、メソッド名がそのまま出力するタグ名となっています。たとえば、<code>&lt;H1&gt;</code>タグを出力するには、<code>h1</code>メソッドを呼び出します。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;h1();
+</pre>
+
+<p>このような命名規則があるので、<code>HTML</code>タグを出力したい際に、直感的にどのメソッドを呼び出せばよいかがわかると思います。メソッドの呼び出し同様、HTMLタグの属性と内容の指定も簡単です。<code>HTML</code>属性をハッシュ・リファレンスで最初の引数、内容があればその後の引数として渡します。</p>
+
+<p>たとえば、<code>H1</code>の属性として<code>align=center</code>を指定し、内容として<code>&quot;table of 
+contents&quot;</code>を指定する場合、以下のように引数を渡します。</p>
+
+<pre class="brush: perl;">
+h1({-align=&gt;center}, 'table of contents');
+</pre>
+
+<p>この出力は下記のとおりです。</p>
+
+<p class="box-config">&lt;h1 align=center&gt;table of contents&lt;/h1&gt;</p>
+
+<h3>HTMLタグのネスティング</h3>
+<p>タグでタグを挟んだ状態をネスティングといいます。 </p>
+
+<pre class="brush: perl;">
+&lt;UL&gt;
+&lt;LI&gt;リスト1&lt;/LI&gt;
+&lt;LI&gt;リスト2&lt;/LI&gt;
+&lt;/UL&gt; 
+</pre>
+
+<p><code>CGI.pm</code>でネスティングを実現するには、次のようにメソッドの引数に、ネスティングしたいメソッドを指定します。</p>
+
+<pre class="box-program">
+print $obj-&gt;ul(
+　　$obj-&gt;li('リスト1'),
+　　$obj-&gt;li('リスト1')
+);
+</pre>
+
+<h2><a name="フォームタグの出力機能">フォームタグの出力機能</a></h2>
+
+
+<h3><a name="start_form__フォームの開始と終了">start_form&nbsp; フォームの開始と終了</a></h3>
+<p><code>&lt;FORM&gt;</code>タグの開始タグと終了タグは、<code>start_form</code>と<code>end_form</code>メソッドを使います。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;start_form(
+　　-method=&gt;$method,
+　　-action=&gt;$action,
+　　-enctype=&gt;$encoding
+);
+
+... フォームの内容出力 ...
+
+print $obj-&gt;end_form;
+</pre>
+
+<p><code>start_form</code>メソッドは<code>&lt;FORM&gt;</code>タグを返します。引数を指定しない場合の<code>&lt;FORM&gt;</code>タグ属性は下記のとおりです。</p>
+
+<table class="table-format01">
+	<tr>
+		<th>属性名称</th>
+		<th>属性の値</th>
+	</tr>
+	<tr>
+		<td class="td_strong">method</td>
+
+		<td>POST</td>
+	</tr>
+	<tr>
+		<td class="td_strong">action</td>
+		<td>呼び出し元スクリプト名</td>
+	</tr>
+	<tr>
+
+		<td class="td_strong">enctype</td>
+		<td>application/x-www-form-urlencoded</td>
+	</tr>
+</table>
+<p><code>end_form</code>は<code>&lt;/FORM&gt;</code>タグを返します。</p>
+<p><code>start_form</code>には、<code>JavaScript</code>用に、<code>-name</code>と<code>-onSubmit</code>パラメータが提供されています。<code>-name</code>パラメータ
+にはフォームの名前、<code>-onSubmit</code>には<code>JavaScript</code>構文を指定できます。</p>
+
+<h3><a name="textfield__テキスト・フィールドの作成">textfield&nbsp; テキスト・フィールドの作成</a></h3>
+<p>テキスト入力フィールドの出力は<code>textfield</code>メソッドを使います。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;textfield(
+　　-name=&gt;'フィールド名',
+　　-default=&gt;'初期値',
+　　-size=&gt;50,
+　　-maxlength=&gt;80
+);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;text&quot; name=&quot;フィールド名&quot; value=&quot;初期値&quot; size=&quot;50&quot; 
+maxlength=<br />
+
+&quot;80&quot; /&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;textfield('フィールド名','初期値',50,80);
+</pre>
+
+<p><code>textfield</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+
+	<tr>
+		<td class="td_strong">-name</td>
+		<td>フィールド名（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong">-default</td>
+		<td>フィールド内容の初期値</td>
+
+	</tr>
+	<tr>
+		<td class="td_strong">-size</td>
+		<td>文字数によるフィールドの大きさ</td>
+	</tr>
+	<tr>
+		<td class="td_strong">-maxlength</td>
+
+		<td>最大文字数</td>
+	</tr>
+</table>
+
+<p>上記のほか、<code>JavaScript</code>用に、<code>-onChange</code>、<code>-onFocus</code>、<code>-onBlur</code>、<code>-onMouseOver</code>、<code>-onMouseOut</code>、<code>-onSelect</code>パラメータが利用可能です。</p>
+
+<p>フォームが処理されたとき、テキスト・フィールドの値は以下のように取り出すことが出来ます。</p>
+
+<pre class="brush: perl;">
+$value = $obj-&gt;param('foo');
+</pre>
+
+<h3>そのほかのフィールド要素</h3>
+<h4><code>textarea</code>　-複数行テキスト入力フィールドの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;textarea(
+　　-name=&gt;'フィールド名',
+　　-default=&gt;'初期値',
+　　-rows=&gt;10,
+　　-columns=&gt;50
+);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;textarea name=&quot;フィールド名&quot; rows=&quot;10&quot; cols=&quot;50&quot;&gt;初期値&lt;/textarea&gt;</p>
+
+<h4><code>password_field</code>　-パスワード・フィールドの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;password_field(
+　　-name=&gt;'フィールド名',
+　　-value=&gt;'初期値',
+　　-size=&gt;50,
+　　-maxlength=&gt;80
+);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+
+<p class="box-shell">&lt;input type=&quot;password&quot; name=&quot;フィールド名&quot; value=&quot;初期値&quot; size=&quot;50&quot; 
+maxlen<br />
+gth=&quot;80&quot; /&gt;</p>
+
+<h4><code>filefield</code>　-ファイル・アップロード・フィールドの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;filefield(
+　　-name=&gt;'フィールド名',
+　　-default=&gt;'初期値',
+　　-size=&gt;50,
+　　-maxlength=&gt;80
+);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+
+<p class="box-shell">&lt;input type=&quot;file&quot; name=&quot;フィールド名&quot; value=&quot;初期値&quot; size=&quot;50&quot; 
+maxlength=<br />
+&quot;80&quot; /&gt;</p>
+
+<p><code>param</code>を呼ぶことによって、アップロードされたファイル名を取得することが出来ます。</p>
+
+<pre class="brush: perl;">
+$fh = $obj-&gt;param('フィールド名');
+</pre>
+
+<p>上記で<code>param</code>が返す値は、ファイル・ハンドルでもあるので、そのまま読み込むことが可能です。</p>
+
+<pre class="brush: perl;">
+# テキストファイルを読み込み、出力
+while (&lt;$fh&gt;) {
+　　print;
+}
+</pre>
+
+<p><code>upload</code>メソッドで取得するほうがより安全です。</p>
+
+<pre class="brush: perl;">
+$fh = $obj-&gt;upload('フィールド名');
+while (&lt;$fh&gt;) {
+　　print;
+}
+</pre>
+
+<h4><code>popup_menu</code>　-ポップアップ・メニューの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;popup_menu(
+　　-name=&gt;'フィールド名',
+　　-values=&gt;['eenie','meenie','minie'],
+　　-default=&gt;'meenie',
+　　-labels=&gt;\%labels);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;select name=&quot;フィールド名&quot;&gt;<br />
+&lt;option value=&quot;eenie&quot;&gt;eenie&lt;/option&gt;<br />
+&lt;option selected=&quot;selected&quot; value=&quot;meenie&quot;&gt;meenie&lt;/option&gt;<br />
+
+&lt;option value=&quot;minie&quot;&gt;minie&lt;/option&gt;<br />
+&lt;/select&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;popup_menu(
+　　'フィールド名',
+　　['eenie','meenie','minie'],
+　　'meenie',\%labels);
+</pre>
+
+<p><code>popup_menu</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+
+	<tr>
+		<td class="td_strong">-name</td>
+		<td>フィールド名（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong">-value</td>
+		<td>メニュー要素（必須）</td>
+
+	</tr>
+	<tr>
+		<td class="td_strong">-default</td>
+		<td>デフォルトで選択されるメニュー要素名</td>
+	</tr>
+	<tr>
+		<td class="td_strong">-labels</td>
+
+		<td>ラベル</td>
+	</tr>
+</table>
+
+
+<h4>scrolling_list&nbsp; -スクローリング・リストの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;scrolling_list(
+　　-name=&gt;'フィールド名',
+　　-values=&gt;['eenie','meenie','minie','moe'],
+　　-default=&gt;['eenie','moe'],
+　　-size=&gt;5,
+　　-multiple=&gt;'true',
+　　-labels=&gt;\%labels);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;select name=&quot;フィールド名&quot; size=&quot;5&quot; multiple=&quot;multiple&quot;&gt;<br />
+
+&lt;option selected=&quot;selected&quot; value=&quot;eenie&quot;&gt;eenie&lt;/option&gt;<br />
+&lt;option value=&quot;meenie&quot;&gt;meenie&lt;/option&gt;<br />
+&lt;option value=&quot;minie&quot;&gt;minie&lt;/option&gt;<br />
+
+&lt;option selected=&quot;selected&quot; value=&quot;moe&quot;&gt;moe&lt;/option&gt;<br />
+&lt;/select&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;scrolling_list(
+　　'フィールド名',
+　　['eenie','meenie','minie','moe'],
+　　['eenie','moe'],5,'true',
+　　\%labels);
+</pre>
+
+<p><code>scrolling_list</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+		<th>引数名</th>
+
+		<th>内容</th>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-name</td>
+		<td>フィールド名（必須）</td>
+	</tr>
+	<tr>
+
+		<td class="td_strong" nowrap>-values</td>
+		<td>メニュー要素（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-default</td>
+		<td>デフォルトで選択される値、もしくはその値が入ったリストへのリファレンス</td>
+	</tr>
+
+	<tr>
+		<td class="td_strong" nowrap>-size</td>
+		<td>リストの大きさ</td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-multiple</td>
+		<td>複数の選択を許可する場合は値に<code>true</code>を指定する</td>
+
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-labels</td>
+		<td>ラベル</td>
+	</tr>
+</table>
+
+
+<h4><code>checkbox_group</code>&nbsp; -チェックボックスのグループの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;checkbox_group(
+　　-name=&gt;'グループ名',
+　　-values=&gt;['eenie','meenie','minie','moe'],
+　　-default=&gt;['eenie','moe'],
+　　-linebreak=&gt;'true',
+　　-labels=&gt;\%labels);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;checkbox&quot; name=&quot;グループ名&quot; value=&quot;eenie&quot; 
+checked=&quot;checked&quot; /&gt;eenie&lt;br /&gt;<br />
+
+&lt;input type=&quot;checkbox&quot; name=&quot;グループ名&quot; value=&quot;meenie&quot; /&gt;meenie&lt;br /&gt;<br />
+&lt;input type=&quot;checkbox&quot; name=&quot;グループ名&quot; value=&quot;minie&quot; /&gt;minie&lt;br/&gt;<br />
+
+&lt;input type=&quot;checkbox&quot; name=&quot;グループ名&quot; value=&quot;moe&quot; checked=&quot;checked&quot; /&gt;moe&lt;br 
+/&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;checkbox_group(
+'グループ名',
+['eenie','meenie','minie','moe'],
+['eenie','moe'],'true',\%labels);
+</pre>
+
+<p><code>checkbox_group</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-name</td>
+
+		<td>フィールド名（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-values</td>
+		<td>フィールドの値</td>
+	</tr>
+	<tr>
+
+		<td class="td_strong" nowrap>-default</td>
+		<td>デフォルトで選択される値、もしくはその値が入ったリストへのリファレンス</td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-linebreak</td>
+		<td>改行<br />
+		値を<code>true</code>に設定するとチェックボックスの間に改行が入ります。 </td>
+
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-labels</td>
+		<td>ラベル</td>
+	</tr>
+</table>
+
+<h4><code>checkbox</code>&nbsp; -チェックボックスの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;checkbox(
+　　-name=&gt;'フィールド名',
+　　-checked=&gt;'checked',
+　　-value=&gt;'ON',
+　　-label=&gt;'CLICK ME');
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;checkbox&quot; name=&quot;フィールド名&quot; value=&quot;ON&quot; 
+checked=&quot;checked&quot; /&gt;CLICK ME</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;checkbox('checkbox_name','checked','ON','CLICK ME');
+</pre>
+
+<p><code>checkbox</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-name</td>
+
+		<td>フィールド名（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-checked</td>
+		<td>フィールドの状態<br />
+		チェックボックスの状態をONにするには、値に<code>checked</code>を指定します。</td>
+
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-value</td>
+		<td>フィールドの値</td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-label</td>
+
+		<td>ラベル</td>
+	</tr>
+</table>
+
+
+<h4><code>radio_group</code>&nbsp; -ラジオボタン・グループの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;radio_group(
+　　-name=&gt;'グループ名',
+　　-values=&gt;['eenie','meenie','minie'],
+　　-default=&gt;'meenie',
+　　-linebreak=&gt;'true',
+　　-labels=&gt;\%labels);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;radio&quot; name=&quot;グループ名&quot; value=&quot;eenie&quot; /&gt;eenie&lt;br 
+/&gt;<br />
+
+&lt;input type=&quot;radio&quot; name=&quot;グループ名&quot; value=&quot;meenie&quot; checked=&quot;checked&quot; 
+/&gt;meenie&lt;br/&gt;<br />
+
+&lt;input type=&quot;radio&quot; name=&quot;グループ名&quot; value=&quot;minie&quot; /&gt;minie&lt;br /&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;radio_group(
+　　'グループ名',
+　　['eenie','meenie','minie'],
+　　'meenie','true',\%labels);
+</pre>
+
+<p><code>radio_group</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-name</td>
+		<td>フィールド名（必須）</td>
+	</tr>
+
+	<tr>
+		<td class="td_strong" nowrap>-values</td>
+		<td>メニュー要素（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-default</td>
+		<td><code>ON</code>の状態にするラジオボタンの要素を指定可能</td>
+
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-linebreak</td>
+		<td>値を<code>true</code>に設定するとチェックボックスの間に改行が入ります。 </td>
+	</tr>
+	<tr>
+		<td class="td_strong" nowrap>-labels</td>
+
+		<td>ラベル</td>
+	</tr>
+</table>
+
+<h4>submit&nbsp; サブミット・ボタンの作成</h4>
+
+<pre class="box-program">
+print $obj-&gt;submit(
+　　-name=&gt;'フィールド名',
+　　-value=&gt;'value');
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;submit&quot; name=&quot;フィールド名&quot; value=&quot;value&quot; /&gt;</p>
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;submit('フィールド名','value');
+</pre>
+
+<p><code>submit</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+	<tr>
+		<td class="td_strong">-name</td>
+		<td>ボタン上に表示されるラベル</td>
+	</tr>
+
+	<tr>
+		<td class="td_strong">-value</td>
+		<td>問い合わせ文字列でスクリプトに渡される値</td>
+	</tr>
+	</table>
+
+<h4>reset&nbsp; -リセット・ボタンの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;reset;
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;reset&quot; /&gt;</p>
+
+<h4>defaults&nbsp; -デフォルト・ボタンの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;defaults('ラベル');
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+
+<p class="box-shell">&lt;input type=&quot;submit&quot; name=&quot;.defaults&quot; value=&quot;ラベル&quot; /&gt;</p>
+
+<h4>hidden&nbsp; -ヒドゥン・フィールドの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;hidden(
+　　-name=&gt;'フィールド名',
+　　-default=&gt;['value1','value2']);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;hidden&quot; name=&quot;フィールド名&quot; value=&quot;value1&quot; /&gt;&lt;input 
+type=&quot;hidden&quot; name=&quot;フィールド名&quot; value=&quot;value2&quot; /&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;hidden('フィールド名','value1','value2');
+</pre>
+
+<p><code>hidden</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+	<tr>
+		<td class="td_strong">-name</td>
+
+		<td>フィールド名（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong">-default</td>
+		<td>フィールドの値<br />
+		1つの値、もしくはリストへのリファレンスを指定可能</td>
+	</tr>
+
+	</table>
+
+<h4>&nbsp;image_button&nbsp; -クリッカブル・イメージ・ボタンの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;image_button(
+　　-name=&gt;'フィールド名',
+　　-src=&gt;'/source/URL',
+　　-align=&gt;'MIDDLE');
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;image&quot; name=&quot;フィールド名&quot; src=&quot;/source/URL&quot; 
+align=&quot;MIDDLE&quot; /&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;image_button('フィールド名','/source/URL','MIDDLE');
+</pre>
+
+<p><code>image_button</code>はクリッカブルなイメージを作成します。クリックされると、クリックの位置がスクリプトへ<code>bottun_name.x</code>と<code>button_name.y</code>として返されます。<code>button_name</code>のところはそれに指定した名前です。</p>
+
+<p><code>image_button</code>のパラメータは以下のとおりです。<br /></p>
+
+<table class="table-format01">
+	<tr>
+		<th>引数名</th>
+		<th>内容</th>
+	</tr>
+
+	<tr>
+		<td class="td_strong">-name</td>
+		<td>フィールド名（必須）</td>
+	</tr>
+	<tr>
+		<td class="td_strong">-src</td>
+		<td>URL</td>
+
+	</tr>
+	<tr>
+		<td class="td_strong">-align</td>
+		<td>TOP/BOTTOM/MIDDLEを指定可能</td>
+	</tr>
+	</table>
+
+<p>このボタンの値は以下のようにして取得できます</p>
+
+<pre class="brush: perl;">
+<code>$x</code> = $obj-&gt;param('button_name.x');<code>
+$y</code> = $obj-&gt;param('button_name.y');
+</pre>
+
+<h4>button&nbsp; -JAVASCRIPTアクション・ボタンの作成</h4>
+
+<pre class="brush: perl;">
+print $obj-&gt;button(
+　　-name=&gt;'フィールド名',
+　　-value=&gt;'user visible label',
+　　-onClick=&gt;&quot;do_something()&quot;);
+</pre>
+
+<p>出力結果は下記のとおりです。</p>
+<p class="box-shell">&lt;input type=&quot;button&quot; name=&quot;フィールド名&quot; value=&quot;user visible 
+label&quot; onclick=&quot;do_something()&quot; /&gt;</p>
+
+<p>名前付引数を使わずに、下記のようにも呼び出せます。</p>
+
+<pre class="brush: perl;">
+print $obj-&gt;button('フィールド名',&quot;do_something()&quot;);
+</pre>
+
+<div class="article-bottom">
+<a href="#">PAGE TOP</a>
+<hr />
+</div>
+
+<h2><a name="フォームからデータを受け取る機能">フォームからデータを受け取る機能</a></h2>
+<h3>フォームフィールドのデータを取得する</h3>
+<p>フォームに入力・選択された値を取得する方法を、以下のフォームを例にしたがって説明します。</p>
+<p class="box-config">&lt;form method=&quot;POST&quot; action=&quot;post.cgi&quot;&gt;<br />
+
+<br />
+&lt;p&gt;ニックネーム&lt;input type=&quot;text&quot; name=&quot;nickname&quot; size=&quot;20&quot;&gt;&lt;/p&gt;<br />
+<br />
+
+&lt;p&gt;リスト&lt;br&gt;<br />
+&lt;select size=&quot;3&quot; name=&quot;list&quot; multiple&gt;<br />
+&lt;option value=&quot;1&quot;&gt;LIST1&lt;/option&gt;<br />
+
+&lt;option value=&quot;2&quot;&gt;LIST2&lt;/option&gt;<br />
+&lt;option value=&quot;3&quot;&gt;LIST3&lt;/option&gt;<br />
+&lt;/select&gt;&lt;/p&gt;<br />
+<br />
+
+&lt;p&gt;&lt;input type=&quot;submit&quot; value=&quot;送信&quot;&gt;&lt;/p&gt;</p>
+<p>送信されたフォームの値を取得するには、<code>param</code>メソッドの引数に必要なフォームフィールドの名称を指定します。</p>
+
+<pre class="brush: perl;">
+# フォームフィールド名 nickname の値を取得
+$nickname = $obj-&gt;param('nickname');
+</pre>
+
+<p>複数選択可能なフォームであるチェックボックスやセレクトボックスを取得するには、以下のようにリストコンテキストにするだけです。</p>
+
+<pre class="brush: perl;">
+# フォームフィールド名 list の値を取得
+@list = $obj-&gt;param('list');
+</pre>
+
+<p>フォームフィールドのすべての名前を受け取るには、<code>param</code>メソッドに引数を与えないでリストコンテキストにするだけです。</p>
+
+<pre class="brush: perl;">
+@name = $obj-&gt;param;
+</pre>
+
+<p>配列<code>@name</code>には、&quot;nickname&quot;、&quot;list&quot;という2つの要素が格納されます。</p>
+
+        </div>
+
+
+
+    </div>
+
+		<div class="article-bottom">
+			<a href="#">PAGE TOP</a>
+		</div>
+		<div class="box-ads">
+<script type="text/javascript"><!--
+google_ad_client = "pub-9885420769768716";
+/* 468x15, 作成済み 09/05/20 */
+google_ad_slot = "5463951055";
+google_ad_width = 468;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>
+
+
+<!-- content-right [s] -->
+<div id="content-right">
+
+<!-- gamma [s] -->
+<div id="gamma">
+    <div id="gamma-inner">
+        <h2>新着記事</h2>
+<ul id="list-new-articles">
+
+	<li><a href="http://rfs.jp/sb/javascript/jquery_1/easy_slider.html">Easy Slider -画像やコンテンツをスライドで切り替える[jQueryプラグイン] </a></li>
+
+
+
+	<li><a href="http://rfs.jp/sb/javascript/jquery_1/jquery.html">jQueryとは</a></li>
+
+
+
+	<li><a href="http://rfs.jp/sb/html/other/html.html">HTMLエスケープ</a></li>
+
+</ul>
+
+
+
+
+
+<h2>タグクラウド</h2>
+    <div id="box-cloud" class="widget-content">
+        <ul>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=Apache&amp;limit=20';return false;" rel="tag">Apache</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=CASE&amp;limit=20';return false;" rel="tag">CASE</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=DBI&amp;limit=20';return false;" rel="tag">DBI</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=DELETE&amp;limit=20';return false;" rel="tag">DELETE</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=INSERT&amp;limit=20';return false;" rel="tag">INSERT</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=like&amp;limit=20';return false;" rel="tag">like</a></li>
+    
+            <li class="rank-1"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=MySQL&amp;limit=20';return false;" rel="tag">MySQL</a></li>
+    
+            <li class="rank-2"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=Perl&amp;limit=20';return false;" rel="tag">Perl</a></li>
+    
+            <li class="rank-2"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=query&amp;limit=20';return false;" rel="tag">query</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=SELECT&amp;limit=20';return false;" rel="tag">SELECT</a></li>
+    
+        </ul>
+    </div>
+
+<h2>Smartからのお知らせ</h2>
+<ul id="list-information">
+<!--    <li><a href="">PR広告のご案内</a></li>-->
+    <li><a href="http://www.rhythmfactory.jp/">サイト構築の受注</a></li>
+</ul>
+
+<h2>関連サイト</h2>
+<ul id="list-related-sites">
+    <li><a href="http://www.rhythmfactory.jp/" target="_blank">rhythmfactory.jp</a></li>
+    <li><a href="http://ameblo.jp/rhythmfactory/" target="_blank">中目黒webデザインブログ</a></li>
+</ul>
+
+<div class="box-ads">
+<script type="text/javascript"><!--
+google_ad_client = "pub-9885420769768716";
+/* 160x90, 作成済み 09/05/20 */
+google_ad_slot = "5731771695";
+google_ad_width = 160;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+		</div>
+    </div>
+</div>
+<!-- gamma [e] -->
+
+<!-- beta [s] -->
+<div id="beta">
+    <div id="beta-inner">
+        
+
+        <div class="widget-syndication widget">
+    <div class="widget-content">
+        <ul>
+            <li><img src="http://rfs.jp/mt-static/images/status_icons/feed.gif" alt="購読する" width="9" height="9" /> <a href="http://rfs.jp/atom.xml">Smartを購読</a></li>
+
+        </ul>
+    </div>
+</div>
+
+
+    </div>
+</div>
+<!-- beta [e] -->
+</div>
+<!-- content-right [e] -->
+
+
+
+<div id="lnav-bottom">
+<span class="sprite-etc"><a href="http://rfs.jp/sb/perl/" title="講座TOP">講座TOP</a></span>
+<ul>
+
+<li class="sprite-etc"><a class="pre" href="http://rfs.jp/sb/perl/07/01.html" title="前のページ">前のページ</a></li>
+</ul>
+</div>
+
+</div>
+
+<!-- right [s] -->
+<div id="right">
+	<!-- box-bnr [s] -->
+	<div class="box-bnr">
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab" id="Player_add2901a-1ee3-4797-b801-1d9230616198"  WIDTH="250px" HEIGHT="250px"> <PARAM NAME="movie" VALUE="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=GetDisplayTemplate"><PARAM NAME="quality" VALUE="high"><PARAM NAME="bgcolor" VALUE="#FFFFFF"><PARAM NAME="allowscriptaccess" VALUE="always"><embed src="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=GetDisplayTemplate" id="Player_add2901a-1ee3-4797-b801-1d9230616198" quality="high" bgcolor="#ffffff" name="Player_add2901a-1ee3-4797-b801-1d9230616198" allowscriptaccess="always"  type="application/x-shockwave-flash" align="middle" height="250px" width="250px"></embed></OBJECT> <NOSCRIPT><A HREF="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=NoScript">Amazon.co.jp ウィジェット</A></NOSCRIPT>
+	</div>
+	<!-- box-bnr [e] -->
+	<!-- box-recommend [s] -->
+	<div class="box-recommend">
+		<img src="/img/book_01.jpg">
+		<h2>はじめて学ぶMySQL</h2>
+		<span>￥ 2,394 (税込)</span>
+		<a class="btn-amazon" href="http://www.amazon.co.jp/%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E5%AD%A6%E3%81%B6-MySQL-%E7%8E%89%E5%B7%9D-%E7%B4%94/dp/4881666282" target="_blank">amazon.co.jpで購入</a>
+		<p>データベースを操作するためのSQL言語を、広く普及しているMySQLを使って基本から学習してきます。<br />
+SQL文ごとに復習問題もあるので、理解度もしっかりチェックできます。</p>
+	</div>
+	<!-- box-recommend [s] -->
+</div>
+<!-- right [e] -->
+
+	<div id="wrapper-bottom"></div>
+</div>
+<!-- wrapper [e] -->
+
+<!-- footer [s] -->
+<div id="footer" class="sprite-bg">
+	<div id="footer-top">
+<!-- list-gnav-footer [s]-->
+<ul id="list-gnav-footer">
+	<li><a href="/sb/html" title="HTML講座">HTML</a></li>
+	<li><a href="/sb/javascript" title="JavaScript講座">JavaScript</a></li>
+	<li><a href="/sb/perl" title="Perl講座">Perl</a></li>
+	<li><a href="/sb/sql" title="SQL講座">SQL</a></li>
+	<li><a href="/sb/business" title="注目技術・アクセス向上">注目技術・アクセス向上</a></li>
+	<li><a href="/server/apache" title="Apache講座">Apache</a></li>
+	<li><a href="/server/bind" title="BIND講座">BIND</a></li>
+	<li><a href="/server/mysql" title="MySQL講座">MySQL</a></li>
+	<li><a href="/server/namazu" title="Namazu講座">Namazu</a></li>
+	<li><a href="/server/samba" title="Samba講座">Samba</a></li>
+	<li><a href="/server/netatalk" title="netatalk講座">netatalk</a></li>
+</ul>
+<!-- list-gnav-footer [e]-->
+
+	</div>
+	<!-- footer-bottom [s] -->
+	<div id="footer-bottom">
+		<div class="box-bnr">
+			<iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=smart-22&o=9&p=13&l=ur1&category=software&banner=1WE6BBZ979NVFYAW9582&f=ifr" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		</div>
+		<ul id="list-information-footer">
+<!--					<li id="list-information-footer-pr"><a class="sprite-etc" href="/p/fmail/prform.cgi" title="PR広告のご案内">PR広告のご案内</a></li>-->
+			<li id="list-information-footer-order"><a class="sprite-etc" href="http://www.rhythmfactory.jp/" title="サイト構築の受注">サイト構築の受注</a></li>
+		</ul>
+		<!-- box-copyright [s] -->
+		<div id="box-copyright" class="sprite-bg">
+			<ul id="list-rhythmfactory">
+			<!--				<li id="list-rhythmfactory-inquiry"><a class="sprite-icon" href="#" title="ご意見メール">ご意見メール</a></li>-->
+				<li id="list-rhythmfactory-company"><a class="sprite-icon" href="http://www.rhythmfactory.jp/about/" title="会社情報">会社情報</a></li>
+			</ul>
+			<span id="copyright" class="sprite-etc">copyright (c) 2020 rhythmfactory Ltd. All rights reserved. </span>
+		</div>
+		<!-- box-copyright [e] -->
+	</div>
+	<!-- footer-bottom [s] -->
+</div>
+<!-- footer [e] -->
+
+
+
+<!-- header [s] -->
+<div id="header">
+	<!-- header-top [s] -->
+	<div id="header-top">
+		<a id="logo" class="sprite-etc" href="http://rfs.jp/" accesskey="1">Smart</a>
+		<div class="box-bnr">
+			<iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=smart-22&o=9&p=13&l=ur1&category=computerinternetbooks&banner=0VS5BBRF0XHDCN8XYG82&f=ifr" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		</div>
+	</div>
+	<!-- header-top [e] -->
+<!-- header-gnav [s] -->
+<div id="header-gnav" class="sprite-bg">
+	<ul class="list-gnav">
+		<li><a id="gnav-html" class="sprite-gnav" href="/sb/html" title="HTML講座">HTML講座</a></li>
+		<li><a id="gnav-javascript" class="sprite-gnav" href="/sb/javascript" title="JavaScript講座">JavaScript講座</a></li>
+		<li><a id="gnav-perl" class="sprite-gnav" href="/sb/perl" title="Perl講座">Perl講座</a></li>
+		<li><a id="gnav-sql" class="sprite-gnav" href="/sb/sql" title="SQL講座">SQL講座</a></li>
+		<li><a id="gnav-feature" class="sprite-gnav" href="/sb/business" title="注目技術・アクセス向上">注目技術・アクセス向上</a></li>
+	</ul>
+	<ul class="list-gnav">
+		<li><a id="gnav-apache" class="sprite-gnav" href="/server/apache" title="Apache講座">Apache講座</a></li>
+		<li><a id="gnav-bind" class="sprite-gnav" href="/server/bind" title="BIND講座">BIND講座</a></li>
+		<li><a id="gnav-mysql" class="sprite-gnav" href="/server/mysql" title="MySQL講座">MySQL講座</a></li>
+		<li><a id="gnav-namazu" class="sprite-gnav" href="/server/namazu" title="Namazu講座">Namazu講座</a></li>
+		<li><a id="gnav-samba" class="sprite-gnav" href="/server/samba" title="Samba講座">Samba講座</a></li>
+		<li><a id="gnav-netatalk" class="sprite-gnav" href="/server/netatalk" title="netatalk講座">netatalk講座</a></li>
+	</ul>
+</div>
+<!-- header-gnav [e] -->
+
+	<!-- header-bottom [s] -->
+	<div id="header-bottom" class="sprite-bg">
+<ul id="list-topic-path">
+    <li><a href="http://rfs.jp/">SmartのWEB講座</a></li>
+
+    	<!--　アーカイブインデックス [s]-->
+        
+	<!--　アーカイブインデックス [e]-->
+
+    	<!--　システムテンプレート [s]-->
+        
+	<!--　システムテンプレート　[e]-->
+
+	<!--　アーカイブ（年月日）　[s]-->
+        
+	<!--　アーカイブ（年月日）　[e]-->
+
+	<!--　ユーザーアーカイブ　[s]-->
+        
+	<!--　ユーザーアーカイブ　[e]-->
+
+	<!--　カテゴリーアーカイブ　[s]-->
+        
+	<!--　カテゴリーアーカイブ　[e]-->
+
+		<!--　ブログ記事　[s]-->
+		
+			
+				<li>　>　<a href="http://rfs.jp/sb/perl/">Perl講座</a></li>
+			
+			<li>　>　CGIモジュール</li>
+		
+		<!--　ブログ記事 [e]-->
+
+    </ul>
+
+
+<form id="form-search" method="get" action="http://rfs.jp/p/mt/mt-search.cgi">
+
+        <input type="hidden" name="IncludeBlogs" value="1" />
+
+        <input id="search-text" class="sprite-etc" type="hidden" name="limit" value="20" />
+        <input id="search-text" class="sprite-etc" class="query" type="text" onfocus="if (this.value == 'サイト内検索') this.value = '';" onblur="if (this.value == '') this.value = 'サイト内検索';" name="search" value="サイト内検索" />
+        <input id="search-btn" class="sprite-etc" class="submit" type="submit" value="検索" />
+    </form>
+
+	</div>
+	<!-- header-bottom [e] -->
+</div>
+<!-- header [e] -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8725980-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
+

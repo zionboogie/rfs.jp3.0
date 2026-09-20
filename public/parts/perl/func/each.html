@@ -1,0 +1,32 @@
+		<div class="func-header">
+			<div class="func-format">
+each ASSOC_ARRAY 
+			</div>
+
+			<div class="func-compat">
+				<span class="ic-perl4"></span>
+				<span class="ic-perl5"></span>
+				<span class="ic-win"></span>
+				<span class="ic-mac"></span>
+			</div>
+		</div>
+
+		<div class="func-detail">
+			<p>リストコンテキストで呼び出すと、<code>each</code>はハッシュのキーと値を返します。取り出し順はランダムです｡配列をすべて読み込んでしまうと、空配列が返されます。スカラコンテキストで呼び出した場合は、ハッシュの次の要素にあたるキーを返します。</p>
+
+			<h2 class="func-sample"><code>each</code>の使い方</h2>
+	
+<pre class="brush: perl;">
+%hash = ('Akai', 27, 'Ishikawa', 30);
+
+# ハッシュのキーと値がなくなるまで処理する
+while ( ($key, $value) = each %hash ) {
+	print "$key : $hash{$key}", "\n";
+} 
+</pre>
+
+			<p><code>each</code>の実行中には、そのハッシュに要素を追加してはいけません。<a href="delete.html"><code>delete</code></a>を使うことは問題ありません。また、<code>each</code>の実行中に、<code>each</code>や、<a href="keys.html"><code>keys</code></a>、<a href="values.html"><code>values</code></a>を使うと、はじめから処理がやり直しになります。</p>
+
+			<p><a href="keys.html"><code>keys</code></a>や<a href="values.html"><code>values</code></a>、<a href="sort.html"><code>sort</code></a>も参照してください。</p>
+
+</div>

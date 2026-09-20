@@ -1,0 +1,35 @@
+<div class="func-header">
+	<div class="func-format">
+		oct EXPR  
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数<code>EXPR</code>の値を8進数と解釈して、10進数の値にして返します(<code>EXPR</code>が 0x で始まるときには、16進数文字列と解釈します)。</p>
+
+	<h2 class="func-sample">octの使い方</h2>
+
+	<p>8進数から10進数に変換します。</p>
+
+<pre class="brush: perl;">
+print oct 10, "\n";
+> 8 
+</pre>
+
+	<p><code>oct</code>の逆変換は次のとおりです。</p>
+
+<pre class="brush: perl;">
+# 16進数に変換
+sprintf "%lo", 16; 
+</pre>
+
+
+</div>

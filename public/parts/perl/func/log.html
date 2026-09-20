@@ -1,0 +1,40 @@
+<div class="func-header">
+	<div class="func-format">
+log EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+<!-- END 関数ヘッダ -->
+
+<div class="func-detail">
+	<p>引数<code>EXPR</code>の (<code>e</code>を底とする) 自然対数を返します。</p>
+	<dl>
+		<dt>自然対数</dt>
+		<dd>自然対数は、ネピア数（<code>e</code>）を底とする対数です。</dd>
+
+		<dt>ネピア数</dt>
+		<dd>自然対数の底として用いられ、e という記号で表されます。その値は、2.71828182845904523... 
+		と続く無理数です。</dd>
+	</dl>
+
+	<h2 class="func-sample">logの使い方</h2>
+
+	<p>底の異なる対数を求めるためには、基礎代数を利用します。ある数の<code>N</code>を底とする対数は、その数の自然対数を<code>N</code>の自然対数で割ったものです。</p>
+
+
+<pre class="brush: perl;">
+sub log10 {
+	my $n = shift;
+	return log($n)/log(10);
+}  
+</pre>
+
+	<p>逆操作については<code><a href="exp.html">exp</a></code>を参照して下さい。</p>
+
+</div>

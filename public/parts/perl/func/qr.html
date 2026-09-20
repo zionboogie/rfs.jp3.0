@@ -1,0 +1,83 @@
+<div class="func-header">
+	<div class="func-format">
+qr/STRING/imosx 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>この演算子は<code>STRING</code>を正規表現としてクォートします (可能ならコンパイルします)。引数<code>STRING</code>は<code><a href="m.html">m/PATTERN/</a></code>内の<code>PATTERN</code>と同様に文字変換されます。
+	ダブルクォーテーション（ &quot; ）がデリミタとして使用された場合、文字変換は行われません。</p>
+
+	<h2 class="func-sample">簡単な使い方</h2>
+
+<pre class="brush: perl;">
+# $patternの値を正規表現としてクォート
+$re = qr/$pattern/;
+
+# qrの返却値を利用してマッチング
+$string =~ /$re/;
+</pre>
+
+	<p>上記のように、<code>qr</code>の返却値はパターンマッチのサブパターンとして使えます。</p>
+
+	<p><code>Perl</code>は<code>qr</code>演算子を実行する際にパターンをコンパイルするので、<code>qr</code>を使うことでいくつかの場面で速度的に有利になります。特に<code>qr</code>の結果が独立して使われる場合に有利になります。</p>
+
+<pre class="brush: perl;">
+sub match {
+	my $patterns = shift;
+	# $patternsの値（複数）を一括して、正規表現としてクォート
+	my @compiled = map qr/$_/i, @$patterns;
+	grep {
+		my $success = 0;
+		foreach my $pat (@compiled) {
+			$success = 1, last if /$pat/;
+		}
+		$success;
+	} @_;
+}
+</pre>
+
+	<p><code>qr</code>の時点でパターンを内部表現にプリコンパイルすることにより、 <code>/$pat/</code> 
+	を試みる毎に毎回パターンを再コンパイルするのを避けることができます。</p>
+
+	<p><code>qr</code>演算子のオプションは以下の通りです。</p>
+
+		<table class="table-format01">
+			<tr>
+				<th>オプション</th>
+				<th>内容</th>
+			</tr>
+			<tr>
+
+				<td class="td_strong" align="center">i</td>
+				<td>パターンマッチにおいて大文字小文字を区別しない</td>
+			</tr>
+			<tr>
+				<td class="td_strong" align="center">m</td>
+				<td>文字列を複数行として扱う</td>
+			</tr>
+
+			<tr>
+				<td class="td_strong" align="center">o</td>
+				<td>一度だけコンパイルする</td>
+			</tr>
+			<tr>
+				<td class="td_strong" align="center">s</td>
+				<td>文字列を一行として扱う</td>
+
+			</tr>
+			<tr>
+				<td class="td_strong" align="center">x</td>
+				<td>拡張正規表現を使う</td>
+			</tr>
+		</table>
+
+</div>

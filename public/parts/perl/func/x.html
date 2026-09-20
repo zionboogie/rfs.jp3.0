@@ -1,0 +1,208 @@
+<div class="func-header">
+	<div class="func-format">
+-X FILEHANDLE<br />
+-X EXPR<br />
+-X
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>-X</code>は以下のオプションで、ファイルテストを行うための演算子です。</p>
+
+	<p>演算子には以下のものがあります。</p>
+
+
+	<table class="table-format01">
+		<tr>
+			<th width="15%" nowrap>演算子</th>
+			<th width="85%">説明</th>
+		</tr>
+		<tr>
+
+			<td width="15%" nowrap align="center" class="td_strong">
+			-r</td>
+			<td width="85%">読み込み可能</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-w</td>
+
+			<td width="85%">書き込み可能</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-x</td>
+			<td width="85%">実行可能で</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-o</td>
+			<td width="85%">実行者とファイルの所有者が同一</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-R</td>
+
+			<td width="85%">実uid/gidで読み込み可能</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-W</td>
+			<td width="85%">実uid/gidで書き込み可能</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-X</td>
+			<td width="85%">実uid/gidで実行可能</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-O</td>
+
+			<td width="85%">実uidとファイルの所有者が同一</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-e</td>
+			<td width="85%">ファイルが存在する</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-z</td>
+			<td width="85%">ファイルサイズが 0</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-s</td>
+
+			<td width="85%">ファイルサイズが 0 以外（大きさを返す）</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-f</td>
+			<td width="85%">ファイルは通常ファイル</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-d</td>
+			<td width="85%">ファイルはディレクトリ</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-l</td>
+
+			<td width="85%">ファイルはシンボリックリンク</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-p</td>
+			<td width="85%">ファイルは名前付きパイプ</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-S</td>
+			<td width="85%">ファイルはソケット</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-b</td>
+
+			<td width="85%">ファイルはブロック型の特殊ファイル</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-c</td>
+			<td width="85%">ファイルはキャラクタ型の特殊ファイル</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-t</td>
+			<td width="85%">ファイルハンドルが tty としてオープンされている</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-u</td>
+
+			<td width="85%">ファイルの setuid ビットがセットされている</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-g</td>
+			<td width="85%">ファイルの setgif ビットがセットされている</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-k</td>
+			<td width="85%">ファイルの sticky ビットがセットされている</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-T</td>
+
+			<td width="85%">ファイルがテキストファイル</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-B</td>
+			<td width="85%">ファイルがバイナリファイル</td>
+		</tr>
+
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-M</td>
+			<td width="85%">perl起動時における、ファイルの更新時刻からの日数</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-A</td>
+
+			<td width="85%">perl起動時における、ファイルの参照時刻からの日数</td>
+		</tr>
+		<tr>
+			<td width="15%" nowrap align="center" class="td_strong">
+			-C</td>
+			<td width="85%">perl起動時における、ファイルの作成時刻からの日数</td>
+		</tr>
+
+	</table>
+
+	<p>上記の単項演算子は、ファイル名かファイルハンドルを引数として動作し、&quot;真&quot;であるか否かを判定した結果を返します。引数が省略されると、<code>-t</code>では<code>STDIN</code>を調べますが、その他は<code>$_</code>を調べます。特に記述されていなければ、&quot;真&quot;として 1、&quot;偽&quot;として空文字、ファイルが存在しなければ、未定義値を返します。</p>
+
+	<h2 class="func-sample">ファイルテスト演算子の使い方</h2>
+
+<pre class="brush: perl;">
+$file = "/home/httpd/html/index.html";
+
+# ファイルが存在するか確認
+if ( -e $file ){
+	....
+}
+</pre>
+
+	<p>ローカルファイルシステムのスーパーユーザには、<code>-r</code>、<code>-R</code>、<code>-w</code>、<code>-W</code>に対して、常に 1 が返り、モード中のいずれかの実行許可ビットが立っていれば、<code>-x</code>、<code>-X</code>にも 1 が返ることにも注意してください。スーパーユーザが実行するスクリプトでは、ファイルのモードを調べるためには、<code><a href="stat.html">stat</a></code>を行なうか、実効<code>uid</code>を一時的に別のものにする必要があるでしょう。</p>
+
+	<p><code>-T</code>と<code>-B</code>は、ファイルの最初の数ブロックを調べて、変わった制御コードや上位ビットがセットされているような、通常のテキストには現れない文字を探します。そのような文字が、多く(30%以上) 見つかるようであれば、そのファイルは<code>-B</code>ファイルであると判断され、それほど見つからなければ、<code>-T</code>ファイルとなります。最初のブロックにヌル文字が含まれるファイルも、バイナリファイルとみなされます。<code>-T</code>や<code>-B</code>
+	をファイルハンドルに対して用いると、最初のブロックを調べる代わりに、標準入出力バッファを調べます。調べたファイルの中身が何もないときや、ファイルハンドルを調べたときに<code>EOF</code>に達していたときには、<code>-T</code>も<code>-B</code>も&quot;真&quot;を返します。</p>
+
+	<p>どのファイルテスト (もしくは、<code><a href="stat.html">stat</a></code>や<code><a href="lstat.html">lstat</a></code>) 演算子にも、下線だけから成る特別なファイルハンドルを与えると、前回の<code>stat</code>構造体が使われ、システムコールを省きます (<code>-t</code>には使えませんし、<code><a href="lstat.html">lstat</a></code>や<code>-l</code>は実ファイルではなく、シンボリックリンクの情報を<code>stat</code>構造体に残します)。</p>
+
+<pre class="brush: perl;">
+print "読み込み可\n" if -r _;
+</pre>
+
+</div>

@@ -1,0 +1,18 @@
+<div class="func-header">
+	<div class="func-format">
+shmwrite ID,STRING,POS,SIZE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+<p><code>System V</code>共有メモリセグメント ID に対し、アタッチして、コピーを行ない、デタッチするという形で、位置<code>POS</code>から、サイズ<code>SIZE</code>だけ、書き込みを行ないます。書き込み時には、<code>STRING</code>が長すぎても、<code>SIZE</code>バイトだけが使われます。<code>STRING</code>が短すぎる場合には、<code>SIZE</code>バイトを埋めるために、ヌル文字が書き込まれます。成功時には&quot;真&quot;を、エラー時には&quot;偽&quot;を返します。</p>
+
+</div>

@@ -1,0 +1,33 @@
+<div class="func-header">
+	<div class="func-format">
+		unshift ARRAY,LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>ARRAY</code>の先頭に<code>LIST</code>を挿入し、挿入後の配列の要素数を返します。</p>
+
+	<h2 class="func-sample">unshiftの使い方</h2>
+
+<pre class="brush: perl;">
+my @list = (&#39;One&#39;, &#39;Tow&#39;, &#39;Three&#39;);
+my @array = (&#39;a&#39;, &#39;b&#39;, &#39;c&#39;);
+unshift(@array, @list); 
+</pre>
+
+	<p><code>@array</code>内の各要素は下記のとおりです。 </p>
+
+<pre class="brush: perl;">
+print &quot;@array\n&quot;;
+&gt; One Tow Three a b c
+</pre>
+
+</div>

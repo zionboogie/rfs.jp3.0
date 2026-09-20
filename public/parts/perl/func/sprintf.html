@@ -1,0 +1,177 @@
+<div class="func-header">
+	<div class="func-format">
+		sprintf FORMAT,LIST  
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>FORMAT</code>で指定されたとおりに整形してから文字列を返します。</p>
+
+	<p class="box-config">sprintf( &quot;出力内容(%フォーマット文字)&quot; , $変数1,$変数2,...);</p>
+
+	<p><code>FORMAT</code>は<i>フィールド指定子</i>を埋め込んだ文字列で、各フィールドは第2引数からの要素によって置き換えられます。</p>
+
+	<p>フィールド指定子は次のような形式になっています。</p>
+
+	<p class="box-config">%m.nx</p>
+
+	<p><code>m</code>と<code>n</code>は省略可能です。ここで<code>m</code>と<code>n</code>はサイズをあらわし、フィールドのタイプに応じて解釈されます。</p>
+
+	<h2 class="func-sample">sprintfの使い方</h2>
+
+<pre class="brush: perl;">
+$num = 5;<br />
+print sprintf( "%02d", $num );<br />
+> 05 
+</pre>
+
+
+	<table class="table-format01">
+
+		<tr>
+			<th align="center" nowrap>文字</th>
+			<th align="center" nowrap>説明</th>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%c</td>
+			<td>文字 -Character</td>
+
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%d</td>
+			<td>10進数 -Deximal</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%e</td>
+
+			<td>浮動少数（指数形式） -Exponential</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%E</td>
+			<td>浮動少数（大文字のEを使った指数形式）</td>
+		</tr>
+		<tr>
+
+			<td align="center" nowrap class="td_strong">%f</td>
+			<td>浮動小数（固定小数点形式） -Floating</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%g</td>
+			<td>浮動小数（浮動少数または指数形式のうち、少ないスペースで表現できる方）</td>
+		</tr>
+
+		<tr>
+			<td align="center" nowrap class="td_strong">%G</td>
+			<td>%g の指数表示をEにしたもの</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%ld</td>
+			<td>倍精度10進数 -Long</td>
+
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%lo</td>
+			<td>倍精度8進数</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%lu</td>
+
+			<td>倍精度符号なし10進数</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%lx</td>
+			<td>倍精度16進数</td>
+		</tr>
+		<tr>
+
+			<td align="center" nowrap class="td_strong">%n</td>
+			<td>すでに出力した文字数を次の変数に格納</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%o</td>
+			<td>8進数 -Octal</td>
+		</tr>
+
+		<tr>
+			<td align="center" nowrap class="td_strong">%p</td>
+			<td>ポインタ （16進数での値のアドレス）</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%s</td>
+			<td>文字列 -String</td>
+
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%u</td>
+			<td>符号なし10進数 -Unsigned</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%x</td>
+
+			<td>符号なし16進数 -heXadecimal</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">%X</td>
+			<td>%x と同じだが大文字を使う</td>
+		</tr>
+	</table>
+
+	<h4>修飾子</h4>
+
+
+	<table class="table-format01">
+		<tr>
+			<th align="center" nowrap>文字</th>
+			<th align="center" nowrap>説明</th>
+
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">-(%-nd)</td>
+			<td>左寄せで表示。ｎ は文字列の長さ</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">#</td>
+
+			<td>8進の整数は0で始まり、16進の整数は0xで始まるように表示</td>
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">(%nd)</td>
+			<td>数値変数の10進展開<br />
+			<br />
+			「ｎ」は文字列の長さ。文字数が足りない場合はスペースで埋める。</td>
+
+		</tr>
+		<tr>
+			<td align="center" nowrap class="td_strong">(%n.mf)</td>
+			<td>小数点付き数値の10進展開<br />
+			<br />
+			ｎ は文字列の長さ、m は少数点以下の桁数を指定。</td>
+		</tr>
+
+		<tr>
+			<td align="center" nowrap class="td_strong">+(%+d)</td>
+			<td>符号付き10進展開<br />
+			<br />
+			符号+または-をつけて表示</td>
+		</tr>
+		<tr>
+
+			<td align="center" nowrap class="td_strong">0(%0nd)</td>
+			<td>文字数が足りない場合は0で埋める<br />
+			<br />
+			ｎ は文字列の長さ。</td>
+		</tr>
+	</table>
+
+	<p><code>m</code>は、通常、フィールドの最小長（負なら左寄せ）です。<code>n</code>は指数表示の場合には精度、文字列の場合には最大長、整数の場合には最小限表示する桁数を表します。フィールド内の空白を埋めるのに、通常は、文字列ではスペース、数値では0が使われます。フィールドの長さに 
+	* を指定することはできません。</p>
+
+</div>

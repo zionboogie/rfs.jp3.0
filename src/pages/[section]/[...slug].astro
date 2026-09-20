@@ -13,7 +13,7 @@ import {
 	type CategoryPageData,
 } from "../../lib/wordpress";
 import { collectionJsonLd, techArticleJsonLd } from "../../lib/structured-data";
-import { categoryListTitle } from "../../lib/seo";
+import { articleDocumentTitle, categoryListTitle } from "../../lib/seo";
 import "../../styles/category.css";
 
 export async function getStaticPaths() {
@@ -73,7 +73,10 @@ type Props =
 	| { kind: "article"; article: ArticleDetail };
 
 const props = Astro.props;
-const title = props.kind === "article" ? props.article.title : categoryListTitle(props.page.title);
+const title =
+	props.kind === "article"
+		? articleDocumentTitle(props.article.title, props.article.categoryName)
+		: categoryListTitle(props.page.title);
 const description =
 	props.kind === "article"
 		? props.article.lead || props.article.title

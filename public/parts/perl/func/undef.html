@@ -1,0 +1,34 @@
+<div class="func-header">
+	<div class="func-format">
+		undef EXPR  
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>undef</code>関数は､既に定義された変数の定義を無効にします｡関数の返却値は常に未定義です｡引数を省略して未定義値（<code>undef</code>）を返し、サブルーチンの返却値として使うことができます。</p>
+
+	<h2 class="func-sample">undefの使い方</h2>
+
+	<p><code>undef</code>関数の便利な使い方として、<code>EXPR</code>を省略してサブルーチンの返却値とすることもできます。</p>
+
+<pre class="brush: perl;">
+undef $scalar;
+undef $hash{"data"};
+undef @list;
+undef %hash;
+undef &function;
+
+return ( wantarray ? () : undef ); # 未定義値を返しています
+</pre>
+
+	<p>この関数は､変数を無効にし、常に未定義を返します｡</p>
+
+</div>

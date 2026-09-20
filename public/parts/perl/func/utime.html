@@ -1,0 +1,25 @@
+<div class="func-header">
+	<div class="func-format">
+utime LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>ファイルのアクセス時刻と修正時刻を変更します。<code>LIST</code>の最初の 2 つの要素に、数値で表わしたアクセス時刻と修正時刻を順に指定します。<code>LIST</code>の残りの要素が、変更の対象となるファイルです。変更に成功したファイルの数を返します。各ファイルの<code>inode</code>修正時刻には、その時点の時刻が設定されます。</p>
+
+	<h2 class="func-sample">utimeの使い方</h2>
+
+<pre class="brush: perl;">
+$now = time;
+utime $now, $now, @ARGV;
+</pre>
+
+</div>

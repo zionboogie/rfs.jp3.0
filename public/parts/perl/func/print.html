@@ -1,0 +1,37 @@
+<div class="func-header">
+	<div class="func-format">
+		print [FILEHANDLE] LIST
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>print</code>は、文字列、もしくはコンマで区切った複数の文字列を出力します。成功時には、0 以外を返します。<code>FILEHANDLE</code>を省略した場合は標準出力、もしくは出力チャネルに出力、<code>FILEHANDLE</code>を指定した場合はそのファイルハンドルに出力します。デフォルトの出力チャネルを<code>STDOUT</code>以外にする場合は、<a href="select.html"><code>select</code></a>を使ってください。</p>
+
+	<h2 class="func-sample">printの使い方</h2>
+
+<pre class="brush: perl;">
+open ( FH, ">test.txt" );
+print FH "I am NO.1 !";
+close ( FH ); 
+</pre>
+
+	<p><code>$,</code>の値があれば、各<code>LIST</code>要素の間に出力されます。
+</p>
+
+<pre class="brush: perl;">
+my @array = qw(one two three);
+$, = ':';
+print @array,"\n";
+>one:two:three:
+</pre>
+
+
+</div>

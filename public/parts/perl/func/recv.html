@@ -1,0 +1,19 @@
+<div class="func-header">
+	<div class="func-format">
+recv SOCKET,SCALAR,LEN,FLAGS
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>ソケット上のメッセージを受信します。指定されたファイルハンドルSOCKETから、変数SCALAR  にLENGTHバイトのデータを読み込もうとします。実際には、Cのrecvfrom()  を呼びますので、送信側のアドレスを返すことができます。エラー発生時には、未定義値を返します。<br />
+SCALARは、実際に読まれた長さによって、大きくなったり、小さくなったりします。同名のシステムコールと同じFLAGSを使います。</p>
+
+</div>

@@ -1,0 +1,42 @@
+<div class="func-header">
+	<div class="func-format">
+		split /PATTERN/,[EXPR,LIMIT] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+<div class="func-detail">
+
+	<p><code>split</code>は指定した<code>PATTERN</code>を分割の区切りとし、<code>EXPR</code>を分割し増す。返却値は分割後の配列です。<code>LIMIT</code>には分割する回数の最大値を指定します。<code>LIMIT</code>を省略すると、全てが分割されます。<code>PATTERN</code>を省略すると、タブかスペース(<code>/[ \t\s]+/</code>) で分割されます。 </p>
+
+	<h2 class="func-sample">splitの使い方</h2>
+
+<pre class="brush: perl;">
+$var = "One:Two:Three";
+@list = split( /:/ , $var );
+# @list の内容は(One, Tow, Three)
+
+# LIMIT を使う
+$var = "One:Two:Three";
+@list = split( /:/ , $var, 2 ); # @list の内容は(One, Tow:Three) 
+</pre>
+
+	<p><code>PATTERN</code>にスペースを指定すると、<code>EXPR</code>の値を1文字ずつに分割します。</p>
+
+<pre class="brush: perl;">
+# @listの内容は(a, b, c, d, e)
+@list = split(/ */, 'abcde');
+</pre>
+
+	<p><code>PATTERN</code>にカッコが含まれていると、デリミタ内の部分文字列にマッチするものも、配列要素に含まれるようになります。</p>
+
+<pre class="brush: perl;">
+@list = split(/([,-])/, "1-10,20"); #@listの内容は(1, '-', 10, ',', 20);
+</pre>
+
+</div>

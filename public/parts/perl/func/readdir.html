@@ -1,0 +1,27 @@
+<div class="func-header">
+	<div class="func-format">
+readdir DIRHANDLE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><a href="opendir.html"><code>opendir</code></a>でオープンしたディレクトリ<code>DIRHANDLE</code>から、次のディレクトリエントリを返します。スカラコンテキストでは、次のディレクトリエントリ、リストコンテキストでは、そのディレクトリから残りのエントリをすべて返します。エントリが残っていない場合には、スカラコンテキストでは未定義値を、リストコンテキストでは空リストを返します。</p>
+
+	<h2 class="func-sample">readdirの使い方</h2>
+
+<pre class="brush: perl;">
+my $dir = &quot;/var/www/temp&quot;;
+opendir(DIR, $dir) || die &quot;can&#39;t opendir $dir: $!&quot;;
+my @f = grep { -f &quot;$dir/$_&quot; } readdir(DIR);
+closedir DIR;
+</pre>
+
+</div>

@@ -1,0 +1,24 @@
+<div class="func-header">
+	<div class="func-format">
+symlink OLDFILE, NEWFILE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>-->
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>NEWFILE</code>として、<code>OLDFILE</code>へのシンボリックリンクを生成します。成功時には 1 を返し、失敗時には 0 を返します。相対パスによるシンボリックリンクを作成するときは、現在の作業ディレクトリではなく、シンボリックリンクの場所から相対パスとして解釈されます。シンボリックリンクをサポートしていないシステムでは、実行時に致命的エラーが発生します。これをチェックするには、<a href="eval.html"><code>eval</code></a>を使用します。</p>
+
+	<h2 class="func-sample">symlinkの使い方</h2>
+
+<pre class="brush: perl;">
+symlink("file1.txt", "file1_link"); 
+</pre>
+
+</div>

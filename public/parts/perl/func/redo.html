@@ -1,0 +1,42 @@
+<div class="func-header">
+	<div class="func-format">
+redo LABEL 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>redo</code>コマンドは、条件を再評価しないで、<code>LABEL</code>で指定したループのブロックの始めから再実行します。<code>continue</code>ブロックがあっても実行されません。<code>LABEL</code>が省略されると、最も内側のループが対象になります。</p>
+
+	<h2 class="func-sample">redoの使い方</h2>
+
+
+<pre class="brush: perl;">
+# redo は条件を再評価せず実行するので、
+# $i がマイナスになるまで出力されます
+$i = 5;
+LOOP1:while($i) {
+$i--;
+print "LOOP1:", $i, "\n";
+print "exit\n", exit if $i < 0;
+
+# この行がないと永遠に続く
+redo LOOP1 if $i == 0;
+}
+&gt; LOOP1:4
+&gt; LOOP1:3
+&gt; LOOP1:2
+&gt; LOOP1:1
+&gt; LOOP1:0
+&gt; LOOP1:-1 
+</pre>
+
+
+</div>

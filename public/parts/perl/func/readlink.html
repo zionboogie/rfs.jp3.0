@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+readlink EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>システムでシンボリックリンクが実装されていれば、シンボリックリンクの値を返します。実装されていないときには、致命的エラーとなります。<code>readlink</code>は、何らかのシステムエラーを検出すると未定義値を返し、<code>$!</code>を設定します。</p>
+
+	<h2 class="func-sample">readlinkの使い方</h2>
+	<p class="func-sample">シェル上で<code>/var/www/htdocs</code>へのシンボリックリンク<code>web</code>を作成します。</p>
+
+	<p class="box-shell">$ ln -s /var/www/htdocs web</p>
+	<p>スクリプトでシンボリックリンク<code>web</code>の値を出力します。</p>
+
+<pre class="brush: perl;">
+print readlink "web";
+> /var/www/htdocs 
+</pre>
+
+</div>

@@ -1,0 +1,25 @@
+<div class="func-header">
+	<div class="func-format">
+getprotobyname NAME
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>getprotobyname</code>は、プロトコルファイル(<code>/etc/naeworks</code>)、もしくは、同等の機構から、引数<code>NAME</code>で指定されたプロトコル名に対応したプロトコルの情報（プロトコル名/エイリアス/プロトコル番号）をリストで返します。スカラコンテキストの場合は、プロトコル名を返します。</p>
+
+	<h2 class="func-sample">getprotobynameの使い方</h2>
+
+<pre class="brush: perl;">
+my($protoname, $alias ,$protnum) = getprotobyname('tcp');
+</pre>
+
+
+</div>

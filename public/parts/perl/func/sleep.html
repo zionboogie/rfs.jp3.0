@@ -1,0 +1,41 @@
+<div class="func-header">
+	<div class="func-format">
+sleep EXPR  
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数で指定した秒数だけ、スクリプトの実行をスリープさせます。引数を省略すると、永久にスリープします。スリープ中のプロセスは、<code>SIGALRM</code>を送ることで実行を再開することができます。返却値はスリープした秒数です。</p>
+	<p>プロセスについては用語集「プロセス」を参照してください。</p>
+
+	<h2 class="func-sample">sleepの使い方</h2>
+
+<pre class="brush: perl;">
+# よくあるファイルロック処理
+$retry = 3;
+sub open_lock{
+	my $filepath = shift; # ファイルパスを受け取る
+
+	while ( -f $filepath ){
+		if ( --$retry <= 0 ){
+		    unlink( $filepath ); # ファイルを削除
+		    return;
+		}
+		sleep(2);
+	}
+	unless ( open( FH, ">$filepath" ) ){
+		return;
+	}
+	close( FH );
+}
+</pre>
+
+</div>

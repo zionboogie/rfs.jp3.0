@@ -1,0 +1,36 @@
+<div class="func-header">
+	<div class="func-format">
+sysseek FILEHANDLE
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p><code>sysseek</code>は、<code><a href="seek.html">seek</a></code>の変種で、引数<code>FILEHANDLE</code>のファイルシステムの<code>read</code>/<code>wirte</code>位置を<code>lseek(2)</code>システムコールを使って設定・取得します。<code>FILEHANDLE</code>は式でも構いません。その場合はその値がファイルハンドルの名前となります。<code>WHENCE</code>の値が、0ならば、新しい位置を<code>POSITION</code>の位置へ、1 ならば、現在位置から<code>POSITION</code>加えた位置へ、2 ならば、<code>EOF</code>から<code>POSITION</code>だけ加えた位置へ、新しい位置を設定します。この値には、<code>Fcntl</code>モジュールで使われている<code>SEEK_SET</code>、<code>SEEK_CUR</code>、<code>SEEK_END</code>(0=ファイルの先頭、1=現在位置、2=ファイルの最後)という定数を使うこともできます。
+	</p>
+	
+	<p><code>sysseek</code>は<code>stdio</code>をバイパスしますので、 (<code>sysread</code>以外の)読み込み、 <code>print</code>、<code>write</code>、<code>seek</code>、<code>tell</code>、<code>eof</code>と混ぜて使うと混乱を引き起こします。<br />
+	<br />
+	<code>sysseek</code>の返却値は、成功時に新しい位置を返します。失敗したときは未定義値を返します。位置がゼロの場合は、<code>0 but true</code>の文字列として返されます。</p>
+
+	<h2 class="func-sample">sysseekの使い方</h2>
+
+<pre class="brush: perl;">
+use Fcntl qw(:DEFAULT :flock);
+use IO::Seekable;
+･･･
+sysopen(FH, $file, O_WRONLY|O_APPEND|O_CREAT);
+flock(FH, LOCK_EX);
+
+# ファイルの末尾に位置を設定
+sysseek(FH, 0, SEEK_END)
+or die "sysseek error: $!";
+</pre>
+
+</div>

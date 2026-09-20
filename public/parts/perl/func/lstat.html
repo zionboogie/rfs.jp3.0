@@ -1,0 +1,33 @@
+<div class="func-header">
+	<div class="func-format">
+lstat FILEHANDLE<br />
+lstat EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code><a href="stat.html">stat</a></code>関数と同じことをしますが、シンボリックリンクが指しているファイルではなく、シンボリック自体の<code>stat</code>をとります。シンボリックリンクがシステムに実装されていないと、通常の<code><a href="stat.html">stat</a></code>が行なわれます。</p>
+	<dl>
+		<dt>シンボリックリンク</dt>
+
+		<dd>ファイルやディレクトリを、本来の位置やファイル名とは別の位置や名前でアクセスするための手段です。<code>Windows</code>ではショートカットと呼ばれています。</dd>
+	</dl>
+
+	<h2 class="func-sample">lstatの使い方</h2>
+
+<pre class="brush: perl;">
+($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,
+	$mtime,$ctime,$blksize,$blocks) = lstat($filename);  
+</pre>
+
+	<p>詳しくは<code><a href="stat.html">stat</a></code>を参照してください。</p>
+
+</div>

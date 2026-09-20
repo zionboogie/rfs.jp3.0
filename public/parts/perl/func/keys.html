@@ -1,0 +1,43 @@
+<div class="func-header">
+	<div class="func-format">
+keys HASH 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数で指定したハッシュにあるすべてのキーをリストで返します。その際の順番はランダムです。スカラコンテキストではキーの個数を返します。</p>
+
+	<h2 class="func-sample">keysの使い方</h2>
+
+<pre class="brush: perl;">
+%hash = ('Akai', 27, 'Ishikawa', 30);
+
+# スカラコンテキストではキーの個数を返す
+print $key = keys %hash, "\n";
+> 2
+foreach $key ( keys %hash ) {
+	print "$key : $hash{$key}", "\n";
+}
+> Ishikawa : 30
+> Akai : 27 
+</pre>
+
+	<h2>キーをソートする場合</h2>
+
+	<p><a href="sort.html"><code>sort</code></a>を使って、<code>keys</code>が返すリストをソートすることができます。</p>
+
+<pre class="brush: perl;">
+foreach $key ( sort( keys %ENV ) ) {
+	...;
+} 
+</pre>
+
+</div>

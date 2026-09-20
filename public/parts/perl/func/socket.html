@@ -1,0 +1,41 @@
+<div class="func-header">
+	<div class="func-format">
+socket SOCKET,DOMAIN,TYPE,PROTOCOL 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>指定した種類のソケットをオープンし、ファイルハンドル<code>SOCKET</code>にアタッチします。<code>DOMAIN</code>、<code>TYPE</code>、<code>PROTOCOL</code>は、同名のシステムコールと同じように指定します。適切な定義を<code>import</code>するために、まず、<code>&quot;use Socket&quot;</code>とするとよいでしょう。<!--webbot bot="PurpleText" PREVIEW="perlipc manpage の例を参照してください。" --></p>
+
+	<h2 class="func-sample">socketの使い方</h2>
+
+<pre class="brush: perl;">
+# TCP/IPを使う場合
+socket(SOCKET, PF_INET, SOCK_STREAM, 0) 
+
+# UDP/IPを使う場合
+socket(SOCKET, PF_INET, SOCK_DGRAM, 0)
+
+# UNIXドメインソケットを使う場合
+socket(SOCKET, PF_LOCAL, SOCK_DGRAM, 0)
+</pre>
+
+	<p>ソケットを利用するには、下記のようにします。</p>
+
+<pre class="brush: perl;">
+# ソケットから読み込む
+$in = &lt;SOCKET&gt;;
+
+# ソケットに送信する
+print SOCKET "....";
+</pre>
+
+</div>

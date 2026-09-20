@@ -1,0 +1,36 @@
+<div class="func-header">
+	<div class="func-format">
+		pop ARRAY 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p>配列<code>ARRAY</code>の最後の要素を取り出し、要素数を１減らします。これは、以下と同様の効果があります。</p>
+
+<pre class="brush: perl;">
+$ARRAY[$#ARRAY--]
+</pre>
+
+	<p>指定された配列に要素がなければ、未定義値が返されます。<code>ARRAY</code>を省略すると、関数の中では <font face="Trebuchet MS">@_</font> が対象になります。それ以外の場所では、<code>@ARGV</code>が対象となります（<font face="Trebuchet MS">@_</font><code> </code>は関数への引数をセットした特殊変数、<code>@ARGV</code>はコマンドラインからの引数をセットした特殊変数）。</p>
+
+	<h2 class="func-sample"><code>pop</code>の使い方</h2>
+
+<pre class="brush: perl;">
+@array = qw(1 2 3 4 5);
+print pop @array;
+> 5 
+</pre>
+
+	<p>関連する関数には <a href="push.html"><code>push</code></a> / <a href="shift.html">
+
+	<code>shift</code></a> / <a href="splice.html"><code>splice</code></a> 
+	などがあります。</p>
+
+</div>

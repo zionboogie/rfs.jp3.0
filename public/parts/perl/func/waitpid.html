@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+waitpid PID,FLAGS 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<!--<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>特定のチャイルドプロセスが終了するのを待ち、消滅したプロセスの<code>pid</code>を返します。指定したチャイルドプロセスが存在しないときには、-1 を返します。ステータスは<code>$?</code>に返されます。</p>
+	<!--<p>プロセスについては用語集「プロセス」を参照してください。</p>-->
+
+	<h2 class="func-sample">waipidの使い方</h2>
+
+<pre class="brush: perl;">
+use POSIX "wait_h";
+...
+waitpid(-1,&WNOHANG);
+</pre>
+
+	<p>上記のようにすると、ブロックが起こらないようにして、任意のプロセスを<code>wait</code>します。ブロックなしの<code>wait</code>は、システムコール<code>wait_pid</code>か、システムコール<code>wait</code>をサポートしているマシンでのみ利用可能です。しかしながら、特定の<code>pid</code>を 0 の<code>FLAGS</code>での<code>wait</code>はどこでも実装されています。(<code>exit</code>したプロセスのステータス値を覚えておいて、<code>Perl</code>がシステムコールをエミュレートしますが、<code>Perl</code>スクリプトには取り入れられていません。)</p>
+
+</div>

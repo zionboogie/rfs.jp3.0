@@ -1,0 +1,165 @@
+<div class="func-header">
+	<div class="func-format">
+stat FILEHANDLE<br />
+stat EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<!--<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>FILEHANDLE</code>を通じてオープンされているファイルか、<code>EXPR</code>で指定されるファイルの情報を与える、13要素の配列を返します。<code>stat</code>に失敗した場合には、空リストを返します。</p>
+
+	<h2 class="func-sample">statの使い方</h2>
+
+<pre class="brush: perl;">
+($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,
+$mtime,$ctime,$blksize,$blocks) = stat($filename); 
+</pre>
+
+	<p>下線だけの<code>_</code>という、特別なファイルハンドルを、<code>stat</code>に渡すと、実際には<code>stat</code>を行なわず、<code>stat</code>構造体に残っている、前回の<code>stat</code>やファイルテストの情報が返されます。</p>
+
+	<h5>stat の返却値</h5>
+
+	<table class="table-format01">
+		<tr>
+			<th>要素</th>
+			<th>意味</th>
+		</tr>
+
+		<tr>
+			<td class="td_strong">0</td>
+			<td>ファイルシステムのデバイス番号</td>
+		</tr>
+		<tr>
+			<td class="td_strong">1</td>
+			<td>i ノード番号</td>
+
+		</tr>
+		<tr>
+			<td class="td_strong">2</td>
+			<td>ファイルのモード</td>
+		</tr>
+		<tr>
+			<td class="td_strong">3</td>
+
+			<td>ファイルへのハードリンク数</td>
+		</tr>
+		<tr>
+			<td class="td_strong">4</td>
+			<td>ファイル所有者のユーザID</td>
+		</tr>
+		<tr>
+
+			<td class="td_strong">5</td>
+			<td>ファイル所有者のグループID</td>
+		</tr>
+		<tr>
+			<td class="td_strong">6</td>
+			<td>特殊ファイルのデバイス識別子</td>
+		</tr>
+
+		<tr>
+			<td class="td_strong">7</td>
+			<td>ファイルのサイズ（バイト単位）</td>
+		</tr>
+		<tr>
+			<td class="td_strong">8</td>
+			<td>最終アクセス時刻</td>
+
+		</tr>
+		<tr>
+			<td class="td_strong">9</td>
+			<td>最終変更時刻</td>
+		</tr>
+		<tr>
+			<td class="td_strong">10</td>
+
+			<td>最終 i ノード変更時刻</td>
+		</tr>
+		<tr>
+			<td class="td_strong">11</td>
+			<td>標準のファイルシステム入出力時の標準ブロックサイズ</td>
+		</tr>
+		<tr>
+
+			<td class="td_strong">12</td>
+			<td>ファイルに割り当てられてりるブロック数</td>
+		</tr>
+	</table>
+
+	<p>下線だけの _ という特別なファイルハンドルを<code>stat</code>に渡すと、実際には<code>stat</code>を行なわず、<code>stat</code>構造体に残っている前回の<code>stat</code>やファイルテストの情報が返されます。</p>
+
+<pre class="brush: perl;">
+if (-x $file && (($d) = stat(_)) && $d < 0) {
+	print "$file is executable NFS file\n";
+}
+</pre>
+
+	<p>(これは、<code>NFS</code>のもとでデバイス番号が負になるマシンでのみ動作します。)</p>
+
+	<p><code>File::stat</code>モジュールは、便利な名前によるアクセス機構を提供します。</p>
+
+<pre class="brush: perl;">
+use File::stat;
+$sb = stat($filename);
+printf "File is %s, size is %s, perm %04o, mtime %s\n", 
+$filename, $sb->size, $sb->mode & 07777,
+scalar localtime $sb->mtime;
+</pre>
+
+	<p>モード定数 (<code>S_IF*</code>) と関数 (<code>S_IS*</code>) を<code>Fcntl</code>モジュールからインポートできます。</p>
+
+<pre class="brush: perl;">
+use Fcntl ':mode';
+use Fcntl ':mode';
+$mode = (stat($filename))[2];
+$user_rwx = ($mode & S_IRWXU) >> 6;
+$group_read = ($mode & S_IRGRP) >> 3;
+$other_execute = $mode & S_IXOTH;
+printf "Permissions are %04o\n", S_ISMODE($mode), "\n";
+$is_setuid = $mode & S_ISUID;
+$is_setgid = S_ISDIR($mode);
+</pre>
+
+	<p>最後の二つは<code>-u</code>と<code>-d</code>演算子を使っても書けます。一般に利用可能な<code>S_IF*</code>定数は以下のものです。</p>
+
+<pre class="brush: perl;">
+# Permissions: read, write, execute, for user, group, others.
+S_IRWXU S_IRUSR S_IWUSR S_IXUSR
+S_IRWXG S_IRGRP S_IWGRP S_IXGRP
+S_IRWXO S_IROTH S_IWOTH S_IXOTH
+# Setuid/Setgid/Stickiness.
+S_ISUID S_ISGID S_ISVTX S_ISTXT
+# File types. Not necessarily all are available on your system.
+S_IFREG S_IFDIR S_IFLNK S_IFBLK S_ISCHR S_IFIFO S_IFSOCK S_IFWHT S_ENFMT
+# The following are compatibility aliases for S_IRUSR, S_IWUSR, S_IXUSR.
+S_IREAD S_IWRITE S_IEXEC
+</pre>
+
+	<p>一般に利用可能な<code>S_IF*</code>関数は以下のものです。</p>
+
+<pre class="brush: perl;">
+S_IFMODE($mode) the part of $mode containing the permission bits
+and the setuid/setgid/sticky bits
+S_IFMT($mode) the part of $mode containing the file type
+which can be bit-anded with e.g. S_IFREG 
+or with the following functions
+
+# The operators -f, -d, -l, -b, -c, -p, and -s.
+S_ISREG($mode) S_ISDIR($mode) S_ISLNK($mode)
+S_ISBLK($mode) S_ISCHR($mode) S_ISFIFO($mode) S_ISSOCK($mode)
+
+# No direct -X operator counterpart, but for the first one
+# the -g operator is often equivalent. The ENFMT stands for
+# record flocking enforcement, a platform-dependent feature.
+S_ISENFMT($mode) S_ISWHT($mode)
+</pre>
+
+</div>

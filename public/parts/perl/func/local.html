@@ -1,0 +1,36 @@
+<div class="func-header">
+	<div class="func-format">
+		local EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>local</code>は、ブロックや関数、<code><a href="eval.html">eval</a></code>などの中で、引数として指定された変数をローカルなものにします。</p>
+
+	<h2 class="func-sample">localの使い方</h2>
+
+	<p>変数をカッコで囲えば複数の変数を宣言できます。</p>
+
+<pre class="brush: perl;">
+local ($a, $b, $c);
+</pre>
+
+	<p><code>EXPR</code>に代入を行なうことも可能で、ローカルな変数の初期化として使うことができます(初期化子を与えなかった変数の値は、未定義値となります)。</p>
+
+<pre class="brush: perl;">local $a;
+local $b = 1;
+</pre>
+
+	<p><code>local</code>は実行時のコマンドですから、ループを通るごとに実行されるので、変数の宣言はループの外でした方が効率的です。</p>
+
+	<p>一般には、<code>local</code>よりも<a href="my.html"><code>my</code></a>を使ったほうが速く、安全ですが、特殊変数をローカル変数として扱いたい場合などで必要になることがあります。</p>
+
+</div>

@@ -1,0 +1,40 @@
+<div class="func-header">
+	<div class="func-format">
+		goto LABEL<br />
+		goto &amp;NAME
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>goto LABEL</code>の形式は、<code>LABEL</code>というラベルを探して、そこから実行を再開します。<code>Perl</code>では、ほとんど必要のないラベルです。</p>
+	<p><code>goto</code>を、サブルーチンや<code>foreach</code>ループなど、初期化が必要な構文の内側に飛ばす
+	ために使用するのはよくありません。また、最適化によってなくなってしまう構文の中も同様です。それ以外では、サブルーチンの外を含む動的スコープ内のほとんどすべての場所で使用できますが、そのような場合は、<a href="last.html"><code>last</code></a>や<a href="die.html"><code>die</code></a>を使った方が良いでしょう。</p>
+
+	<h2 class="func-sample"><code>goto</code>の使い方</h2>
+
+<pre class="brush: perl;">
+# 実用性のないスクリプトですが、goto の動作がわかると思います
+$max_number = 1;
+LOOP1:while(1){
+	for (1 .. $max_number) {
+		print "LOOP1:", $max_number, "\n";
+	}goto LOOP2;
+}
+LOOP2:{
+	print "LOOP2:", $max_number, "\n";
+}
+> LOOP1:1
+> LOOP2:1 
+</pre>
+
+	<p><code>goto &amp;NAME</code>の形式は、現在実行中のサブルーチンを<code>NAME</code>で指定したサブルーチンの呼び出しで置き換えます。これは、<code>AUTOLOAD</code>サブルーチンが別のサブルーチンをロードして、別のサブルーチンが最初に呼ばれたようにするために使われます(ただし、現在のサブルーチンで<code>@_</code>を修正した場合には、置き換えられたサブルーチンに伝わります)。<code>goto</code>のあとは、<a href="caller.html"><code>caller</code></a>も元のルーチンが先に呼び出されたことを知ることはできません。</p>
+
+</div>

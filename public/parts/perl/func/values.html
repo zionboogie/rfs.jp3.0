@@ -1,0 +1,34 @@
+<div class="func-header">
+	<div class="func-format">
+values ASSOC_ARRAY
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>ハッシュ<code>ASSOC_ARRAY</code>の<code>value</code>を返します。</p>
+
+	<h2 class="func-sample">valuesの使い方</h2>
+
+<pre class="brush: perl;">
+%hash = ('Akai', 27, 'Ishikawa', 30);
+
+# スカラコンテキストでは値の個数を返す
+print $key = values %hash, "\n";
+> 2
+
+foreach $value ( values %hash ) {
+　　print $value, "\n";
+}
+> 30
+> 27
+</pre>
+
+</div>

@@ -1,0 +1,28 @@
+<div class="func-header">
+	<div class="func-format">
+getsockname SOCKET 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p>ソケットの自分自身のホスト側のIPアドレスとポート番号を調べます。返却値は<code>SOCKET</code>コネクションのこちら側のパックされた<code>aockaddr</code>アドレス
+	です。相手先のIPアドレス・ポート番号は<code><a href="getpeername.html">getpeername</a></code>で調べることができます。<br />
+&nbsp;</p>
+
+	<h2 class="func-sample">getsocknametの使い方</h2>
+
+
+<pre class="brush: perl;">
+while ( accept(CLIENT, SERVER) ) {
+$my_socket_address = getsockname(CLIENT);
+($port, $myaddr) = sockaddr_in($my_socket_address);
+}
+</pre>
+</div>

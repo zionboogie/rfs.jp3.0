@@ -1,0 +1,33 @@
+<div class="func-header">
+	<div class="func-format">
+ioctl FILEHANDLE,FUNCTION,SCALAR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>ioctl</code>システムコールを実装します。</p>
+
+	<dl>
+		<li><code>ioctl</code>システムコールについては用語集「ioctlシステムコール」を参照してください。</li>
+	</dl>
+
+	<p>引数<code>FOUNCTION</code>に応じて<code>SCALAR</code>が読み書きされます。<code>SCALAR</code>の文字列値へのポインタが、実際の<code>ioctl</code>コールの3番目の引数として渡されます。(<code>SCALAR</code>が文字列値を持っておらず、数値を持っている場合には、文字列値へのポインタの代わりに、その値が渡されます。このことを保証するためには、使用する前に<code>SCALAR</code>に 0 を足してください。)</p>
+	<p>正しい関数の定義を得るために、最初に下記のような呼び出しを行ったほうがよいでしょう。</p>
+
+<pre class="brush: perl;">
+require "ioctl.ph";
+</pre>
+
+	<p><code>ioctl.h</code>がないか、間違った定義をしている場合には、<code>&lt;sys/ioctl.ph&gt;</code>のような<code>C</code>のヘッダファイルをもとに、自分で作らなければなりません。(これを手助けしてくれる、<code>h2ph</code>という<code>Perl</code>スクリプトが<code>Perl</code>の配布キットに入っています。)</p>
+
+	<p><code>ioctl</code>で使われる構造体の値を操作するには、<code><a href="pack.html">pack</a></code>関数と<code><a href="unpack.html">unpack</a></code>関数が便利です。</p>
+
+</div>

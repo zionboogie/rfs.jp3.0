@@ -1,0 +1,24 @@
+<div class="func-header">
+	<div class="func-format">
+getgrnam GROUP_NAME
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p><code>getgrgid</code>は、引数<code>GROUP_NAME</code>に指定されたグループ名を使って、グループファイル（<code>/etc/group</code>）からマッチしたグループ情報（グループ名/パスワード/グループID/メンバ）を返します。スカラコンテキストの場合は、グループ名を返します。</p>
+
+	<h2 class="func-sample">getgrgidの使い方</h2>
+
+<pre class="brush: perl;">
+# グループ名が rhythmfactory のグループ情報を取得する
+@group = getgrname('rhythmfactory');
+</pre>
+
+</div>

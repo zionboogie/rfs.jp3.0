@@ -1,0 +1,18 @@
+<div class="func-header">
+	<div class="func-format">
+msgsnd ID,MSG,FLAGS 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>System V IPC関数msgsndを呼び出し、メッセージキュー ID にメッセージMSGを送信します。MSGの先頭は、long整数のメッセージタイプでなければならず、これは、pack("L", $type)として生成できます。成功時には"真"を、エラー時には"偽"を返します。</p>
+
+</div>

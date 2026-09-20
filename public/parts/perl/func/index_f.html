@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+index STR,SUBSTR,POSITION<br />
+index STR,SUBSTR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>index</code>は、第1引数<code>STR</code>の先頭から第2引数<code>SUBSTR</code>が最初に見つかった位置を返します。</p>
+	<p>第3引数 <code>POSITION</code>で検索する位置を指定することもできます。第3引数<code>POSITION</code>には最初の文字を 0 として指定します。</p>
+	<p>返却値は 0、もしくは変数<code>$[</code>に設定した値です。<code>SURSTR</code>が見つからなかった場合は -1 を返します。</p>
+
+	<h2 class="func-sample">indexの使い方</h2>
+
+<pre class="brush: perl;">
+$str = "How you always hurt the one you love.";
+print index($str,'you');
+> 4 
+</pre>
+
+</div>

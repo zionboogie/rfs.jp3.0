@@ -32,7 +32,16 @@ export function resolveSiteOrigin(site: URL | undefined, fallbackOrigin: string)
 function documentTitle(pageTitle?: string): string {
 	const trimmed = pageTitle?.trim();
 	if (!trimmed || trimmed === SITE_NAME) return SITE_NAME;
+	if (trimmed.endsWith("[Smart]")) return trimmed;
 	return `${trimmed} | ${SITE_NAME}`;
+}
+
+export function articleDocumentTitle(articleTitle: string, categoryName: string): string {
+	const title = articleTitle.trim();
+	const category = categoryName.trim();
+	if (!title) return category ? `${category} [Smart]` : SITE_NAME;
+	if (!category) return `${title} [Smart]`;
+	return `${title} | ${category} [Smart]`;
 }
 
 export function categoryListTitle(categoryName: string): string {

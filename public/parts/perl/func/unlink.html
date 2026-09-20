@@ -1,0 +1,28 @@
+<div class="func-header">
+	<div class="func-format">
+unlink LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>LIST</code>に含まれるファイルを削除します。削除に成功したファイルの数を返します。</p>
+
+	<h2 class="func-sample">unlinkの使い方</h2>
+
+<pre class="brush: perl;">
+$cnt = unlink 'a', 'b', 'c';
+unlink @goners;
+unlink <*.bak>;
+</pre>
+
+	<p>システムの管理者権限で、<code>Perl</code>に<code>-U</code>を付けて実行した場合でなければ、<code>unlink</code>でディレクトリを削除することはありません。ディレクトリを削除するには、<a href="rmdir.html"><code>rmdir</code></a>を代わりに使ってください。</p>
+
+</div>

@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+grep BLOCK LIST<br />
+grep EXPR, LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>grep</code>は、第1引数に指定された検索パターンを使い、第2引数<code>LIST</code>からマッチするものを検索します。リストコンテキストでは、第2引数<code>LIST</code>の個々の要素に対して第1引数を評価し、評価した式が&quot;真&quot;となったものをリストにして返します。スカラコンテキストでは、式が&quot;真&quot;となった回数を返します。</p>
+
+
+	<h2 class="func-sample">grepの使い方</h2>
+
+<pre class="brush: perl;">
+# コメント行の除去
+@foo = grep( !/^#/, @bar );
+
+# コメント行の除去 
+@foo = grep { !/^#/} @bar;
+</pre>
+</div>

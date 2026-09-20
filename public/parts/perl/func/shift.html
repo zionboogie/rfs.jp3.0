@@ -1,0 +1,32 @@
+<div class="func-header">
+	<div class="func-format">
+		shift ARRAY 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>配列の最初の要素を削除し、その値を返します。その際、各要素はひとつずつインデックスの小さい方へずれ、要素数が１減ります。配列に要素がなければ、未定義値を返します。<br />
+	<code>ARRAY</code>を省略すると、関数の中では<code>@_</code>が対象になります。それ以外の場所では、<code>@ARGV</code>が対象となります。<code>@_</code>は関数への引数をセットした特殊変数、<code>@ARGV</code>はコマンドラインからの引数をセットした特殊変数です。</p>
+
+	<h2 class="func-sample">shiftの使い方</h2>
+
+	<p>下記は、リストの先頭要素を抜き出し、出力する例です。<code>出力後の@list</code>の値は (<code>Tow,Three</code>) となります。</p>
+
+<pre class="brush: perl;">
+@list = (One, Tow, Three);
+print shift( @list );
+> One
+</pre>
+
+	<p><a href="unshift.html"><code>unshift</code></a>、<a href="push.html"><code>push</code></a>、<a href="pop.html"><code>pop</code></a> 
+	も参照してください。</p>
+
+</div>

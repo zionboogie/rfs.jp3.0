@@ -1,0 +1,210 @@
+<div class="func-header">
+	<div class="func-format">
+open FILEHANDLE, [EXPR] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>open</code>は、ファイルを開くための関数です。第2引数<code>EXPR</code>で指定したファイル名をファイルをオープンして、第1引数<code>FILEHANDLE</code>に対応させます。ファイルハンドル名には慣習的に半角大文字で名前を付けるのが決まりになっています。<code>EXPR</code>を省略すると、<code>FILEHANDLE</code>と同じ名前のスカラ変数にファイル名が入れられているものとして処理されます。</p>
+
+	<p><code>open</code>は、成功時には、0 以外を返し、失敗時には未定義値を返します。</p>
+
+	<h2 class="func-sample">openの使い方</h2>
+
+<pre class="brush: perl;">
+# 一般的な open
+open FH, ">filename.txt";
+
+# EXPRを省略
+$FH = "filename.txt";
+open FH; 
+</pre>
+
+	<p>ファイルの読み書きには &gt;、&gt;&gt;、&lt; を使います。ファイル名の前に、以下の記号を付けることにより、モードを指定できます。</p>
+
+	<div align="center">
+		<table class="table-format01">
+
+			<tr>
+				<th width="100">　</th>
+				<th>読み取り</th>
+				<th>書き込み</th>
+				<th>追加</th>
+				<th>新規作成</th>
+
+				<th>上書き</th>
+			</tr>
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">&lt; filename</td>
+				<td align="center">○</td>
+				<td align="center">×</td>
+
+				<td align="center">×</td>
+				<td align="center">×</td>
+				<td align="center">×</td>
+			</tr>
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">&gt; filename</td>
+
+				<td align="center">×</td>
+				<td align="center">○</td>
+				<td align="center">×</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+			</tr>
+
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">&gt;&gt; 
+				filename</td>
+				<td align="center">×</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+
+				<td align="center">×</td>
+			</tr>
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">+&lt; 
+				filename</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+
+				<td align="center">×</td>
+				<td align="center">×</td>
+				<td align="center">×</td>
+			</tr>
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">+&gt; 
+				filenameｓ</td>
+
+				<td align="center">○</td>
+				<td align="center">○</td>
+				<td align="center">×</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+			</tr>
+
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">+&gt;&gt; 
+				filename</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+				<td align="center">○</td>
+
+				<td align="center">×</td>
+			</tr>
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">command |</td>
+				<td colspan="5">command 
+				を実行し、その出力をパイプ経由でファイルハンドルを渡す</td>
+			</tr>
+			<tr>
+
+				<td width="100" bgcolor="#F5F5F5">| command</td>
+				<td colspan="5">出力とファイルハンドルをパイプで command に渡す</td>
+			</tr>
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">-</td>
+				<td colspan="5">STDINをオープン</td>
+			</tr>
+
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">&gt;-</td>
+				<td colspan="5">STDOUTをオープン</td>
+			</tr>
+			<tr>
+				<td width="100" bgcolor="#F5F5F5">&gt;&amp;</td>
+				<td colspan="5">
+				式がテキストであればファイルハンドルの名前と解釈。数値であればファイル記述子と解釈。</td>
+
+			</tr>
+		</table>
+	</div>
+
+	<!--<p>ファイル記述子については用語集「<a href="javascript:OpenWin('../word/filedesc.html',400,400);">ファイル記述子</a>」を参照してください。</p>-->
+	<p>ファイル名の先頭に &lt; を付けるか、何も付けなかった場合には、入力用としてオープンされることになります。&gt; と &gt;&gt; との動作の違いは、&gt; はファイルサイズを0にしてから上書きするのに対し、&gt;&gt; はファイルの終わりにデータを追加します。&gt; や &lt; の前に + を置くことで、ファイルを読み書き両用にすることもできます。</p>
+
+	<p>ファイルを開いたあとは、ファイルハンドルを読み込んだり、その内容を<code><a href="print.html">print</a></code>で他のファイルハンドルに出力したりすることができます。</p>
+
+<pre class="brush: perl;">
+# ファイルをオープンし、ファイルハンドル FH に関連付け
+open FH, ">filename.txt";
+# 1行ずつ読み込み処理
+while( $line = <fh> ){
+	print $line; # ファイルの内容を出力
+}
+close FH; 
+</pre>
+
+	<h3><a name="open でパイプ処理">openでパイプ処理</a></h3>
+
+	<p>他のプログラムや<code>OS</code>についているコマンドなどからの出力を読み取ったり、逆に出力を渡すために、パイプ出力が使えます。<br />
+	ファイル名の先頭に | を付けると、そのファイル名をコマンドとして解釈し、そのコマンドへ出力されます。逆にファイル名の最後に | を付けた場合には、同様にファイル名をコマンドと解釈し、そのコマンドの出力を読み込むことができます。</p>
+
+<pre class="brush: perl;">
+# cat コマンドの出力を読み取る
+open( FILE, "cat $text |");
+while ( <file> ){
+	print;
+}
+close( FILE ); 
+</pre>
+
+	<p>ファイルをパイプを使ってオープンする場合は、ファイルが開けない場合でもエラーを示す未定義値は返ってきません。パイプを作成できなかったときだけ､エラーステータスが返されます。パイプオープンのエラーを捕らえるには、特殊変数 
+	 
+	<code>$?</code>を利用します。ファイルハンドルがクローズされると、特殊変数<code>$?</code>にリターンステータスをセーブするので、これを利用します。</p>
+
+<pre class="brush: perl;">
+open( FILE, "cat $text |");
+while ( <file> ){
+	print;
+}
+close( FILE )
+if ( $? ){
+	print "Can't open $text"; exit;
+} 
+</pre>
+
+	<h3><a name="プロセス間の入出力">プロセス間の入出力</a></h3>
+
+	<p>現在のプロセスの子プロセスの出力を渡したいときは、<code>open</code>文に引数として<code>|-</code>を渡します。</p>
+
+<pre class="brush: perl;">
+open( CH, "|-" );
+</pre>
+
+	<p>親プロセスからの出力をその子プロセスで出力するには次のようにします。</p>
+
+<pre class="brush: perl;">
+print <>
+</pre>
+
+	<p>逆に、子プロセスから親プロセスに出力を渡すこともできます。親プロセス側では<code>open</code>に引数として 
+	 
+	<code>-|</code>を渡します。</p>
+
+<pre class="brush: perl;">
+if( open CH, "-|" ){
+	print <ch>;
+	close(CH);
+} 
+</pre>
+
+	<p>子プロセス側では<code><a href="print.html">print</a></code>で親プロセスに出力を渡します。</p>
+
+<pre class="brush: perl;">
+print "...";
+</pre>
+
+	<!--<p>詳しくは <a href="../04/09.html">ファイル入出力</a>、プロセスについては用語集「<a href="javascript:OpenWin('../word/process.html',400,400);">プロセス</a>」を参照してください。</p>-->
+
+</div>

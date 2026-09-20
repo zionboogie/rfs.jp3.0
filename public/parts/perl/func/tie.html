@@ -1,0 +1,66 @@
+<div class="func-header">
+	<div class="func-format">
+tie VARIABLE, PACKAGENAME, LIST 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>tieは、変数とクラスを関連付ける関数です。<code>VARIABLE</code>には、関連付けをする変数、<code>PACKAGENAME</code>には、オブジェクトを実装するクラス名を指定します。他に引数があれば、そのパッケージの<code>new</code>メソッドに渡されます。<br />
+	<br />
+	大きな<code>DBM</code>ファイルでは、<code><a href="keys.html">keys</a></code>や<code><a href="values.html">values</a></code>のような関数は、大きな配列値を返す可能性があります。大きな<code>DBM</code>ファイルでは、<code><a href="each.html">each</a></code>関数を使って繰り返しを行なった方が、よいかもしれません。</p>
+
+	<h2 class="func-sample">tieの使い方</h2>
+
+<pre class="brush: perl;">
+# print out history file offsets
+tie(%HIST, NDBM_File, '/usr/lib/news/history', 1, 0);
+while (($key,$val) = each %HIST) {
+	print $key, ' = ', unpack('L',$val), "\n";
+}
+untie(%HIST);
+</pre>
+
+	<p>ハッシュを実装するパッケージでは、次のようなメソッドを用意します。</p>
+
+	<ul class="ul-list">
+		<li>TIEHASH objectname, LIST</li>
+		<li>DESTROY this</li>
+		<li>FETCH this, key</li>
+		<li>STORE this, key, value</li>
+		<li>DELETE this, key</li>
+		<li>EXISTS this, key</li>
+		<li>FIRSTKEY this</li>
+		<li>NEXTKEY this, lastkey</li>
+
+	</ul>
+
+	<p>通常の配列を実装するパッケージでは、次のようなメソッドを用意します。</p>
+
+	<ul class="ul-list">
+		<li>TIEARRAY objectname, LIST</li>
+		<li>DESTROY this</li>
+		<li>FETCH this, key</li>
+
+		<li>STORE this, key, value</li>
+		<li>[others TBD]</li>
+	</ul>
+
+	<p>スカラ変数を実装するパッケージでは、次のようなメソッドを用意します。</p>
+
+	<ul class="ul-list">
+		<li>TIESCALAR objectname, LIST</li>
+		<li>DESTROY this</li>
+		<li>FETCH this,</li>
+		<li>STORE this, value</li>
+	</ul>
+	<p><code>tie</code>はモジュールを<code><a href="use.html">use</a></code>したり<code><a href="require.html">require</a></code>したりしません。自分で明示的に行う必要があります。</p>
+
+</div>

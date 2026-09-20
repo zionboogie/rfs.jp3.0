@@ -1,0 +1,34 @@
+<div class="func-header">
+	<div class="func-format">
+read FILEHANDLE, SCALAR, LENGTH, [OFFSET] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+<!-- END 関数ヘッダ -->
+
+<div class="func-detail">
+
+	<p><code>read</code>は、ファイルハンドルからデータを読み取ります。第1引数のファイルハンドルから第2引数の変数に第3引数のバイト数分のデータを読み込みます。第4引数<code>OFFSET</code>を指定すると、指定した位置から読み込みを行なうことができます。</p>
+	<p>成功時には、実際に読み込まれたバイト数、もしくは、ファイルの終わり（<code>EOF</code>）の場合は0を返します。エラー時には<code>undef</code>を返します。</p>
+
+	<h2 class="func-sample"><code>read</code>の使い方</h2>
+
+
+<pre class="brush: perl;">
+open ( FH, $file );
+my $line;
+while( read( FH, $new, 1 ) ){
+	$line .= $new;
+}
+print $line; 
+</pre>
+
+	<p><code>read</code>は指定した<code>LENGTH</code>より多めに読み込んだりすることがあります。より細かい制御が必要な場合は<a href="sysread.html"><code>sysread</code></a>を使いましょう。</p>
+
+</div>

@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+semop KEY,OPSTRING 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>シグナルを送信や、待ち合わせなどのセマフォ操作を行なうために、<code>System V IPC</code>関数<code>semop</code>を呼び出します。</p>
+
+	<p><code>OPSTRING</code>は、<code>semop</code>構造体の<code><a href="pack.html">pack</a></code>された配列でなければなりません。<code>semop</code>構造体は、それぞれ、<code>pack(&quot;sss&quot;, $semnum, $semop, $semflag)</code>のように作ることができます。セマフォ操作の数は、<code>OPSTRING</code>の長さからわかります。成功時には真を、エラー時には偽を返します。　</p>
+
+	<h2 class="func-sample">semopの使い方</h2>
+
+<pre class="brush: perl;">
+$semop = pack("sss", $semnum, -1, 0);
+die "Semaphore trouble: $!\n" unless semop($semid, $semop);
+</pre>
+
+	<p>上記は、セマフォ ID<code>$semid</code>のセマフォ<code>$semnum</code>で待ち合わせを行ないます。セマフォにシグナルを送るには、&quot;-1&quot;を &quot;1&quot; に変更してください。</p>
+
+</div>

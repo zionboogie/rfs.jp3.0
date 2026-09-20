@@ -1,0 +1,43 @@
+<div class="func-header">
+	<div class="func-format">
+sort [SUBNAME] LIST<br />
+sort [BLOCK] LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>配列<code>LIST</code>の値をソートして返します。引数<code>SUBNAME</code>には、ソートの比較式を指定できます(<code>&lt;=&gt;</code>演算子や<code>cmp</code>演算子が便利です)。<code>SUBNAME</code>や<code>BLOCK</code>を省略すると、標準の文字列比較の順番でソートが行なわれます。<code>SUBNAME</code>の代わりに、無名のインラインソートルーチンとして、<code>BLOCK</code>を書くことができます。</p>
+
+	<h2 class="func-sample">sortの使い方</h2>
+
+<pre class="brush: perl;">
+# 文字の順でソート
+@sort_array = sort @array;
+
+# 文字の順で逆順にソート
+@sort_array = sort {$b cmp $a} @array;
+
+# 数値の昇順にソート
+@sort_array = sort {$a <=> $b} @files;
+
+# 数値の降順にソート
+@sort_array = sort {$b <=> $a} @files;
+
+# サブルーチン名を指定してソート
+sub byage {
+	$age{$a} <=> $age{$b}; # 整数を仮定
+}
+@sort_array = sort byage @class; 
+</pre>
+
+	<p>引数<code>SUBNAME</code>は、スカラ変数でもよく、その場合には、その値が使用するサブルーチンの名前と解釈されます。</p>
+
+</div>

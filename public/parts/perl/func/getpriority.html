@@ -1,0 +1,30 @@
+<div class="func-header">
+	<div class="func-format">
+getpriority WHICH,WHO 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+	<p>プロセス、プロセスグループ、ユーザに対する現在の優先度を返します。<!--webbot bot="PurpleText" PREVIEW="(getpriority(2) manpage を参照してください。)" -->システムコマンドの<code>getpriority</code>システムコールを実装していないマシンで実行した場合には、致命的エラーとなります。</p>
+
+	<p>引数<code>WHICH</code>には、<code>PRIO_PROCESS</code>（プロセス）、<code>PRIO_PGRP</code>（プロセスグループ）、<code>PRIO_USER</code>（ユーザID）などが指定できます。引数<code>WHO</code>には、<code>WHICH</code>で指定したプロセス<code>ID</code>、プロセス･グループ<code>ID</code>、ユーザー<code>ID</code>の<code>ID</code>を指定します。引数<code>WHO</code>が 0 ならば、呼び出したプロセス、プロセスグループ、ユーザーIDを意味します。</p>
+
+	<p>返却値は -20 から 20 の範囲の値で、デフォルトの優先度は 0 です。小さな数字ほど、有利なスケジューリングを意味します。</p>
+	<p><code>getpriority</code>は指定したプロセスのなかの最も高い優先度(数値的には最小)を返します。 </p>
+	<h2 class="func-sample">getpriorityの使い方</h2>
+
+<pre class="brush: perl;">
+# プロセス番号2030の優先度を出力
+print getpriority(PROCESS,2030),"\n";
+> 0 
+</pre>
+	<p>プロセスについては用語集「<a href="javascript:OpenWin('../word/process.html',400,400);">プロセス</a>」を参照してください。</p>
+
+</div>

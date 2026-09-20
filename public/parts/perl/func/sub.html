@@ -1,0 +1,32 @@
+<div class="func-header">
+	<div class="func-format">
+sub BLOCK<br />
+sub NAME<br />
+sub NAME BLOCK 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>sub</code>は、サブルーチン定義で使われ、本質的には関数ではありません。<code>NAME</code>(とプロトタイプや属性)のみの場合は、前方定義です。<code>NAME</code>なしの場合は、無名関数定義であり、値を返します。</p>
+
+	<h2 class="func-sample">subの使い方</h2>
+
+<pre class="brush: perl;">
+sub foo;
+sub foo {}
+$x = sub { ... };
+
+sub foo($;);
+sub foo($;) { }
+$x = sub($;) { ... }; 
+</pre>
+
+</div>

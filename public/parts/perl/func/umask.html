@@ -1,0 +1,25 @@
+<div class="func-header">
+	<div class="func-format">
+umask EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>umask</code>現在のプロセスの<code>umask</code>を設定し、以前の値を返します。引数が省略されると、その時点の<code>umask</code>の値を返します。</p>
+	<!--<p>プロセスについては用語集「プロセス」を参照してください。</p>-->
+
+	<h2 class="func-sample">umaskの使い方</h2>
+
+<pre class="brush: perl;">
+umask( ( umask() & 077 ) | 7 ); 
+</pre>
+
+</div>

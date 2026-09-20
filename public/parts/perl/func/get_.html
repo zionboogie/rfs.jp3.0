@@ -1,0 +1,79 @@
+<div class="func-header">
+	<div class="func-format">
+endgrent<br />
+endhostent<br />
+endnetent<br />
+endprotoent<br />
+endpwent<br />
+endservent<br />
+getgrent<br />
+getgrgid GID<br />
+getgrnam NAME<br />
+gethostbyaddr ADDR,ADDRTYPE<br />
+gethostbyname NAME<br />
+gethostent<br />
+getnetbyaddr ADDR,ADDRTYPE<br />
+getnetbyname NAME<br />
+getnetent<br />
+getprotobyname NAME<br />
+getprotobynumber NUMBER<br />
+getprotoent<br />
+getpwent<br />
+getpwnam NAME<br />
+getpwuid UID<br />
+getservbyname NAME,PROTO<br />
+getservbyport PORT,PROTO<br />
+getservent<br />
+setgrent<br />
+sethostent STAYOPEN<br />
+setnetent STAYOPEN<br />
+setprotoent STAYOPEN<br />
+setpwent<br />
+setservent STAYOPEN
+	</div>
+
+</div>
+
+<div class="func-detail">
+	<p>これらのルーティンは、システムライブラリの同名の関数を実行します。</p>
+
+	<h2 class="func-sample">さまざまなget ルーティンからの返却値</h2>
+
+
+<pre class="brush: perl;">
+($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell)
+&nbsp;&nbsp;&nbsp; = getpw*
+($name,$passwd,$gid,$members) = getgr*
+($name,$aliases,$addrtype,$length,@addrs) = gethost*
+($name,$aliases,$addrtype,$net) = getnet*
+($name,$aliases,$proto) = getproto*
+($name,$aliases,$port,$proto) = getserv*
+</pre>
+
+	<p><code>getgr*</code> 関数によって返される値<code>$members</code>は、グループのメンバのログイン名をスペースで区切ったものです。</p>
+
+	<p>エントリが存在しなければ、空リストが返されます。</p>
+
+	<p>スカラコンテキストでは、<code>*nam</code>、<code>*byname</code>といった<code>NAME</code>で検索するもの以外は、<code>name</code>を返し、<code>NAME</code>で検索するものは、何か別のものを返します。(エントリが存在しなければ、未定義値が返ります。)</p>
+
+<pre class="brush: perl;">
+$uid = getpwnam
+$name = getpwuid
+$name = getpwent
+$gid = getgrnam
+$name = getgrgid
+$name = getgrent
+etc.
+</pre>
+
+	<h2 class="func-sample">gethostの使い方</h2>
+
+	<p><code>gethost*</code> 関数では、<code>C</code>で<code>h_errno</code>変数がサポートされていれば、関数呼出が失敗したときに、<code>$?</code>を通して、その値が返されます。　成功時に返される<code>@addrs</code>値は、対応するシステムコールが返す、生のアドレスのリストです。<br />
+
+	インターネットドメインでは、個々のアドレスは、4 バイト長で、下記のようにして、<code><a href="unpack.html">unpack</a></code>することができます。</p>
+
+<pre class="brush: perl;">
+($a,$b,$c,$d) = unpack('C4',$addr[0]);
+</pre>
+
+</div>

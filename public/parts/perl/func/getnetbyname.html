@@ -1,0 +1,23 @@
+<div class="func-header">
+	<div class="func-format">
+getnetbyname NAME
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p><code>getnetbyname</code>は、ネットワークファイル(<code>/etc/naeworks</code>)、もしくは、同等の機構から、引数<code>NAME</code>で指定されたネットワーク名にマッチしたネットワーク情報（ネットワーク名/エイリアス/アドレスタイプ/ネットワークアドレスの構造体）のリストを返します。スカラコンテキストの場合は、IPアドレスを表す構造体を返します。</p>
+
+	<h2 class="func-sample">getnetbynameの使い方</h2>
+
+<pre class="brush: perl;">
+@network = getnetbyname('www.rfs.jp');
+</pre>
+
+</div>

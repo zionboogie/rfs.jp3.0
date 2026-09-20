@@ -1,0 +1,25 @@
+<div class="func-header">
+	<div class="func-format">
+truncate FILEHANDLE, [LENGTH] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>FILEHANDLE</code>上にオープンされたファイルか、<code>EXPR</code>で名前を表わしたファイルを、指定した長さに切り詰めます。<br />
+	<code>truncate</code>システムコールが実装されていなければ、致命的エラーとなります。</p>
+
+	<h2 class="func-sample">truncateの使い方</h2>
+
+<pre class="brush: perl;">
+truncate "readme.txt",10;
+</pre>
+
+</div>
