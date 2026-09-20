@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Disallow: /search/
+
+Sitemap: https://rfs.jp/sitemap.xml
