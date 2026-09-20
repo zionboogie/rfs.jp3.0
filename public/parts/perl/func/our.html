@@ -1,0 +1,31 @@
+<div class="func-header">
+	<div class="func-format">
+our EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>our</code>は、<a href="my.html"><code>my</code></a>や<code><a href="local.html">local</code></a>と同様に、変数を宣言するためのものです。<code>our</code>宣言された変数は、グローバル変数をパッケージ名で修飾しなくても使用できるようにします。<code>our</code>宣言は<code><a href="my.html">my</a></code>宣言と似ていますが、新たにローカル変数を生成するかわりに、カレントパッケージに所属するグローバル変数をパッケージ修飾なしで使えるようにしてくれます。<code>our</code>宣言の有効範囲は、<code><a href="my.html">my</a></code>と同じで、宣言が置かれているブロック、<code><a href="eval.html">eval</a></code>、またはファイルの末尾まで有効です。</p><p><code>our</code>宣言は、<code>use strict 'vars'</code>プラグマと共に使用されます。<code>use strict 'vars'</code>プラグマを指定した場合、グローバル変数はパッケージ名で修飾して<code>$package::var</code>のように書く必要がありますが、<code>our</code>宣言により、パッケージ名を省略できます。</p>
+
+	<p><code>our</code>で宣言した変数は、宣言を行なった時点で有効なパッケージに所属します。<code><a href="package.html">package</a></code>文によって別パッケージに切り替えたとしても、<code>our</code>宣言された変数は、あくまでも宣言時のパッケージに所属すると解釈されます。</p>
+	<h2 class="func-sample">ourの使い方</h2>
+
+<pre class="brush: perl;">
+package Foo;
+our $bar = 10;
+
+package Bar;
+# パッケージFooの$bar
+print $bar,"\n";
+> 10
+</pre>
+
+</div>

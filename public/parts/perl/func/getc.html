@@ -1,0 +1,27 @@
+<div class="func-header">
+	<div class="func-format">
+getc FILEHANDLE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>getc</code>は入力ファイル<code>FILEHANDLE</code>から、次の一文字を返します。ファイルの終わり（<code>EOF</code>）、またはエラーが発生した場合は、未定義値を返します。<code>FILEHANDLE</code>が省略された場合には、<code>STDIN</code>から読み込みを行ないます。</p>
+	<p>この関数はキーボードからの入力を受け取りたい際に便利です。</p>
+
+	<h2 class="func-sample">getc&nbsp;の使い方</h2>
+
+<pre class="brush: perl;">
+# 0 などFALSE値を受け取るまで実行されます
+while( $char = getc STDIN ){
+print $char, "\n";
+}
+</pre>
+</div>

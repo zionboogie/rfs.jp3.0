@@ -1,0 +1,129 @@
+<div class="func-header">
+	<div class="func-format">
+s/PATTERN/REPLACE/egimosx 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>検索文字<code>PATTERN</code>を使ってパターンを検索し、もし見つかれば、置換文字<code>REPLACE</code>で置き換え、置換した数を返します。見つからなければ、&quot;偽&quot;を返します。<br />
+	<code>=~</code>演算子などによって文字列が指定されていなければ、<code>$_</code>が使われます。</p>
+
+	<p>スラッシュ( / )の区切り文字以外にも、英数字、空白ではない任意の文字が使えます。シングルクォート( ` )を使うと置換文字列での展開はされません。バッククォートを使うと、置換文字列をコマンドとして実行して、その出力が実際の置換文字列に使われます。<code>PATTERN</code>をカッコ類で括った場合には、<code>REPLACE</code>用にもう一組の区切り文字を用意します。</p>
+
+	<h2 class="func-sample">sの使い方</h2>
+
+<pre class="brush: perl;">
+# スラッシュ( / )以外の区切り文字を使う
+$path =~ s|/usr/bin|/usr/local/bin|;
+
+# カッコ類も可
+$path =~ s(/usr/bin)(/usr/local/bin);
+</pre>
+
+	<p><code>PATTERN</code>や<code>REPLACE</code>の文字列に変数を含めると、文字列として展開されます。</p>
+
+<pre class="brush: perl;">
+$num = '[0-9]+';
+$str = "test 1 2 3";
+$str =~ s/$num//gxo;
+print $str, "\n";
+> test
+</pre>
+
+	<h3>s/// 演算子の応用</h3>
+
+	<p><code>g</code>オプションを使って繰り返し置換</p>
+
+<pre class="brush: perl;">
+s/<[^>]+>/ /g;
+</pre>
+
+	<p>置換した値を他の変数に代入</p>
+
+<pre class="brush: perl;">
+$str = "if you aint runnin game.\n";
+($str2 = $str) =~ s/aint/are not/;
+print $str, $str2;
+> if you aint runnin game.
+> if you are not runnin game.
+</pre>
+
+	<p>マッチしたパターンの順番を入れ替える</p>
+
+<pre class="brush: perl;">
+$str = "back Looking";
+$str =~ s/([^ ]*) *([^ ]*)/$2 $1/; # 最初の 2 語の入れ替え
+print $str, "\n";s
+> Looking back
+</pre>
+
+	<h3>s/// 演算子用のオプション</h3>
+
+
+	<table class="table-format01">
+		<tr>
+			<th nowrap>オプション</th>
+
+			<th nowrap>意味</th>
+		</tr>
+		<tr>
+			<td class="td_strong"><a href="#e オプション">e</a></td>
+			<td>式の右側の評価を行なう</td>
+		</tr>
+		<tr>
+
+			<td class="td_strong">ee</td>
+			<td>式の右側の評価を行い、実行後の返却値を再度評価する</td>
+		</tr>
+		<tr>
+			<td class="td_strong">g</td>
+			<td>繰り返し置換</td>
+		</tr>
+
+		<tr>
+			<td class="td_strong">i</td>
+			<td>大文字、小文字を区別しないで検索</td>
+		</tr>
+		<tr>
+			<td class="td_strong">m</td>
+			<td>文字列を複数行として扱う</td>
+
+		</tr>
+		<tr>
+			<td class="td_strong">o</td>
+			<td>パターンのコンパイルを 1 度だけにする</td>
+		</tr>
+		<tr>
+			<td class="td_strong">s</td>
+
+			<td>ワイルドカードのドット( . )が改行にもマッチするようにする</td>
+		</tr>
+		<tr>
+			<td class="td_strong">x</td>
+			<td>拡張正規表現を使用する</td>
+		</tr>
+	</table>
+
+
+
+	<h3><a name="e オプション">e オプション</a>-REPLACE を式として評価</h3>
+
+	<p>e オプションは置換文字列を式として解釈し、<code><a href="eval.html">eval</a></code>します。</p>
+
+<pre class="brush: perl;">
+s/\d+/sprintf("%02d",$&)/e; # マッチした文字列を sprintf で整形
+
+s/^=(\w+)/&func($1)/e; # サブルーチン呼び出しを使う
+</pre>
+
+	<p>その他のオプションについては <a href="m.html">m// 演算子</a>を参照してください。</p>
+
+</div>

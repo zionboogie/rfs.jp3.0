@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAISaqxyviRu2ZdPokB6DyURQUmdxOOAs9gZKiURYEsRKKeB07FhRAvRkIHfRhGOpE3D7NkS4csznM9g" type="text/javascript"></script> 
+</head>
+<body onload="initAddress()">
+
+<div id="map" style="width:450px; height:400px"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+// グローバル変数の宣言
+var map;
+var geocoder;
+
+// 初期化
+function initAddress(){
+	if ( GBrowserIsCompatible() ) {
+		map	= new GMap2(document.getElementById("map"));
+		// 初期化時は任意の経度、緯度の地点を表示させる
+		map.setCenter(new GLatLng(35.644934,139.699166), 13);
+		// ジオコーディングオブジェクトの生成
+		geocoder	= new GClientGeocoder();
+	}
+}
+
+// 地図を移動する
+function moveAddress( ADDRESS ){
+	if ( geocoder ) {
+		// getLatLngに住所情報を渡し、コールバック関数で地図を移動させる
+		geocoder.getLatLng(
+			ADDRESS, function( latlng ){
+				if ( latlng ) {
+					// コールバック関数から受け取った引数を使って地図を移動
+					map.setCenter(latlng, 13);
+					// マーカーを表示
+					var marker = new GMarker(latlng);
+					map.addOverlay(marker);
+				}
+			}
+		);
+	}
+}
+//]]>
+</script>
+
+<form action="#" onsubmit="moveAddress(this.address.value); return false">
+	<input type="text" name="address" value="中目黒3-22-4" />
+
+	<button type="submit">移動する</button>
+</form>
+
+</body>
+</html>

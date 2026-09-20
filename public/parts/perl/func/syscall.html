@@ -1,0 +1,30 @@
+<div class="func-header">
+	<div class="func-format">
+syscall LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>-->
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>LIST</code>の最初の要素で指定するシステムコールを、2番目以降の要素を引数として渡して実行します。<code>syscall</code>システムコールが実装されていないときには、致命的エラーとなります。引数が数字であれば、整数として引数を渡します。そうでなければ、文字列値へのポインタが渡されます。</p>
+
+	<h2 class="func-sample">syscallの使い方</h2>
+	<p class="func-sample">以下は<code>syswrite</code>関数(あるいはその逆)をエミュレートします。</p>
+
+<pre class="brush: perl;">
+require 'syscall.ph';
+syscall(&SYS_write, fileno(STDOUT), $s, length $s); 
+</pre>
+
+	<p><code>syscall</code>は、呼び出したシステムコールが返した値を返します。システムコールが失敗すると、<code>syscall</code>は -1 を返し、 <code>$!(errno)</code>を設定します。システムコールが正常に -1 を返す場合があることに注意してください。このようなシステムコールを正しく扱うには、<code>$!=0;</code>をシステムコールの前に実行し、<code>syscall</code>が -1 を返した時には<code>$!</code>の値を調べてください。</p>
+
+	<p><code>syscall(&amp;SYS_pipe)</code>には問題があります。これはパイプの読み出し側が作ったファイル番号を返します。相手側のファイル番号を得る方法がありません。この問題を避けるためには、代わりに<code><a href="pipe.html">pipe</a></code>を使ってください。</p>
+
+</div>

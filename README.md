@@ -41,3 +41,6 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+Astro v5 + Tailwind CSS v4 の最小構成スターターキット
+https://zenn.dev/ryotahagihara/articles/5b558b351fe57c

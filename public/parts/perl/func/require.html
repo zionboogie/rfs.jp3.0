@@ -1,0 +1,39 @@
+<div class="func-header">
+	<div class="func-format">
+require EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数で指定した<code>Perl</code>スクリプトファイルを読み込んで実行します。<a href="eval.html"><code>eval</code></a>とは違い、実行する前に、指定されたファイルがまだ読み込まれていないか確認します。また、<code>@INC</code>に格納されたパスを検索します。<br />
+	引数が数値のときは、実行中の<code>Perl</code>のバージョン番号と引数で指定した値を比較し、バージョン番号が小さい場合は実行を中止します。</p>
+
+	<h2 class="func-sample"><code>require</code>の使い方</h2>
+
+<pre class="brush: perl;">
+# abc.pm を require する
+require "/home/httpd/cgi-bin/abc.pm";
+
+# Perl のバージョンが 5.003 以下の場合は実行の中止
+require 5.003; 
+</pre>
+
+	<p><code>require</code>にパッケージ名のみを指定した場合は、拡張子の<code>pm</code>を省略することができます。</p>
+
+<pre class="brush: perl;">
+# abc.pm を require する
+require abc; 
+</pre>
+
+	<p>注意する点として、<code>require</code>から実行される<code>Perl</code>スクリプトには、ファイルの最後に 1 
+	を記述する必要があります。<!--webbot bot="PurpleText" PREVIEW="　より強力な import 機能については、このドキュメントのuse() の項と、perlmod manpage をご覧ください。" --></p>
+
+</div>

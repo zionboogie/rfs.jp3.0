@@ -1,0 +1,37 @@
+<div class="func-header">
+	<div class="func-format">
+unpack TEMPLATE, EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>unpack</code>は<a href="pack.html"><code>pack</code></a>の逆を行ないます。バイナリデータの構造体を含む文字列<code>EXPR</code>
+	を受け取り、それをリスト値に展開して返します。スカラコンテキストでは、最初の値を返します。<code>TEMPLATE</code>は、<a href="pack.html"><code>pack</code></a>関数と同じフォーマットを使います。</p>
+
+	<h2 class="func-sample">unpackの使い方</h2>
+
+<pre class="brush: perl;">
+unpack "C", $word; 
+</pre>
+
+	<h3>unpackで部分文字列を取り出す</h3>
+
+	<p><code>unpack</code>で部分文字列を取り出すことができます。大量の値を一度に取り出すときは、<a href="substr.html"><code>substr</code></a>よりも高速です。</p>
+
+<pre class="brush: perl;">
+$a = "It's funny how money change a situation";
+
+# 5文字進んで、5文字取り出す
+print unpack( "x5 A5", $a );
+> funny
+</pre>
+
+</div>

@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAISaqxyviRu2ZdPokB6DyURQUmdxOOAs9gZKiURYEsRKKeB07FhRAvRkIHfRhGOpE3D7NkS4csznM9g" type="text/javascript"></script> 
+</head>
+<body>
+
+<p>インフォウィンドウの表示</p>
+
+<div id="map" style="width:500px; height:400px"></div>
+
+<script type="text/javascript">
+//<![CDATA[    
+
+var map = new GMap2( document.getElementById("map") );
+
+// 座標の指定
+map.setCenter( new GLatLng(35.644934,139.699166), 13 );
+
+var marker = new GMarker(map.getCenter());
+map.addOverlay(marker);
+
+var infoTabs = [
+	new GInfoWindowTab("タブ1", "タブ1の内容"),
+	new GInfoWindowTab("タブ2", "タブ2の内容")
+];
+
+marker.openInfoWindowTabsHtml(infoTabs);
+
+//]]>
+</script>
+
+</body>
+</html>

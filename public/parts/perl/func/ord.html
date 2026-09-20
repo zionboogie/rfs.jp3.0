@@ -1,0 +1,35 @@
+<div class="func-header">
+	<div class="func-format">
+ord EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数の最初の文字の<code>ASCII</code>値を返します。<code>ord</code>が返す値は常に符号なしです。符号付の値が必要な場合は、<a href="unpack.html"><code>unpack</code></a>を参考にしてください。</p>
+
+	<h2 class="func-sample">ordの使い方</h2>
+
+<pre class="brush: perl;">
+$word = 'rhythm';
+# 最初の文字を符号なしASCII 値を返す
+print ord($word);
+> 114
+
+# 符号付の値を返す
+print unpack('C', $word);
+> 114
+
+# すべての文字を符号付の値で返す
+print unpack('C*', $word);
+> 114104121116104109 
+</pre>
+
+</div>

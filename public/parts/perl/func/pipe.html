@@ -1,0 +1,18 @@
+<div class="func-header">
+	<div class="func-format">
+pipe READHANDLE, WRITEHANDLE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<!--<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+	<p>対応するシステムコールと同じように、接続されたパイプのペアをオープンします。パイプでプロセスをループにするときには、よほど気を付けないと、デッドロックは起こります。さらに、<code>Perl</code>のパイプでは、<code>stdio</code>のバッファリングを使いますから、アプリケーションによっては、コマンドごとに<code>WRITEHANDLE</code>をフラッシュするように、<code>$|</code>を設定することが必要になるかもしれません。</p>
+	<!--<p>プロセスについては用語集「プロセス」を参照してください。</p>-->
+
+</div>

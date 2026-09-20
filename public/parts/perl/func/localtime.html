@@ -1,0 +1,104 @@
+<div class="func-header">
+	<div class="func-format">
+localtime EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><a href="time.html"><code>time</code></a>関数が返す時刻をローカル時間に変換し、9 要素の配列として返します。</p>
+
+	<h2 class="func-sample">localtimeの使い方</h2>
+
+<pre class="brush: perl;">
+($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+</pre>
+
+	<p>すべての配列要素は数値です。注意する点は、<code>$mon</code>が 0..11 の範囲で、0 が1月を表し、<code>$wday</code>が 0..6 の範囲、0 が日曜日を表します。また、<code>$year</code>には西暦から1900を引いた値がセットされています。引数が省略されると、<code>localtime(time)</code>を実行します。</p>
+	<p>完全な4桁の西暦を得る方法は以下のとおりです。</p>
+
+<pre class="brush: perl;">
+$year += 1900;
+</pre>
+
+	<p>スカラコンテキストでは、ctime(3) の値を返します。</p>
+
+	<h3><code>localtime</code>の返却値</h3>
+
+	<table class="table-format01">
+		<tr>
+			<th nowrap>変数</th>
+
+			<th nowrap>値</th>
+			<th nowrap>値が取りえる範囲</th>
+		</tr>
+		<tr>
+			<td nowrap class="td_strong">$sec</td>
+			<td nowrap>秒</td>
+			<td nowrap>0～60</td>
+
+		</tr>
+		<tr>
+			<td nowrap class="td_strong">$min</td>
+			<td nowrap>分</td>
+			<td nowrap>0～59</td>
+		</tr>
+		<tr>
+
+			<td nowrap class="td_strong">$hour</td>
+			<td nowrap>時</td>
+			<td nowrap>0～23</td>
+		</tr>
+		<tr>
+			<td nowrap class="td_strong">$mday</td>
+			<td nowrap>日</td>
+
+			<td nowrap>1～31</td>
+		</tr>
+		<tr>
+			<td nowrap class="td_strong">$mon</td>
+			<td nowrap>月</td>
+			<td nowrap>0～11(1月は0)</td>
+		</tr>
+
+		<tr>
+			<td nowrap class="td_strong">$year</td>
+			<td nowrap>年</td>
+			<td nowrap>1～138(1900を引いた年数)</td>
+		</tr>
+		<tr>
+			<td nowrap class="td_strong">$wday</td>
+
+			<td nowrap>曜日</td>
+			<td nowrap>0～6(日曜日は0)</td>
+		</tr>
+		<tr>
+			<td nowrap class="td_strong">$yday</td>
+			<td nowrap>年初からの経過日数</td>
+			<td nowrap>0～365</td>
+
+		</tr>
+		<tr>
+			<td nowrap class="td_strong">$isdst</td>
+			<td nowrap>0または1</td>
+			<td nowrap>サマータイム期間中は1、期間外は0</td>
+		</tr>
+	</table>
+
+	<p><code>Perl</code>ライブラリモジュール<code>Time::Local</code>には<code>timelocal</code>サブルーチンが用意されていて、<code>localtime</code>の逆変換が可能です。</p>
+
+	<h3>その年の何週目かを求める</h3>
+
+<pre class="brush: perl;">
+$yday = (localtime)[7];
+$yweek = int($yday / 7); 
+</pre>
+
+</div>

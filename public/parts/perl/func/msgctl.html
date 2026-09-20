@@ -1,0 +1,19 @@
+<div class="func-header">
+	<div class="func-format">
+msgctl ID,CMD,ARG 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>System V IPC</code>関数<code>msgctl</code>を呼び出します。<code>CMD</code>が<code>&amp;IPC_STAT</code>であれば、<code>ARG</code>は返される<code>msqid_ds</code>構造体を納める変数でなければなりません。</p>
+	<p><code><a href="ioctl.html">ioctl</a></code>と同じように、エラー時には未定義値、ゼロのときは<code>&quot;0 but	true&quot;</code>、それ以外なら、その値そのものを返します。</p>
+
+</div>

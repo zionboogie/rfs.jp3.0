@@ -1,0 +1,40 @@
+<div class="func-header">
+	<div class="func-format">
+write FILEHANDLE<br />
+write EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>指定されたファイルに対して、そのファイルに対応させたフォーマットを使って整形されたレコードを書き出します。<!--webbot bot="PurpleText" PREVIEW="デフォルトでは、ファイルに対応するフォーマットは、ファイルハンドルと同じ名前のものですが、その時点の出力チャネル (select 関数の項を参照) のフォーマットは、その名前を明示的に、変数 $~ に代入することで、変更が可能です。" --></p>
+
+	<h2 class="func-sample">writeの使い方</h2>
+
+<pre class="brush: perl;">
+open ( FH, $text );
+format FH =
+@<<<<<<<<<<<<@>>>>>>>>>>>
+$t1 $2
+.
+$t1 = "You might win some";
+$t2 = "but you just lost one";
+
+write FH;
+close( FH );
+</pre>
+
+	<p>ページの先頭の処理は、自動的に行なわれます。現在のページに整形されたレコードを出力するだけのスペースがない場合には、改ページを行なってページを進め、新しいページヘッダを整形するため、ページ先頭フォーマットが使われ、その後でレコードが書かれます。デフォルトでは、ページ先頭フォーマットは、ファイルハンドルの名前に<code>_TOP</code>をつなげたものですが、ファイルハンドルが選択されている間に、変数<code>$^</code>
+
+	に名前を設定すれば、動的にフォーマットを変更することができます。　そのページの残り行数は、変数<code>$-</code>に入っており、この変数を 0 に設定することで、強制的に改ページを行なうことができます。</p>
+
+	<p><code>FILEHANDLE</code>を指定しないと、出力はその時点のデフォルト出力チャネルに対して行なわれます。これは、スクリプトの開始時点では<code>STDOUT</code>ですが、<a href="select.html"><code>select</code></a>で変更することができます。<code>FILEHANDLE</code>が<code>EXPR</code>ならば、式が評価され、その結果の文字列が実行時に<code>FILEHANDLE</code>の名前として見られます。<!--webbot bot="PurpleText" PREVIEW="フォーマットについて、さらには、perlform manpage を参照してください。" --></p>
+
+</div>

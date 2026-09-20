@@ -1,0 +1,71 @@
+<div class="func-header">
+	<div class="func-format">
+sysopen FILEHANDLE, FILENAME, MODE, [PERMS] 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>FILENAME</code>で指定された名前を持つファイルをオープンして、<code>FILEHANDLE</code>と結びつます。<code>FILEHANDLE</code>に式を与えられた場合、その値をファイルハンドルの名前（またはファイルハンドルへのリファレンス）として扱います。この関数呼び出しはシステムの<code><a href="open.html">open</a></code>関数を<code>FILENAME</code>、<code>MODE</code>、<code>PERMS</code>の引数で呼び出すことを基礎としています。</p>
+
+	<p><code>MODE</code>パラメータに使用できる値は、システム依存で、<code>Fcntl</code>ライブラリモジュールによって提供されます。一般的には0は呼び出し専用、1は書き込み専用、2は読み書き可能を表します。<br />
+	<code>FILENAME</code>で指定されたファイルが存在せず、<code>sysopen</code>がそれを作成した場合には、<code>PERMS</code>の値が新たに作成されるファイルのパーミッションとなります。<code>PERMS</code>のデフォルト値は 0666で、全員に読み書きが許可されます。</p>
+
+	<table class="table-format01">
+		<tr>
+			<th width="50%">MODEパラメータ</th>
+			<th width="50%">パラメータの意味</th>
+		</tr>
+		<tr>
+			<td width="50%" class="td_strong">O_RDONLY</td>
+
+			<td width="50%">読み取り専用</td>
+		</tr>
+		<tr>
+			<td width="50%" class="td_strong">O_WRONLY</td>
+			<td width="50%">書き込み専用</td>
+		</tr>
+		<tr>
+
+			<td width="50%" class="td_strong">O_RDWR</td>
+			<td width="50%">読み書き用</td>
+		</tr>
+		<tr>
+			<td width="50%" class="td_strong">O_CREAT</td>
+			<td width="50%">ファイルが存在しないとき作成する</td>
+		</tr>
+
+		<tr>
+			<td width="50%" class="td_strong">O_EXCL</td>
+			<td width="50%">ファイルが存在する場合はエラーにする</td>
+		</tr>
+		<tr>
+			<td width="50%" class="td_strong">O_APPEND</td>
+			<td width="50%">ファイルの終わりに追加する</td>
+
+		</tr>
+		<tr>
+			<td width="50%" class="td_strong">O_TRUNC</td>
+			<td width="50%">ファイルを上書きする</td>
+		</tr>
+		<tr>
+			<td width="50%" class="td_strong">O_NONBLOCK</td>
+
+			<td width="50%">非ブロック方式のアクセス</td>
+		</tr>
+	</table>
+
+	<p>ファイルを書き込み用にオープンしてから、必要に応じて新しいファイルを作成して、上書きする場合は次のように書きます。</p>
+
+<pre class="brush: perl;">
+sysopen( FH, $path, O_WRONLY|O_TRUNC|O_CREAT, 0600);
+</pre>
+
+</div>

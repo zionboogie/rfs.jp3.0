@@ -1,0 +1,26 @@
+<div class="func-header">
+	<div class="func-format">
+rmdir FILENAME
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>FILENAME</code>で指定したディレクトリが空であれば、そのディレクトリを削除します。</p>
+	<p>成功時には 1 を返します。失敗時には 0 を返し、<code>$!</code>を設定します。</p>
+
+	<h2 class="func-sample">rmdirの使い方</h2>
+
+<pre class="brush: perl;">
+# /hotm/httpd/html/test ディレクトリの削除
+rmdir "/hotm/httpd/html/test" or die "Can't remove dir $!\n"; 
+</pre>
+
+</div>

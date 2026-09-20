@@ -1,0 +1,25 @@
+<div class="func-header">
+	<div class="func-format-none">
+getlogin
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+<!-- END 関数ヘッダ -->
+
+<div class="func-detail">
+
+	<p><code>/etc/utmp</code>から現在のログイン名を返します。ヌルであれば、<a href="getpwuid.html"><code>getpwuid</code></a>を使ってください。<!--webbot bot="PurpleText" PREVIEW="getloginは、同じ名前のCライブラリ関数の実装です。" --></p>
+
+	<h2 class="func-sample">getloginの使い方</h2>
+
+<pre class="brush: perl;">
+$login = getlogin || (getpwuid($<))[0] || "Kilroy";
+</pre>
+
+</div>

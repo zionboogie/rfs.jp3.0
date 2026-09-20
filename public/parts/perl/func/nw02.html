@@ -1,0 +1,434 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja" id="sixapart-standard">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="imagetoolbar" content="no" />    
+    <title>関連リンク - smart</title>
+<script type="text/javascript" src="/js/main.js"></script>
+<script type="text/javascript">
+SyntaxHighlighter.config.clipboardSwf = '/js/syntaxhighlighter/scripts/clipboard.swf';
+SyntaxHighlighter.all();
+</script>
+
+    
+
+    
+        
+        
+        
+        
+        
+        
+        <link rel="stylesheet" href="http://mt.rfs.jp/styles.css" type="text/css" />
+        <link rel="alternate" type="application/atom+xml" title="Atom" href="http://mt.rfs.jp/atom.xml" />
+        <link rel="start" href="http://mt.rfs.jp/" title="Home" />
+        <script type="text/javascript" src="http://mt.rfs.jp/mt.js"></script>
+        
+    
+
+
+    
+    <link rel="next bookmark" href="http://mt.rfs.jp/sb/javascript/cat18/test.html" title="test" />
+
+<link href="/c/page.css" rel="stylesheet" type="text/css" />
+
+    
+    <script type="text/javascript">
+    /* <![CDATA[ */
+    mtAttachEvent('load', mtUpdateScores);
+    mtAttachEvent('usersignin', mtUpdateScores);
+    /* ]]> */
+    </script>
+
+</head>
+
+
+<body>
+
+<!-- container領域 [s] -->
+<div id="content" style="background:none; border:none;">
+	
+				<h2>特殊変数一覧</h2>
+				<p>※強調した特殊変数はよく使われるものです。</p>
+				<ul class="ul-site">
+					<li><a href="#グローバルな特殊変数">グローバルな特殊変数</a></li>
+
+					<li><a href="#グローバルな特殊配列と特殊ハッシュ">グローバルな特殊配列と特殊ハッシュ</a></li>
+					<li><a href="#グローバルな特殊ファイルハンドル">グローバルな特殊ファイルハンドル</a></li>
+					<li><a href="#グローバルな特殊定数">グローバルな特殊定数</a></li>
+					<li><a href="#パターンマッチに関する特殊変数">パターンマッチに関する特殊変数</a></li>
+					<li><a href="#ファイルハンドルに関する特殊変数">ファイルハンドルに関する特殊変数</a></li>
+				</ul>
+
+				<h2><a name="グローバルな特殊変数">グローバルな特殊変数</a></h2>
+				<p class="function"><b>$_</b></p>
+				<p>use English: $ARG</p>
+				<p>デフォルトで入力やパターンマッチの対象になる特殊変数です。</p>
+				<p class="function">$.</p>
+				<p>use English: $INPUT_LINE_NUMER / $NR</p>
+
+				<p><b>[入出力関連] ファイルハンドルの現在の行数</b></p>
+				<p>※ファイルハンドルを明示的にクローズすると行番号もリセットされます。</p>
+				<p class="function">$/</p>
+				<p>use English: $INPUT_RECORD_SEPARATOR / $RS</p>
+				<p><b>[入出力関連] 入力時のレコード区切り文字</b></p>
+				<p>デフォルト値は改行文字です。</p>
+
+				<h5 class="sampel">$/ 
+				の使い方</h5>
+				<p>$/ を未定義値にすると、ファイルの内容を一度に読み込むことができます。<br />
+				</p>
+				<pre class="brush: perl;">undef $/;
+				open FILEHANDLE, &quot;read.txt&quot;;
+				$text = &lt;FILEHANDLE&gt;; # すべての行を $text に代入 </pre>
+
+				<p class="function">$,</p>
+				<p>use English: $OUTPUT_FIELD_SEPARATOR / $OFS</p>
+				<p><b>[入出力関連] 出力フィールドの区切り文字</b></p>
+				<h5 class="sampel">$, 
+				の使い方<br />
+				</h5>
+				<pre class="brush: perl;">$, = '-';
+				print 1, 2, 3;
+				&gt; 1-2-3</pre>
+				<p class="function">$\</p>
+				<p>use English: $OUTPUT_RECORD_SEPARATOR / $ORS</p>
+				<p><b>[入出力関連] 出力時の行末文字</b></p>
+
+				<p>デフォルト値は NULL です。</p>
+				<h5 class="sampel">$\ 
+				の使い方<br />
+				</h5>
+				<pre class="brush: perl;">$\ = &quot;\n&quot;;
+				print &quot;Hello Perl World !&quot;; </pre>
+
+				<p class="function">$&quot;</p>
+				<p>use English: $LIST_SEPARATOR</p>
+				<p><b>[入出力関連] 出力フィールドの区切り文字</b></p>
+				<p>デフォルト値は空白文字です。$, と同じですが、$&quot; は配列値を展開する際に使えます。</p>
+				<h5 class="sampel">$&quot; 
+				の使い方<br />
+
+				</h5>
+				<pre class="brush: perl;">@list = (1, 2, 3);
+				$&quot; = ',';
+				print &quot;@list\n&quot;;
+				&gt; 1,2,3</pre>
+
+				<p class="function">$;</p>
+				<p>use English: $SUBSCRIPT_SEPARATOR / $SUBSEP</p>
+				<p><b>ハッシュのインデックスの区切り文字</b></p>
+				<p>デフォルト値は \034 です。</p>
+				<p class="function">$^L</p>
+				<p>use FileHandle: $FORMAT_FORMFEED</p>
+
+				<p><b>[フォーマット関連] 改ページ文字</b></p>
+				<p>デフォルト値は \f です。</p>
+				<p class="function">$:</p>
+				<p>use FileHandle: $FORMAT_LINE_BREAK_CHARACTERS</p>
+				<p><b>[フォーマット関連] 折り返し文字</b></p>
+				<p>この変数に格納されている文字のあとに、折り返して次の行にフィールドを継続できます。</p>
+
+				<p class="function">$^A</p>
+				<p>use English: $ACCUMULATOR</p>
+				<p><b>書き出しアキュムレータの現在値</b></p>
+				<p>write でフォーマットを呼び出したあとにアキュムレータの内容を出力します。</p>
+				<p class="function">$#</p>
+				<p>use English: $OFMT</p>
+
+				<p><b>[不要]　出力時の数値形式</b></p>
+				<p class="function">$?</p>
+				<p>use English: $CHILD_ERROR</p>
+				<p><b>最後に実行されたコマンドのステータス値</b></p>
+				<p class="function">$!</p>
+				<p>use English: $OS_ERROR / $ERRNO</p>
+
+				<p><b>システムコールのエラー値</b></p>
+				<p>システムコール呼び出し時に発生したエラー番号、もしくはエラー文字列を格納します。</p>
+				<h5 class="sampel">$! 
+				の使い方</h5>
+				<pre class="brush: perl;"># カレントディレクトリの移動
+				chdir( $ENV{'HOME'} ) or die $!;</pre>
+				<p class="function">$@</p>
+
+				<p>use English: $EVAL_ERROR</p>
+				<p><b>eval のエラーメッセージ</b></p>
+				<h5 class="sampel">$@ 
+				の使い方</h5>
+				<pre class="brush: perl;">eval &quot;require $class&quot; or die $@; </pre>
+				<p class="function">$$</p>
+
+				<p><b>PerlのプロセスID</b></p>
+				<p class="function">$&lt;</p>
+				<p>use English: $REAL_USER_ID</p>
+				<p><b>PerlのプロセスのユーザーID</b></p>
+				<p class="function">$&gt;</p>
+				<p>$ERRECTIVE_USER_ID<br />
+
+				$EUID</p>
+				<p><b>Perlのプロセスの実効ユーザーID</b></p>
+				<p class="function">$(</p>
+				<p>use English: $REAL_GROUP_ID / $GID</p>
+				<p><b>PerlのプロセスのグループID</b></p>
+				<p>カレントプロセスの実グループIDが格納されています。グループが複数の場合、すべてのリストを格納します。実グループIDは、プログラムファイルのオーナーのグループIDです。</p>
+
+				<p class="function">$)</p>
+				<p>use English: $EFECTIVE_GROUP_ID / $EGID</p>
+				<p><b>Perlのプロセスの実効グループID</b></p>
+				<p>カレントプロセスの実行グループIDが格納されています。グループが複数の場合、すべてのリストを格納します。実行グループIDは、プログラムを実行しているユーザのグループIDです。</p>
+				<p class="function">$0</p>
+				<p>use English: $PROGRAM_NAME</p>
+
+				<p><b>Perl スクリプトのコマンド名</b></p>
+				<p class="function">$[</p>
+				<p><b>[不要]　配列の最初のインデックスと、部分文字列の先頭文字のインデックス</b></p>
+				<p>デフォルト値は 0 です。</p>
+				<p class="function">$]</p>
+				<p>use English: $PERL_VERSION</p>
+
+				<p><b>Perl のバージョン番号</b></p>
+				<p class="function">$^D</p>
+				<p>use English: $DEBUGGING</p>
+				<p><b>デバッグフラグの値</b></p>
+				<p class="function">$^E</p>
+				<p>use English: $EXTENDED_OS_ERROR</p>
+
+				<p><b>オペレーティングシステムのエラー情報</b></p>
+				<p class="function">$^F</p>
+				<p>use English: $SYSTEM_FD_MAX</p>
+				<p><b>システムファイル記述子の最大値</b></p>
+				<p class="function">$^H</p>
+				<p><b>現在の構文チェック内容</b></p>
+
+				<p>一部のプラグ間モジュールで有効な内部的なコンパイラヒントを格納します。</p>
+				<p class="function">$^I</p>
+				<p>use English: $INPLACE_EDIT</p>
+				<p><b>-i オプションで指定したバックアップファイルの拡張子</b></p>
+				<p>書き戻し編集でバックアップファイルにつける拡張子を指定します。書き戻し編集を禁止するには undef を指定します。</p>
+				<p class="function">$^M</p>
+
+				<p><b>緊急のメモリバッファ</b></p>
+				<p>メモリ不足の際に $^M で設定した領域をバッファとして使えます。$^M を利用するには、Perl のコンパイル時に -DPERL_EMERGENCY_SBRK 
+				を指定する必要があります。</p>
+				<h5 class="sampel">$^M 
+				の使い方</h5>
+				<p>次のようにして1Mバイトの緊急用のバッファを割り当てることができます。</p>
+				<pre class="brush: perl;">$^M = ' ' x( x ** 20); </pre>
+				<p class="function">$^0</p>
+
+				<p><b>オペレーティングシステム名</b></p>
+				<p class="function">$^P</p>
+				<p><b>デバッガが使用する内部フラグ</b></p>
+				<p class="function">$^R</p>
+				<p><b>パターンにマッチした位置指定正規表現の結果</b></p>
+				<p class="function">$^T</p>
+
+				<p><b>スクリプトを実行した時刻</b></p>
+				<p>エポック（1970年1月1日午前0時）からの秒数で表現されます。</p>
+				<h5 class="sampel">$^T 
+				の使い方</h5>
+				<pre class="brush: perl;">print $^T; </pre>
+				<p class="function">$^W</p>
+				<p><b>警告スイッチ（-w）の現在値を示す論理値</b></p>
+
+				<p>警告スイッチを指定していると TRUE、それ以外は FALSE の値を格納します。</p>
+				<h5 class="sampel">$^w 
+				の使い方</h5>
+				<pre class="brush: perl;">#!/usr/local/bin/perl -w
+				print $^W; </pre>
+				<p class="function">$^X</p>
+
+				<p><b>Perl の起動時の名前</b></p>
+				<h5 class="sampel">$^X 
+				の使い方</h5>
+				<pre class="brush: perl;">print $^X;
+				&gt; /usr/local/bin/perl </pre>
+				<p class="function"><b>$ARGV</b></p>
+				<p><b>&lt;&gt;を使って読み取っているファイルの名前</b></p>
+
+				<h5 class="sampel">$ARGV 
+				の使い方</h5>
+				<pre class="brush: perl;">@line = &lt;&gt;;
+				print $ARGV; </pre>
+				<p class="function"><b>@_</b></p>
+				<p><b>サブルーチンへの引数</b></p>
+					
+				<a href="#top" class="gototop">トップに戻る</a>
+
+			
+			<hr>
+				<h2><a name="グローバルな特殊配列と特殊ハッシュ">グローバルな特殊配列と特殊ハッシュ</a></h2>
+				<p class="function"><b>@ARGV</b></p>
+				<p><b>スクリプトに渡されたコマンドライン引数</b></p>
+				<h5 class="sampel">@ARGV 
+				の使い方</h5>
+				<p>スクリプトを「% perl script.pl a b」のようにオプションをつけて起動した場合、次のようにその値を使うことができます。</p>
+
+				<pre class="brush: perl;">print @ARGV; </pre>
+				<p class="function"><b>@INC</b></p>
+				<p><b>Perlライブラリ検索ディレクトリ</b></p>
+				<h5 class="sampel">@INC 
+				の使い方</h5>
+				<p>自作のライブラリの場所をPerlに記憶させる場合は次のようにします。</p>
+				<pre class="brush: perl;">push( @INC, '/home/user/LIB' ); </pre>
+
+				<p>これで「/home/user/LIB」にあるライブラリが自動的に読み込まれるようになります。</p>
+				<p class="function"><b>%INC</b></p>
+				<p><b>do や require によってインクルードされたライブラリファイル名</b></p>
+				<p>ハッシュのキーは指定したファイル名で、value は実際に見つかった場所です。</p>
+				<p class="function"><b>%ENV</b></p>
+				<p><b>環境変数の値</b></p>
+
+				<h5 class="sampel">%ENV 
+				の使い方</h5>
+				<pre class="brush: perl;">while ( my($key, $value) = each %ENV ){
+				print &quot;key:$key value:$value\n&quot;;
+				}</pre>
+				<p class="function">%SIG</p>
+
+				<p><b>シグナルのシグナルハンドラ</b></p>
+				<h5 class="sampel">%SIG 
+				の使い方</h5>
+				<pre class="brush: perl;">local $SIG{__WARN__} = sub{}; # warn を無効
+				local $SIG{__DIE__} = sub{}; # die を無効 </pre>
+					
+<div class="article-bottom">
+	<a href="#">PAGE TOP</a>
+	<hr />
+</div>
+
+				<h2><a name="グローバルな特殊ファイルハンドル">グローバルな特殊ファイルハンドル</a></h2>
+				<p class="function"><b>ARGV</b></p>
+				<p><b>コマンドラインで指定されたファイル名のリスト</b></p>
+				<p>コマンドラインで指定されたファイル名のリスト @ARGV 
+				を順番に読み込むための特殊ファイルハンドルです。通常、このファイルハンドルから入力を行うときは、空のファイルハンドルを使います。</p>
+				<h5 class="sampel">ARGV 
+				の使い方</h5>
+				<pre class="brush: perl;">while( &lt;&gt; ){
+				print $_, &quot;\n&quot;;
+				} </pre>
+				<p class="function"><b>STDERR</b></p>
+				<p><b>標準エラー用のファイルハンドル</b></p>
+				<p class="function"><b>STDIN</b></p>
+
+				<p><b>標準入力用のファイルハンドル</b></p>
+				<p class="function"><b>STDOUT</b></p>
+				<p><b>標準出力用のファイルハンドル</b></p>
+				<p class="function">DATA</p>
+				<p><b>__END__ 以降のテキストを読み込む特殊ファイルハンドル</b></p>
+				<p>スクリプトが格納されているファイルのうち、 __END__ トークン以降の部分を読むための特殊ファイルハンドルです。</p>
+
+				<p>_</p>
+				<p>最後に実行したstat、lstat、ファイルテスト演算子が読み込んだ情報をキャッシュするのに用いる特殊ファイルハンドルです。</p>
+					
+<div class="article-bottom">
+	<a href="#">PAGE TOP</a>
+	<hr />
+</div>
+				<h2><a name="グローバルな特殊定数">グローバルな特殊定数</a></h2>
+				<p class="function">__END__</p>
+
+				<p><b>プログラムの論理的な終わり</b></p>
+				<p>これ以降に続くテキストは全て無視されるが、DATAファイルハンドルで読み込むことができます。</p>
+				<p class="function">__FILE__</p>
+				<p><b>このトークンがおかれている時点でプログラムのファイル名</b></p>
+				<p>文字列中には展開されません。</p>
+				<p class="function">__LINE__</p>
+
+				<p><b>現在の行番号</b></p>
+				<p>文字列中には展開されません。</p>
+				<p class="function">__PACKAGE__</p>
+				<p><b>コンパイル時の現在のパッケージ名</b></p>
+				<p>現在のパッケージがなければ未定義値です。　文字列中には展開されません。</p>
+					
+<div class="article-bottom">
+	<a href="#">PAGE TOP</a>
+	<hr />
+</div>
+				<h2><a name="パターンマッチに関する特殊変数">パターンマッチに関する特殊変数</a></h2>
+				<p class="function">$n</p>
+				<p><b>パターンマッチの際のn番目のカッコに対応する文字列</b></p>
+				<h5 class="sampel">$n 
+				の使い方<br />
+				</h5>
+				<pre class="brush: perl;">$x =~ /^\d+\t(\w+)\t(\w+)\t(\w+)\n$/;
+				my ($f1, $f2, $f3) = ($1, $2, $3); </pre>
+				<p class="function">$&amp;</p>
+				<p>use English: $MATCH</p>
+				<p><b>パターンマッチにマッチした文字列</b></p>
+				<p class="function">$`</p>
+				<p>use English: $PREMATCH</p>
+
+				<p><b>パターンマッチにマッチした部分の前側の文字列</b></p>
+				<p class="function">$'</p>
+				<p>use English: $POSTMATCH</p>
+				<p><b>パターンマッチにマッチした部分の後側の文字列</b></p>
+				<p class="function">$+</p>
+				<p>use English: $LAST_PAREN_MATCH</p>
+
+				<p><b>パターンマッチの最後のカッコに対応する文字列</b></p>
+				<h5 class="sampel">$+ 
+				の使い方<br />
+				</h5>
+				<pre class="brush: perl;">$x =~ /^\d+\t(\w+)\t(\w+)\t(\w+)\n$/;<br />
+				$field = $+; </pre>
+				<p class="function">$*</p>
+
+				<p>use English: $MULTILINE_MATCHING</p>
+				<p><b>[不要] 複数行検索</b></p>
+				<p>$* を 1 に設定すると、複数行にまたがって検索できます。</p>
+					
+<div class="article-bottom">
+	<a href="#">PAGE TOP</a>
+	<hr />
+</div>
+				<h2><a name="ファイルハンドルに関する特殊変数">ファイルハンドルに関する特殊変数</a></h2>
+
+				<p class="function">$|</p>
+				<p>use English: $OUTPUT_AUTOFLUSH</p>
+				<p>autoflush HANDLE EXPR</p>
+				<p><b>[入出力関連] 出力の自動フラッシュ</b></p>
+				<p>0 以外が代入されると出力をバッファリングしなくなります。</p>
+				<h5 class="sampel">$| 
+				の使い方<br />
+
+				</h5>
+				<pre class="brush: perl;">pipe( R, W ):
+				W-&gt;autoflush(1); </pre>
+				<p class="function">$%</p>
+				<p>use FileHandle: $FORMAT_PAGE_NUMBER</p>
+				<p>format_page_number HANDLE EXPR</p>
+
+				<p><b>[フォーマット関連] 現在のページ番号</b></p>
+				<p class="function">$=</p>
+				<p>use FileHandle: $FORMAT_LINES_PER_PAGE</p>
+				<p>format_lines_per_page HANDLE EXPR</p>
+				<p><b>[フォーマット関連] 現在のページ行数（デフォルトは60）</b></p>
+				<p class="function">$-</p>
+
+				<p>use FileHandle: $FORMAT_LINES_LEFT</p>
+				<p>format_lines_left HANDLE EXPR</p>
+				<p><b>[フォーマット関連] ページの残り行数</b></p>
+				<p class="function">$~</p>
+				<p>use FileHandle: $FORMAT_NAME</p>
+				<p>format_name HANDLE EXPR</p>
+
+				<p><b>[フォーマット関連] フォーマット名</b></p>
+				<p><b>　</b>デフォルト値はファイルハンドル名と同じです。</p>
+				<p class="function">$^</p>
+				<p>use FileHandle: $FORMAT_TOP_NAME</p>
+				<p>format_top_name HANDLE EXPR</p>
+				<p><b>[フォーマット関連] ヘッダのフォーマット名</b></p>
+
+				<p><b>　</b>デフォルト値はファイルハンドル名の後に _TOP を追加した名称になります。</p>
+
+	
+
+	</div>
+
+<!-- container領域 [e] -->
+</body>
+</html>

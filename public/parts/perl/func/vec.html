@@ -1,0 +1,36 @@
+<div class="func-header">
+	<div class="func-format">
+values ASSOC_ARRAY
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>文字列<code>EXPR</code>を符号なし<code>int</code>のベクタとして扱い、引数<code>OFFSET</code>と<code>BITS</code>で指定されるビットフィールドの値を返します。左辺値として、代入の対象にすることもできます。<code>BIT</code>は、1 から 32 までの 2 のべきを値として使うことができます (1, 2, 4, 8, 16, 32)。<br />
+	<br />
+
+	<code>vec</code>で作られたベクターは、論理演算子<code>|</code>、<code>&amp;</code>、<code>^</code>で扱うこともできます。これらの演算子は、両方の被演算子に文字列を使うと、ビットベクター演算を行ないます。</p>
+
+	<h2 class="func-sample">vecの使い方</h2>
+
+	<p>ビットベクターを、0 と 1 の文字列や配列に変換するには次のようにします。</p>
+
+<pre class="brush: perl;">
+$bits = unpack("b*", $vector);
+@bits = split(//, unpack("b*", $vector));
+</pre>
+
+	<p>ビット長が分かっていれば、* の代わりにその長さを使うことができます。<br />
+	<br />
+	<code>wait</code>チャイルドプロセスが終了するのを待ち、消滅したプロセスの<code>pid</code>を返します。チャイルドプロセスが存在しないときには、-1 を返します。ステータスは<code>$?</code>に返されます。</p>
+
+	<!--<p>プロセスについては用語集「プロセス」を参照してください。</p>-->
+
+</div>

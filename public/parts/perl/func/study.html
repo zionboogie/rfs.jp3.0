@@ -1,0 +1,58 @@
+<div class="func-header">
+	<div class="func-format">
+study SCALAR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>study</code>は、パターン･マッチを行う前に、パターンを学習する関数です。これは、検索のために、どのようなパターンを何回使うかによって、また、検索される文字列内の文字頻度の分布によって、時間を節約することになるかもしれませんし、逆に浪費することになるかもしれません。予習をした場合と、しない場合の実行時間を比較して、どちらが速いか調べることが、必要でしょう。短い固定文字列 (複雑なパターンの固定部分を含みます) をたくさん検索するループで、もっとも効果があるでしょう。</p>
+
+	<p>一つの時点では、一つの<code>study</code>だけが有効です。別のスカラを<code>study</code>した場合には、以前に学習した内容は忘却されてしまいます。</p>
+
+	<h2 class="func-sample">特定のパターンを含む行の前にインデクスを付けるエントリを入れる</h2>
+
+<pre class="brush: perl;">
+while (<>) {
+	study;
+	print ".IX foo\n" if /\bfoo\b/;
+	print ".IX bar\n" if /\bbar\b/;
+	print ".IX blurfl\n" if /\bblurfl\b/;
+	...
+	print;
+} 
+</pre>
+
+	<p><code>f</code>は<code>o</code>よりもめずらしいので、<code>/\bfoo\b/</code>を探すとき、<code>$_</code>で<code>f</code>を含む場所だけが探されます。一般にかなりの結果が得られます。<br />
+	唯一の問題は、節約できる時間が、最初にリンクリストを作る時間よりも多いかどうかです。</p>
+
+	<p>実行時まで、探そうとする文字列がわからないときには、ループ全体を文字列として組み立てて、<code><a href="eval.html">eval</a></code>すれば、いつも、ずべてのパターンを再コンパイルするという事態は避けられます。ファイル全体を一つのレコードとして入力するために、<code>$/</code> を未定義にすれば、かなり速くなり、多くの場合<code>fgrep(1)</code>のような専用のプログラムより速くなります。</p>
+
+	<p>以下の例は、ファイルのリスト (<code>@files</code>) から単語のリスト (<code>@words</code>) を探して、マッチするものがあったファイル名を出力します。</p>
+
+<pre class="brush: perl;">
+$search = 'while (<>) { 
+study;';
+foreach $word (@words) {
+	$search .= "++\$seen{\$ARGV} if /\\b$word\\b/;\n";
+}
+$search .= "}";
+@ARGV = @files;
+undef $/;
+eval $search;
+$/ = "\n";
+
+# 入力のデリミタをもとに戻す
+foreach $file (sort keys(%seen)) {
+	print $file, "\n";
+} 
+</pre>
+
+</div>

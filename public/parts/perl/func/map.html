@@ -1,0 +1,41 @@
+<div class="func-header">
+	<div class="func-format">
+map BLOCK LIST<br />
+map EXPR,LIST 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>第2引数<code>LIST</code>の個々の要素に対して、<code>BLOCK</code>か<code>EXPR</code>を評価し、評価結果のリスト値を返します。<code>BLOCK</code>や<code>EXPR</code>をリストコンテキストで評価しますので、返却値の要素数は0個の場合もあれば、複数の場合もあります。</p>
+
+	<h2 class="func-sample">mapの使い方</h2>
+
+<pre class="brush: perl;">
+# @list の値を chr を使ってASCII に変換
+@chars = map(chr, @list); 
+</pre>
+
+	<p><code>map</code>は、簡単な配列処理を行う際に、威力を発揮します。以下のようなスクリプトは、<code>map</code>を使うことにより1行で済ますことができます。</p>
+
+<pre class="brush: perl;">
+%hash = ();
+foreach $_ (@array) {
+	$hash{getkey($_)} = $_;
+}
+</pre>
+
+	<p>上記スクリプトは、<code>map</code>を使って次のように表すことができます。</p>
+
+<pre class="brush: perl;">
+%hash = map { getkey($_) => $_ } @array;
+</pre>
+
+</div>

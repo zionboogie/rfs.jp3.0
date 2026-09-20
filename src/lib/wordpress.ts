@@ -128,6 +128,7 @@ export type RelatedArticle = {
 export type ArticleDetail = {
 	id: number;
 	title: string;
+	categoryName: string;
 	lead: string;
 	publishedAt: string;
 	updatedAt: string;
@@ -1235,12 +1236,14 @@ function buildArticleDetail(
 			href: toTagPath(tag.slug),
 		}));
 	const user = post.author ? users.find((item) => item.id === post.author) : undefined;
+	const category = findPostCategory(post, categories);
 	const lessonNumber = lessonNumberForPost(post, categories, posts);
 	const { previous, next } = adjacentArticles(post, categories, posts);
 
 	return {
 		id: post.id,
 		title,
+		categoryName: category ? wpText(category.name) : "",
 		lead,
 		publishedAt: post.date,
 		updatedAt: post.modified || post.date,

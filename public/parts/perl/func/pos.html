@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+pos SCALAR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数<code>SCALAR</code>に指定した変数に対して、前回の<code>m//g</code>が最後にマッチした場所の次のオフセットを返します。そのオフセットを変えるために、変更することができます。文字列の先頭のオフセットは 0 です。</p>
+
+	<h2 class="func-sample">posの使い方</h2>
+
+<pre class="brush: perl;">
+$word = "one two tree";
+while( $word =~ /o/g ){
+print pos $word, "　";
+}
+> 1 7 
+</pre>
+
+	<p><code>pos</code>は o が見つかった次のオフセットを返すので、上記の出力結果は <code>1 7</code> となります。</p>
+</div>

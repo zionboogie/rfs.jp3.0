@@ -1,0 +1,34 @@
+<div class="func-header">
+	<div class="func-format">
+		hex EXPR  
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数<code>EXPR</code>の値を16進数と解釈して、10進数の値に変換して返します。0 や 0x で始まる文字列を数値として扱いたい場合は、<a href="oct.html"><code>oct</code></a>を使ったほうがよいでしょう。</p>
+
+	<h2 class="func-sample">hexの使い方</h2>
+
+<pre class="brush: perl;">
+print hex( 0x1AB );
+> 1063 
+</pre>
+
+	<h2><a name="10進数から16進数">10進数から16進数</a></h2>
+
+	<p>10進数から文字列表現の16進数へ変換するには、<a href="sprintf.html"><code>sprintf</code></a>関数と書式指定子<code>%x</code>を使います。</p>
+
+<pre class="brush: perl;">
+print sprintf("%lx", 16), "\n";
+> 10 
+</pre>
+
+</div>

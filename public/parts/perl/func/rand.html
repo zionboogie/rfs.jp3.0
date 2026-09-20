@@ -1,0 +1,47 @@
+<div class="func-header">
+	<div class="func-format">
+rand EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>0 から 引数<code>EXPR</code>の値までの小数の乱数値を返します(引数は正の数である必要があります)。引数を省略すると、0 から 1 までの値を返します。<a href="srand.html"><code>srand</code></a>とともに利用します。</p>
+
+	<h2 class="func-sample">randの使い方</h2>
+
+<pre class="brush: perl;">
+# 1から10までの少数が出力される
+print rand(10)+1;
+</pre>
+
+	<h3><code>rand</code>を使ったパスワードの自動生成</h3>
+
+<pre class="brush: perl;">
+# パスワードの自動生成
+my ($result,$intval)=('','');
+srand(time);
+while ( length($result) <= 8 ){
+
+	# ASCII英数字の文字コードを生成(48から122)
+	$intval = int( rand(75) ) + 48;
+
+	# 文字コード91から96、58から64は英数字以外の文字
+	# なので、文字コードの生成処理をやり直す
+	next if ($intval >= 91 and $intval <= 96 )
+&nbsp;&nbsp;&nbsp;&nbsp;	or ($intval >= 58 and $intval <= 64);
+	$result .= sprintf("%c", $intval);
+
+}
+print $result, "\n";
+> Z2r9IqT9x 
+</pre>
+
+</div>

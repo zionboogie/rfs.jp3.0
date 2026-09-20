@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja" id="sixapart-standard">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="imagetoolbar" content="no" />    
+    <title>do - smart</title>
+<script type="text/javascript" src="/js/main.js"></script>
+<script type="text/javascript">
+SyntaxHighlighter.config.clipboardSwf = '/js/syntaxhighlighter/scripts/clipboard.swf';
+SyntaxHighlighter.all();
+</script>
+
+    
+
+    
+        
+        
+        
+        
+        
+        
+        <link rel="stylesheet" href="/styles.css" type="text/css" />
+        <link rel="alternate" type="application/atom+xml" title="Atom" href="/atom.xml" />
+        <link rel="start" href="/" title="Home" />
+        <script type="text/javascript" src="/mt.js"></script>
+        
+    
+
+
+    
+    <link rel="next bookmark" href="/sb/javascript/cat18/test.html" title="test" />
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="/sb/perl/00/01.html"
+    trackback:ping="/p/mt/mt-tb.cgi/2"
+    dc:title="第1章 まえがき"
+    dc:identifier="/sb/perl/00/01.html"
+    dc:subject="イントロダクション"
+    dc:description="本講座で用いる表記  本文中などで用いる書体の規約は以下のとおりです。    	..."
+    dc:creator="リズムファクトリー"
+    dc:date="2009-05-20T21:48:00+09:00" />
+</rdf:RDF>
+-->
+
+
+<link href="/c/page.css" rel="stylesheet" type="text/css" />
+
+    
+    <script type="text/javascript">
+    /* <![CDATA[ */
+    mtAttachEvent('load', mtUpdateScores);
+    mtAttachEvent('usersignin', mtUpdateScores);
+    /* ]]> */
+    </script>
+
+</head>
+<body id="mt-community-blog" class="mt-entry-archive layout-wtt">
+<div id="wrapper">
+<div id="main">
+
+<!--START title-->
+<h1>do</h1>
+<!--END title-->
+
+<div id="lnav-top">
+	
+	<span id="category-perl" class="sprite-etc">JavaScript講座</span>
+	
+	<ul>
+
+			
+		
+	</ul>
+</div>
+<div id="content">
+
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+		
+		
+<!--START content-->
+		<div class="func-header">
+			<div class="func-format">
+do BLOCK 
+			</div>
+
+			<div class="func-compat">
+				<span class="ic-perl4"></span>
+				<span class="ic-perl5"></span>
+				<span class="ic-win"></span>
+				<span class="ic-mac"></span>
+			</div>
+		</div>
+		<!-- END 関数ヘッダ -->
+
+		<div class="func-detail">
+			<hr />
+
+
+
+
+			<p><code>do</code>は、ブロック内の命令文を実行し、引数で指定したコマンド列の最後の値を返します。ループ修飾子で修飾すると、ループ条件を調べる前に
+			引数<code>BLOCK</code>を実行します。ほかの文に対しては最初の条件を調べます。</p>
+
+			<h2 class="func-sample"><code>do</code>の使い方</h2>
+	
+<pre class="brush: perl;">
+# do を最初に実行した後、 until の条件式を評価
+do {
+    $line = <stdin>;
+    ....
+}  until $line eq ".\n"; 
+
+# $w を小文字に変換し、変換した数を出力
+print do {
+&nbsp;&nbsp;&nbsp; $w = 'NORTON@XXXX.JP';
+&nbsp;&nbsp;&nbsp; $w =~ tr/A-Z/a-z/;
+}
+</pre>
+
+
+
+
+
+
+
+
+
+
+</div>
+<!--END content-->		
+		
+
+        </div>
+
+
+
+    </div>
+
+		<div class="article-bottom">
+			<a href="#">PAGE TOP</a>
+		</div>
+		<div class="box-ads">
+<script type="text/javascript"><!--
+google_ad_client = "pub-9885420769768716";
+/* 468x15, 作成済み 09/05/20 */
+google_ad_slot = "5463951055";
+google_ad_width = 468;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>
+
+
+<div id="content-right">
+
+<div id="gamma">
+    <div id="gamma-inner">
+  
+<h2>関連サイト</h2>
+<ul id="list-related-sites">
+    <li><a href="http://www.rhythmfactory.jp/" target="_blank">rhythmfactory.jp</a></li>
+    <li><a href="http://ameblo.jp/rhythmfactory/" target="_blank">中目黒webデザインブログ</a></li>
+</ul>
+
+<div class="box-ads">
+<script type="text/javascript"><!--
+google_ad_client = "pub-9885420769768716";
+/* 160x90, 作成済み 09/05/20 */
+google_ad_slot = "5731771695";
+google_ad_width = 160;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+
+</script>
+		</div>
+    </div>
+</div>
+
+<div id="beta">
+    <div id="beta-inner">
+        
+
+        <div class="widget-syndication widget">
+    <div class="widget-content">
+        <ul>
+            <li><img src="/mt-static/images/status_icons/feed.gif" alt="購読する" width="9" height="9" /> <a href="/atom.xml">Smartを購読</a></li>
+
+        </ul>
+    </div>
+</div>
+
+
+    </div>
+</div>
+</div>
+
+
+
+<div id="lnav-bottom">
+<span class="sprite-etc"><a href="/sb/perl/" title="講座TOP">講座TOP</a></span>
+
+<ul>
+
+
+</ul>
+</div>
+
+</div>
+
+<div id="right">
+	<div class="box-bnr">
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab" id="Player_add2901a-1ee3-4797-b801-1d9230616198"  WIDTH="250px" HEIGHT="250px"> <PARAM NAME="movie" VALUE="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=GetDisplayTemplate"><PARAM NAME="quality" VALUE="high"><PARAM NAME="bgcolor" VALUE="#FFFFFF"><PARAM NAME="allowscriptaccess" VALUE="always"><embed src="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=GetDisplayTemplate" id="Player_add2901a-1ee3-4797-b801-1d9230616198" quality="high" bgcolor="#ffffff" name="Player_add2901a-1ee3-4797-b801-1d9230616198" allowscriptaccess="always"  type="application/x-shockwave-flash" align="middle" height="250px" width="250px"></embed></OBJECT> <NOSCRIPT><A HREF="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=NoScript">Amazon.co.jp ウィジェット</A></NOSCRIPT>
+	</div>
+
+	<div class="box-recommend">
+		<img src="/img/book_01.jpg">
+		<h2>はじめて学ぶMySQL</h2>
+		<span>￥ 2,394 (税込)</span>
+		<a class="btn-amazon" href="http://www.amazon.co.jp/%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E5%AD%A6%E3%81%B6-MySQL-%E7%8E%89%E5%B7%9D-%E7%B4%94/dp/4881666282" target="_blank">amazon.co.jpで購入</a>
+		<p>
+データベースを操作するためのSQL言語を、広く普及しているMySQLを使って基本から学習してきます。<br />
+
+SQL文ごとに復習問題もあるので、理解度もしっかりチェックできます。		</p>
+	</div>
+</div>
+<div id="wrapper-bottom"></div>
+
+            </div>
+            <div id="footer" class="sprite-bg">
+                <div id="footer-top">
+<ul id="list-gnav-footer">
+			<li><a href="/sb/html" title="HTML講座">HTML</a></li>
+
+			<li><a href="/sb/javascript" title="JavaScript講座">JavaScript</a></li>
+			<li><a href="/sb/perl" title="Perl講座">Perl</a></li>
+			<li><a href="/sb/sql" title="SQL講座">SQL</a></li>
+			<li><a href="/sb/business" title="注目技術・アクセス向上">注目技術・アクセス向上</a></li>
+			<li><a href="/server/apache" title="Apache講座">Apache</a></li>
+			<li><a href="/server/bind" title="BIND講座">BIND</a></li>
+
+			<li><a href="/server/mysql" title="MySQL講座">MySQL</a></li>
+			<li><a href="/server/namazu" title="Namazu講座">Namazu</a></li>
+			<li><a href="/server/samba" title="Samba講座">Samba</a></li>
+			<li><a href="/server/netatalk" title="netatalk講座">netatalk</a></li>
+		</ul>
+                </div>
+                <div id="footer-bottom">
+
+                <div class="box-bnr">
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=smart-22&o=9&p=13&l=ur1&category=software&banner=1WE6BBZ979NVFYAW9582&f=ifr" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		</div>
+		<ul id="list-information-footer">
+			<li id="list-information-footer-pr"><a class="sprite-etc" href="#" title="PR広告のご案内">PR広告のご案内</a></li>
+			<li id="list-information-footer-order"><a class="sprite-etc" href="#" title="サイト構築の受注">サイト構築の受注</a></li>
+		</ul>
+		<div id="box-copyright" class="sprite-bg">
+
+			<ul id="list-rhythmfactory">
+				<li id="list-rhythmfactory-inquiry"><a class="sprite-icon" href="#" title="ご意見メール">ご意見メール</a></li>
+				<li id="list-rhythmfactory-company"><a class="sprite-icon" href="#" title="会社情報">会社情報</a></li>
+			</ul>
+			<span id="copyright" class="sprite-etc">copyright (c) 2009 rhythmfactory Ltd. All rights reserved. </span>
+		</div>
+            </div>
+
+        </div>
+
+    
+
+<!-- START header -->
+<div id="header">
+<div id="header-top">
+<a id="logo" class="sprite-etc" href="/" accesskey="1">smart</a>
+<div class="box-bnr">
+<iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=smart-22&o=9&p=13&l=ur1&category=computerinternetbooks&banner=0VS5BBRF0XHDCN8XYG82&f=ifr" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>	
+</div>
+</div>
+<div id="header-gnav" class="sprite-bg">
+	<ul class="list-gnav">
+
+		<li><a id="gnav-html" class="sprite-gnav" href="/sb/html" title="HTML講座">HTML講座</a></li>
+		<li><a id="gnav-javascript" class="sprite-gnav" href="/sb/javascript" title="JavaScript講座">JavaScript講座</a></li>
+		<li><a id="gnav-perl" class="sprite-gnav" href="/sb/perl" title="Perl講座">Perl講座</a></li>
+		<li><a id="gnav-sql" class="sprite-gnav" href="/sb/sql" title="SQL講座">SQL講座</a></li>
+		<li><a id="gnav-feature" class="sprite-gnav" href="/sb/business" title="注目技術・アクセス向上">注目技術・アクセス向上</a></li>
+	</ul>
+
+	<ul class="list-gnav">
+		<li><a id="gnav-apache" class="sprite-gnav" href="/server/apache" title="Apache講座">Apache講座</a></li>
+		<li><a id="gnav-bind" class="sprite-gnav" href="/server/bind" title="BIND講座">BIND講座</a></li>
+		<li><a id="gnav-mysql" class="sprite-gnav" href="/server/mysql" title="MySQL講座">MySQL講座</a></li>
+		<li><a id="gnav-namazu" class="sprite-gnav" href="/server/namazu" title="Namazu講座">Namazu講座</a></li>
+		<li><a id="gnav-samba" class="sprite-gnav" href="/server/samba" title="Samba講座">Samba講座</a></li>
+
+		<li><a id="gnav-netatalk" class="sprite-gnav" href="/server/netatalk" title="netatalk講座">netatalk講座</a></li>
+	</ul>
+</div>
+
+
+<div id="header-bottom" class="sprite-bg">
+<ul id="list-topic-path">
+    <li><a href="/">SmartのWEB講座</a></li>
+
+    	<!--　アーカイブインデックス [s]-->
+        
+	<!--　アーカイブインデックス [e]-->
+
+    	<!--　システムテンプレート [s]-->
+        
+	<!--　システムテンプレート　[e]-->
+
+	<!--　アーカイブ（年月日）　[s]-->
+        
+	<!--　アーカイブ（年月日）　[e]-->
+
+	<!--　ユーザーアーカイブ　[s]-->
+        
+	<!--　ユーザーアーカイブ　[e]-->
+
+	<!--　カテゴリーアーカイブ　[s]-->
+
+        
+	<!--　カテゴリーアーカイブ　[e]-->
+
+		<!--　ブログ記事　[s]-->
+		
+			
+				<li>　>　<a href="/sb/perl/">Perl講座</a></li>
+			
+			<li>　>　do</li>
+		
+		<!--　ブログ記事 [e]-->
+
+    </ul>
+
+
+<form id="form-search" method="get" action="/p/mt/mt-search.cgi">
+
+        <input type="hidden" name="IncludeBlogs" value="1" />
+
+        <input id="search-text" class="sprite-etc" type="hidden" name="limit" value="20" />
+        <input id="search-text" class="sprite-etc" class="query" type="text" onfocus="if (this.value == 'サイト内検索') this.value = '';" onblur="if (this.value == '') this.value = 'サイト内検索';" name="search" value="サイト内検索" />
+        <input id="search-btn" class="sprite-etc" class="submit" type="submit" value="検索" />
+    </form>
+
+</div>
+
+</div>
+<!-- END header -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8725980-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+getpgrp PID 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>指定された<code>PID</code>の現在のプロセスグループを返します。<code>PID</code>に 0 を与えるとカレントプロセスを指定したことになります。<code>PID</code>を省略するとカレントプロセスのプロセスグループを返します。システムコマンドの<code>getpgrp</code>(2) を実装していないマシンで実行した場合には、例外が発生します。<code>POSIX</code>版の<code>getpgrp</code>
+
+	は<code>PID</code>引数を受け付けないので、<code>PID==0</code>のみが完全に移植性があります。</p>
+	<p><code>PID</code>については用語集「<a href="javascript:OpenWin('../word/pid.html',400,400);">PID</a>」、プロセスについては「<a href="javascript:OpenWin('../word/process.html',400,400);">プロセス</a>」を参照してください。</p>
+
+	<h2 class="func-sample">getpgrpの使い方</h2>
+
+<pre class="brush: perl;">
+# 番号 70 のプロセスIDのプロセスグループを出力<br />
+print getpgrp 70,"\n";<br />
+> 1
+</pre>
+
+</div>

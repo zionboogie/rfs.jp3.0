@@ -1,0 +1,61 @@
+<div class="func-header">
+	<div class="func-format">
+select RBITS, WBITS, EBITS, TIMEOUT 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>指定したファイル記述子のうち、どれが入出力操作が可能になっているのか、またはどれが例外状態にあるかを調べるものです。<code>select</code>システムコールを実行します。</p>
+	<p>ファイル記述子については用語集「ファイル記述子」を参照してください。</p>
+	<p>ビットマスクは、<code><a href="fileno.html">fileno</a></code>と<code><a href="vec.html">vec</a></code>を使って、次のようにして作成することができます。</p>
+
+<pre class="brush: perl;">
+$rin = $win = $ein = '';
+vec($rin,fileno(STDIN),1) = 1;
+vec($win,fileno(STDOUT),1) = 1;
+$ein = $rin | $win; 
+</pre>
+
+	<p>複数のファイルハンドルに<code>select</code>を行ないたいのであれば、次のようなサブルーチンを書くとよいでしょう。</p>
+
+<pre class="brush: perl;">
+sub fhbits {
+	local(@fhlist) = split(' ',$_[0]);
+	local($bits);
+	for (@fhlist) {
+		vec($bits,fileno($_),1) = 1;
+	}
+	$bits;
+}
+$rin = &fhbits('STDIN TTY SOCK'); 
+</pre>
+
+	<p>通常は、次のように使います。</p>
+
+<pre class="brush: perl;">
+($nfound,$timeleft) = select($rout=$rin, $wout=$win, $eout=$ein, $timeout);
+</pre>
+
+	<p>いずれかの準備が整うまでブロックするには、次のようにします。</p>
+
+<pre class="brush: perl;">
+$nfound = select($rout=$rin, $wout=$win, $eout=$ein, undef);
+</pre>
+
+	<p>どのビットマスクにも<code>undef</code>を設定することができます。<code>TIMEOUT</code>を指定するときは、秒数で指定し、少数でかまいません。<br />
+	<br />
+	250 ミリ秒の<code>sleep</code>と同じ効果が、次のようにして得られます。</p>
+
+<pre class="brush: perl;">
+select(undef, undef, undef, 0.25);
+</pre>
+
+</div>

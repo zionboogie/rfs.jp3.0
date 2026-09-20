@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+next LABEL 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>next</code>コマンドはループの次の繰り返しを開始します。</p>
+
+	<h2 class="func-sample">nextの使い方</h2>
+
+<pre class="brush: perl;">
+while ( ) {
+	next if /^#/;&nbsp; # コメントを削除
+	...
+} 
+</pre>
+
+	<p><code>continue</code>ブロックがある場合は、<code>next</code>の次に<code>continue</code>ブロックが実行され、その後にループが繰り返されます。引数が省略されると、このコマンドは、もっとも内側のループを参照します。</p>
+
+</div>

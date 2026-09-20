@@ -1,0 +1,18 @@
+<div class="func-header">
+	<div class="func-format">
+semctl ID, SEMNUM, CMD, ARG 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>System V IPC関数semctlを呼び出します。CMDが、&IPC_STATか&GETALLのときには、ARGは、返されるsemid_ds構造体か、セマフォ値の配列を納める変数でなければなりません。ioctl  と同じように、エラー時には未定義値、ゼロのときは"0 but true"、それ以外なら、その値そのものを返します。</p>
+
+</div>

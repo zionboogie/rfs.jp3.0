@@ -1,0 +1,37 @@
+<div class="func-header">
+	<div class="func-format">
+sysseek FILEHANDLE
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>システム上のプログラムを実行します。<code>&quot;exec LIST&quot;</code>とほとんど同じですが、最初に<code>fork</code>を行ない、チャイルドプロセスが終了するのを<code>wait</code>します。<code><a href="exec.html">exec</a></code>の項で述べたように、引数の処理は、引数の数によって異なることに注意してください。</p>
+	<p>返却値は、<code>wait</code>が返すプログラムの<code>exit</code>状態です。実際の<code>exit</code>値を得るには 256 で割ってください。<a href="exec.html"><code>exec</code></a>の項も参照してください。</p>
+
+	<p><code>system</code>は、コマンドからの出力を捕らえるために使うものではありません。そのような用途には、逆クォートや<code><a href="qx.html">qx//</a></code>を使用してください。 -1 の返り値はプログラムを開始させることに失敗したことを示します。</p>
+
+	<h2 class="func-sample">systemの使い方</h2>
+
+<pre class="brush: perl;">
+system '/bin/echo', 'Hello world!';
+</pre>
+
+	<p>以下のように<code>$?</code>を調べることで、全ての失敗の可能性をチェックすることができます。</p>
+
+<pre class="brush: perl;">
+$exit_value = $? >> 8;
+$signal_num = $? & 127;
+$dumped_core = $? & 128;
+</pre>
+
+	<p>プロセスについては用語集「プロセス」を参照してください。</p>
+
+</div>

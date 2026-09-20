@@ -1,0 +1,32 @@
+<div class="func-header">
+	<div class="func-format">
+untie VARIABLE 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>指定したモジュールから、現在のパッケージにサブルーチンや変数などをインポートします。これは下記のコードを同じです。</p>
+
+<pre class="brush: perl;">
+BEGIN { require Module ; import Module LIST; }
+</pre>
+
+	<p><code>BEGIN</code>によって、<a href="require.html"><code>require</code></a>や<code><a href="import.html">import</a></code>は、コンパイル時に実行されることになります。</p>
+
+	<p><code>use</code>でインポートしたしたものを取り消すには<a href="no.html"><code>no</code></a>が使えます。<!--webbot bot="PurpleText" PREVIEW="標準モジュールやプラグマの一覧は、perlmod manpage を参照してください。" --></p>
+
+	<h2 class="func-sample">useの使い方</h2>
+
+<pre class="brush: perl;">
+no integer;
+no strict 'refs';
+</pre>
+</div>

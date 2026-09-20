@@ -1,0 +1,40 @@
+<div class="func-header">
+	<div class="func-format">
+		my EXPR 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>my</code>は、リストアップされた変数を囲っているブロックや、関数、<code><a href="eval.html">eval</a></code>などの中でローカルなものにします。</p>
+
+	<h2 class="func-sample">myの使い方</h2>
+
+	<p>変数をカッコで囲えば複数の変数を宣言できます。</p>
+
+<pre class="brush: perl;">
+my ($a, $b, $c);
+</pre>
+
+	<p><code>$/</code>のような、特殊変数をローカル化するには、<a href="local.html"><code>local</code></a>を使う必要があります。</p>
+
+<pre class="brush: perl;">
+my $_; # 不正
+</pre>
+
+	<p><code>my</code>を省略しても<code>Perl</code>インタプリタから警告を受けませんが、<code>strict</code>パッケージをインポートすれば明示的に宣言されていない変数はコンパイルエラーとなります。</p>
+
+<pre class="brush: perl;">
+use strict 'vars';
+</pre>
+
+	<p><code>no strict 'vars'</code>で<code>use strict 'vars'</code>を無効にすることができます。</p>
+
+</div>

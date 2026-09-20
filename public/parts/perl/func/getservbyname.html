@@ -1,0 +1,48 @@
+<div class="func-header">
+	<div class="func-format">
+getservbyname SERVICE, PROTO 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>サービス名からポート番号を取得します。</p>
+
+	<p><code>getservbyname</code>は<code>http・smtp・ftp</code>などのサービス名に対応するサービス情報（サービス名/エイリアス/ポート番号/プロトコル名）のリストを返します。スカラコンテキストの場合は、サービス名を返します。</p>
+
+	<h2 class="func-sample">getservbynameの使い方</h2>
+
+
+<pre class="brush: perl;">
+$port = getservbyname('http', 'tcp');
+</pre>
+
+	<p>第2引数には、<code>tcp</code>のほかにも<code>udp</code>などが指定できます。プロトコル名とポート番号の対応表は、<code>UNIX</code>なら<code>/etc/services</code>から調べられます。</p>
+	<h2>/etc/servicesの内容の抜粋</h2>
+
+	<p class="box-shell">gopher 70/udp<br />
+	netrjs-1 71/tcp # Remote Job Service<br />
+	netrjs-1 71/udp # Remote Job Service<br />
+	netrjs-2 72/tcp # Remote Job Service<br />
+	netrjs-2 72/udp # Remote Job Service<br />
+	netrjs-3 73/tcp # Remote Job Service<br />
+
+	netrjs-3 73/udp # Remote Job Service<br />
+	netrjs-4 74/tcp # Remote Job Service<br />
+	netrjs-4 74/udp # Remote Job Service<br />
+	finger 79/tcp<br />
+	finger 79/udp<br />
+	http 80/tcp www www-http # WorldWideWeb HTTP<br />
+
+	http 80/udp www www-http # HyperText Transfer Protocol <br />
+
+	</p>
+
+</div>

@@ -1,0 +1,26 @@
+<div class="func-header">
+	<div class="func-format">
+rindex STR,SUBSTR, [POSITION] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>rindex</code>は<a href="index_f.html"><code>index</code></a>とよく似ています。<a href="index_f.html"><code>index</code></a>と違う点は、第1引数<code>STR</code>中で最後に見つかった第2引数<code>SUBSTR</code>の位置を返すところです。<code>POSITION</code>を指定すると、<code>POSITION</code>で指定した位置よりも右でマッチし、なおかつ最後にマッチした位置を返します。</p>
+
+	<h2 class="func-sample">rindexの使い方</h2>
+
+<pre class="brush: perl;">
+$str = "How you always hurt the one you love.";<br />
+print rindex($str,'you');<br />
+> 28 
+</pre>
+
+</div>

@@ -1,0 +1,176 @@
+<div class="func-header">
+	<div class="func-format">
+printf [FILEHANDLE] FORMAT, LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>FORMAT</code>で指定されたフォーマットに従って<code>LIST</code>を整形し、ファイルハンドル<code>FORMAT</code>に出力します。<code>FORMAT</code>を省略すると、現在セレクトされている出力ファイルハンドルに出力されます。<br />
+	<code>printf</code>は選択されたファイルハンドルに % フォーマット文字で整形した文字列を出力します。返却値は、<code>printf</code>が正常に終了したら1、異常があったら 0 です。</p>
+
+	<h2 class="func-sample">printfの使い方</h2>
+
+<pre class="brush: perl;">
+printf "%02d", 2;
+> 02 
+</pre>
+
+	<h3>フォーマット指定子</h3>
+
+	<div align="center">
+
+		<table class="table-format01">
+			<tr>
+				<th align="center" nowrap>文字</th>
+				<th align="center" nowrap>説明</th>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%c</td>
+
+				<td>文字 -Character</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%d</td>
+				<td>10進数 -Deximal</td>
+			</tr>
+			<tr>
+
+				<td align="center" nowrap class="td_strong">%e</td>
+				<td>浮動少数（指数形式） -Exponential</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%E</td>
+				<td>浮動少数（大文字のEを使った指数形式）</td>
+			</tr>
+
+			<tr>
+				<td align="center" nowrap class="td_strong">%f</td>
+				<td>浮動小数（固定小数点形式） -Floating</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%g</td>
+				<td>浮動小数（浮動少数または指数形式のうち、少ないスペースで表現できる方）</td>
+
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%G</td>
+				<td>%g の指数表示をEにしたもの</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%ld</td>
+
+				<td>倍精度10進数 -Long</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%lo</td>
+				<td>倍精度8進数</td>
+			</tr>
+			<tr>
+
+				<td align="center" nowrap class="td_strong">%lu</td>
+				<td>倍精度符号なし10進数</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%lx</td>
+				<td>倍精度16進数</td>
+			</tr>
+
+			<tr>
+				<td align="center" nowrap class="td_strong">%n</td>
+				<td>すでに出力した文字数を次の変数に格納</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%o</td>
+				<td>8進数 -Octal</td>
+
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%p</td>
+				<td>ポインタ （16進数での値のアドレス）</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%s</td>
+
+				<td>文字列 -String</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%u</td>
+				<td>符号なし10進数 -Unsigned</td>
+			</tr>
+			<tr>
+
+				<td align="center" nowrap class="td_strong">%x</td>
+				<td>符号なし16進数 -heXadecimal</td>
+			</tr>
+			<tr>
+				<td align="center" nowrap class="td_strong">%X</td>
+				<td>%x と同じだが大文字を使う</td>
+			</tr>
+
+		</table>
+	</div>
+
+	<h3>修飾子</h3>
+
+	<div align="center">
+		<table class="table-format01">
+			<tr>
+				<th align="center" nowrap>文字</th>
+
+				<th align="center" nowrap>説明</th>
+			</tr>
+			<tr>
+				<th align="center" nowrap>-(%-nd)</th>
+				<td>左寄せで表示。ｎ は文字列の長さ。</td>
+			</tr>
+			<tr>
+
+				<th align="center" nowrap>#</th>
+				<td>8進の整数は0で始まり、16進の整数は0xで始まるように表示</td>
+			</tr>
+			<tr>
+				<th align="center" nowrap>(%nd)</th>
+				<td>数値変数の10進展開<br />
+				「ｎ」は文字列の長さ。文字数が足りない場合はスペースで埋める。</td>
+
+			</tr>
+			<tr>
+				<th align="center" nowrap>(%n.mf)</th>
+				<td>小数点付き数値の10進展開。ｎ は文字列の長さ、m は少数点以下の桁数を指定。</td>
+			</tr>
+			<tr>
+				<th align="center" nowrap>+(%+d)</th>
+
+				<td>符号付き10進展開。符号+または-をつけて表示</td>
+			</tr>
+			<tr>
+				<th align="center" nowrap>0(%0nd)</th>
+				<td>文字数が足りない場合は0で埋める。ｎ は文字列の長さ。</td>
+			</tr>
+		</table>
+
+	</div>
+
+	<h4>現在の日時を出力</h4>
+
+<pre class="brush: perl;">
+# 現在日時を取得
+( $sec , $min , $hour , $day , $mon , $year ) = localtime( time );
+$mon++;
+printf("現在の日時は：%02d年%02d月%02d日の %02d:%02d:%02d　です", 
+$year, $mon, $day, $hour, $min, $sec );
+> 現在の日時は：96年01月03日の 09:03:02　です 
+</pre>
+
+	<p><a href="sprintf.html"><code>sprintf</code></a> も参照してください。</p>
+
+
+</div>

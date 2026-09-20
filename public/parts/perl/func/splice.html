@@ -1,0 +1,75 @@
+<div class="func-header">
+	<div class="func-format">
+		splice ARRAY, OFFSET, [LENGTH, LIST] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>配列<code>ARRAY</code>の<code>OFFSET</code>番目の要素から<code>LENGTH</code>分を取り除き、<code>LIST</code>が指定されていれば、それを代わりに挿入します。最後に配列から取り除かれた要素を返します。<br />
+	<code>splice</code>は、呼び出されたコンテキストによって異なる値を返します。リストコンテキストでは、<code>splice</code>は配列から削除した要素のリストを返します。スカラーコンテキストで呼び出すと、削除した最後の要素を返します。</p>
+
+	<h2 class="func-sample">spliceの使い方</h2>
+
+<pre class="brush: perl;">
+@list = (a, b, c, d, e, f, g);
+splice( @list, 1, 2, "X", "X", "X" );
+print @list, "\n";
+> aXXXdefg 
+</pre>
+
+	<p>上記では、インデックスの1に当たる要素から2個の要素（b と c）を削除して、代わりに3つの<code>&quot;X&quot;</code>を挿入しています。</p>
+
+	<p>要素を削除せずに挿入だけしたいときは長さ指定の<code>LENGTH</code>を 0 にします。</p>
+
+<pre class="brush: perl;">
+@list = (a, b, c, d, e, f, g);
+splice( @list , 1, 0, "X", "X", "X" );
+print @list, "\n";
+> aXXXbcdefg 
+</pre>
+
+	<p>要素の削除だけを行いたいときは挿入する値<code>LIST</code>を省略します。</p>
+
+<pre class="brush: perl;">
+@list = (a, b, c, d, e, f, g);
+splice( @list , 1, 2 );
+print @list, "\n";
+> adefg 
+</pre>
+
+	<p>引数<code>OFFSET</code>に負の数を指定すると、配列の末尾から数えて<code>OFFSET</code>番目の要素が指定されたことになります。</p>
+
+<pre class="brush: perl;">
+@list = (a, b, c, d, e, f, g);
+splice( @list , -3, 2 );
+print @list, "\n";
+> abcdg
+</pre>
+
+	<p><code>LENGTH</code>を省略すると、<code>OFFSET</code>以降のすべての要素を取り除けます。 </p>
+
+<pre class="brush: perl;">
+@list = (a, b, c, d, e, f, g);
+splice( @list , -3);
+print @list, "\n";
+> abcd 
+</pre>
+
+	<p><code>LENGTH</code>に負の数を指定すると、配列の最後の<code>LENGTH</code>個の要素を除いた部分を指定したことになります。</p>
+
+<pre class="brush: perl;">
+@list = (a, b, c, d, e, f, g);
+splice( @list ,1, -3, "X");
+print @list, "\n";
+> aXefg 
+</pre>
+
+</div>

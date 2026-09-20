@@ -1,11 +1,7 @@
 <?php
 /**
  * Plugin Name: RFS Block Patterns
-<<<<<<< .mine
- * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・用語解説・AIに聞こう）
-=======
- * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・AIに聞こう・サイト内リンク）
->>>>>>> .theirs
+ * Description: 記事本文用のブロックパターン（コラム・ポラロイド・中央イラスト・用語解説・AIに聞こう・サイト内リンク・実寸表示）
  * Version: 1.0.0
  */
 
@@ -40,6 +36,15 @@ add_action('init', static function () {
 		'categories'  => ['rfs'],
 		'content'     => '<!-- wp:image {"className":"illust"} -->
 <figure class="wp-block-image illust"><img alt=""/></figure>
+<!-- /wp:image -->',
+	]);
+
+	register_block_pattern('rfs/lightbox', [
+		'title'       => '実寸表示',
+		'description' => 'キャプション付き。クリックするとモーダルで画像を実際のサイズで表示します。',
+		'categories'  => ['rfs'],
+		'content'     => '<!-- wp:image {"className":"lightbox"} -->
+<figure class="wp-block-image lightbox"><img alt=""/><figcaption class="wp-element-caption">キャプション</figcaption></figure>
 <!-- /wp:image -->',
 	]);
 

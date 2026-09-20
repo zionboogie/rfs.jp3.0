@@ -1,0 +1,34 @@
+<div class="func-header">
+	<div class="func-format">
+sin EXPR 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>ラジアン（角度）で示した引数のサイン（正弦）を返します。</p>
+	<p>詳しくは用語集の「三角関数」を参照してください。</p>
+
+	<h2 class="func-sample"><code>sin</code>の使い方</h2>
+
+<pre class="brush: perl;">
+print sin 30,"\n";
+> -0.988031624092862
+</pre>
+
+	<h2 class="func-sample">アークサインを求める</h2>
+	<p class="func-sample">アークサイン（逆正弦）を求めるには<code>POSIX::asin</code>
+	を使うか、下記の関数を利用してください。</p>
+
+<pre class="brush: perl;">
+sub asin { atan2($_[0], sqrt(1 - $_[0] * $_[0])) }
+</pre>
+
+</div>

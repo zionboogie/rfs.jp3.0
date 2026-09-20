@@ -1,0 +1,28 @@
+<div class="func-header">
+	<div class="func-format">
+telldir DIRHANDLE  
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>DIRHANDLE</code>上の<a href="readdir.html"><code>readdir</code></a>に対する現在位置を返します。<code>telldir</code>が返す値を 
+	<a href="seekdir.html"><code>seekdir</code></a>に渡せば、ディレクトリ中の特定の位置にアクセスすることができます。</p>
+
+	<h2 class="func-sample">telldirの使い方</h2>
+
+<pre class="brush: perl;">
+opendir(DH,"/var/www/cgi-bin");
+readdir(DH);
+print telldir DH,"\n";
+>4096
+</pre>
+
+</div>

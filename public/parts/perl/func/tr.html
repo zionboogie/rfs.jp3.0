@@ -1,0 +1,103 @@
+<div class="func-header">
+	<div class="func-format">
+tr/SEARCH/REPLACE/ 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>tr///</code>演算子は検索文字列<code>SEARCH</code>に含まれる各文字を、置換文字列<code>REPLACE</code>にマッチする文字に1文字ずつ変換します。<code>REPLACE</code>を省略すると、マッチした文字は削除されます。この関数は変換、もしくは削除した文字数を返します。置換文字列が検索文字列より短い場合、対応する文字がない時は置換文字列中の最後の文字に置き換えられます。</p>
+
+	<p><code>tr///</code>演算子の変わりに<code><a href="y.html">y///</a></code>演算子を使うこともできます。 </p>
+
+	<h5>オプション</h5>
+
+	<table class="table-format01">
+		<tr>
+			<th nowrap>オプション</th>
+			<th nowrap>意味</th>
+		</tr>
+
+		<tr>
+			<td>c</td>
+			<td>検索リストに指定された文字以外を検索</td>
+		</tr>
+		<tr>
+			<td>d</td>
+			<td>置換されなかった文字を削除</td>
+
+		</tr>
+		<tr>
+			<td>s</td>
+			<td>置換後の文字が重複している場合は削除して1つにつめる</td>
+		</tr>
+	</table>
+
+	<h2 class="func-sample"><code>tr///</code>演算子の使い方</h2>
+
+<pre class="brush: perl;">
+# 小文字に統一
+$str =~ tr/A-Z/a-z/;
+</pre>
+
+	<p><code>tr</code>は変数を展開しません。変数を使いたい場合には、<code><a href="eval.html">eval</a></code>を使います。</p>
+
+<pre class="brush: perl;">
+eval "tr/$search/$replace/, 1" or die $@;
+</pre>
+
+	<h4>c オプション(Complement)</h4>
+
+	<p><code>c</code>オプションは、検索文字列以外の文字を検索します。つまり、最初に指定する文字列に含まれていない文字を置換文字列の文字に変換します。 
+	</p>
+
+<pre class="brush: perl;">
+# 0から9以外の文字列を*に変換
+tr/[0-9]/*/c
+</pre>
+
+	<h4>s オプション(Squeeze)</h4>
+
+	<p><code>s</code>オプションは、検索文字列の文字が連続して複数個見つかった場合、それらを1文字に置き換えます。 </p>
+
+<pre class="brush: perl;">
+# 複数の「A」を1つの「A」に変換
+tr/A/A/s
+</pre>
+
+	<h4>d オプション(Delete)</h4>
+
+	<p><code>d</code>オプションは、検索文字列の文字のうち置換文字列には含まれない文字をすべて削除します。 </p>
+
+	<h2 class="func-sample"><code>tr///</code>演算子の様々な使い方</h2>
+
+<pre class="brush: perl;">
+$w = 'BOOK@RFS.JP';
+$w =~ tr/A-Z/a-z/; # 小文字に正規化
+print $w,"\n";
+> book@rfs.jp 
+
+# $w に含まれる . の数を数える
+$cnt = $w =~ tr/././;
+print $cnt,"\n";
+> 1
+
+# 英字以外をスペースに変換
+$w =~ tr/a-zA-Z/ /cs;
+print $w,"\n";
+> book rfs jp
+
+# 連続した単語をひとつにまとめる
+$w =~ tr/a-zA-Z//s;
+print $w,"\n";
+> bok rfs jp
+</pre>
+
+</div>

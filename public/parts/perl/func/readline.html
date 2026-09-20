@@ -1,0 +1,30 @@
+<div class="func-header">
+	<div class="func-format">
+readline EXPR 
+	</div>
+
+	<div class="func-compat">
+		<!--<span class="ic-perl4"></span>-->
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+<p>
+	<code>引数EXPRには、ファイルハンドルのtypeglob（*STDINなど）を指定します。readlineは指定されたファイルハンドルを読み込み、読み込んだ内容を返します。<br />
+	</code>スカラコンテキストでは、呼び出し毎に一行読み込んで返します。ファイルの最後まで読み込んだら、以後の呼び出しでは<code>undef</code>を返します。リストコンテキストでは、ファイルの最後まで読み込んで、行のリストを返します。
+	</p>
+	<p>readlineが読み込む行とは、<code>$/</code>で定義されることに注意してください。<code>$/</code>に<code>undef</code>を設定した場合は、<code>readline</code>はスカラコンテキストとなり、空のファイルを読み込んだ場合は、最初は '' を返し、それ以降は<code>undef</code>を返します。 
+	</p>
+
+	<h2 class="func-sample">readlineの使い方</h2>
+
+<pre class="brush: perl;">
+$line = &lt;STDIN&gt;;
+$line = readline(*STDIN); 
+</pre>
+
+</div>

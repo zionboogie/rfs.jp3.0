@@ -1,0 +1,30 @@
+<div class="func-header">
+	<div class="func-format">
+socketpair SOCKET1,SOCKET2,DOMAIN,TYPE,PROTOCOL 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<!--<span class="ic-win"></span>
+		<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>指定した<code>DOMAIN</code>に、指定した<code>TYPE</code>で名前の無いソケットのペアを生成します。<code>DOMAIN</code>、<code>TYPE</code>、<code>PROTOCOL</code>は、同名のシステムコールと同じように指定します。<code>socketpair</code>システムコールが実装されていない場合には、致命的エラーとなります。成功時には&quot;真&quot;を返します。</p>
+
+	<h2 class="func-sample">socketpairの使い方</h2>
+
+<pre class="brush: perl;">
+use Socket;
+
+socketpair(Rdr, Wtr, AF_UNIX, SOCK_STREAM, PF_UNSPEC);
+# no more writing for reader
+shutdown(Rdr, 1);
+# no more reading for writer
+shutdown(Wtr, 0);
+</pre>
+
+</div>

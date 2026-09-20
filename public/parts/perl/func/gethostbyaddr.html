@@ -1,0 +1,27 @@
+<div class="func-header">
+	<div class="func-format">
+gethostbyaddr IPADDR, ADDR_TYPE 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+	<p><code>gethostbyaddr</code>は、ネットワークファイル(<code>/etc/naeworks</code>)、もしくは、同等の機構から、引数<code>IPADDR</code>にマッチした
+	ホスト情報（ホスト名/エイリアス/アドレスタイプ/アドレスの長さ/アドレスのリスト）をリストで返します。スカラコンテキストの場合は、ホスト名を返します。</p>
+
+	<p><code>IPADDR</code>には、IPアドレスを表す構造体、<code>ADDR_TYPE</code>には、<code>Socket</code>モジュールからインポートできる定数<code>AF_INET</code>を指定します。</p>
+
+	<h2 class="func-sample">gethostbyaddrの使い方</h2>
+
+<pre class="brush: perl;">
+use Socket;
+@host = gethostbyaddr(unpack(N, pack('C4',192.168.0.10)), AF_INET);
+</pre>
+
+</div>

@@ -1,0 +1,30 @@
+<div class="func-header">
+	<div class="func-format">
+		q/STRING/ 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+<!-- END 関数ヘッダ -->
+
+<div class="func-detail">
+
+	<p><code>q//</code>
+	は文字列をシングルクォートで囲んだのと同様です。バックスラッシュは次の文字が区切文字か、別のバックスラッシュである場合を除いて無視されます。区切文字やバックスラッシュが続く場合には、それがそのまま展開されます。</p>
+
+	<h2 class="func-sample">q//の使い方</h2>
+
+<pre class="brush: perl;">
+print q!I said, "You said, 'She said it.'"!, "\n";
+> I said, "You said, 'She said it.'"
+
+print q('This is it.'), "\n";
+> 'This is it.' 
+</pre>
+
+</div>

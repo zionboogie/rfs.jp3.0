@@ -1,0 +1,22 @@
+<div class="func-header">
+	<div class="func-format">
+syswrite FILEHANDLE, SCALAR, LENGTH, [OFFSET] 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p><code>write(2)</code>システムコマンドを使って、指定した<code>FILEHANDLE</code>へ、変数<code>SCALAR</code>から、<code>LENGTH</code>バイトのデータの書き込みを試みます。<code>OFFSET</code>を指定すると、<code>SCALAR</code>の先頭以外の場所から、データを取り出して、書き込みを行ないうことができます。<code>OFFSET</code>に負の値を指定すると、文字列の最後から逆向きに数えて何バイト目から書き込むかを示します。<code>SCALAR</code>が空の場合、<code>OFFSET</code>はゼロのみ使用できます。</p>
+
+	<p>実際に読み込まれたデータの長さか、エラー時には<code>undef</code>が返されます。<code>LENGTH</code>が<code>OFFSET</code>以降の<code>SCALAR</code>の利用可能なデータより大きかった場合、利用可能なデータのみが書き込まれます。</p>
+
+	<p>これは、<code>stdio</code>ルーティンを通りませんから、他の出力関数と混ぜて使うと、出力がおかしくなるかもしれません。</p>
+
+</div>

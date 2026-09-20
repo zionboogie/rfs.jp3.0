@@ -273,6 +273,13 @@ const shareRel = "noopener noreferrer";
 	</div>
 </main>
 
+<dialog class="article-lightbox" aria-label="画像の実寸表示">
+	<button class="article-lightbox__close" type="button" aria-label="閉じる"></button>
+	<div class="article-lightbox__stage">
+		<img class="article-lightbox__image" alt="" />
+	</div>
+</dialog>
+
 <script>
 	function syncArticleMugOrigin() {
 		const wrap = document.querySelector(".article-hero__title-wrap");
@@ -555,4 +562,167 @@ const shareRel = "noopener noreferrer";
 
 	initIllustFade();
 	document.addEventListener("astro:page-load", initIllustFade);
+</script>
+
+<script>
+	/** @type {null | (() => void)} */
+	let disposeLightbox = null;
+
+	/** @param {string} url */
+	function isImageUrl(url) {
+		try {
+			const path = new URL(url, window.location.href).pathname;
+			return /\.(avif|gif|jpe?g|png|svg|webp)$/i.test(path);
+		} catch {
+			return false;
+		}
+	}
+
+	/** @param {HTMLImageElement} img */
+	function getLightboxSrc(img) {
+		const link = img.closest("a");
+		if (link instanceof HTMLAnchorElement) {
+			const href = link.getAttribute("href")?.trim() ?? "";
+			if (href && href !== "#" && !href.startsWith("javascript:") && isImageUrl(link.href)) {
+				return link.href;
+			}
+		}
+
+		const srcset = img.getAttribute("srcset");
+		if (srcset) {
+			let bestUrl = img.currentSrc || img.src;
+			let bestSize = 0;
+			for (const candidate of srcset.split(",")) {
+				const parts = candidate.trim().split(/\s+/);
+				const url = parts[0];
+				const descriptor = parts[1] ?? "";
+				const size = descriptor.endsWith("w") ? Number.parseInt(descriptor, 10) : 0;
+				if (url && size >= bestSize) {
+					bestUrl = url;
+					bestSize = size;
+				}
+			}
+			return bestUrl;
+		}
+
+		return img.currentSrc || img.src;
+	}
+
+	function initLightbox() {
+		disposeLightbox?.();
+		disposeLightbox = null;
+
+		const dialog = document.querySelector(".article-lightbox");
+		const stage = dialog?.querySelector(".article-lightbox__stage");
+		const image = dialog?.querySelector(".article-lightbox__image");
+		const closeButton = dialog?.querySelector(".article-lightbox__close");
+		if (
+			!(dialog instanceof HTMLDialogElement) ||
+			!(stage instanceof HTMLElement) ||
+			!(image instanceof HTMLImageElement) ||
+			!(closeButton instanceof HTMLButtonElement)
+		) {
+			return;
+		}
+
+		const figures = [...document.querySelectorAll(".article-body .lightbox")].filter(
+			(el) => el instanceof HTMLElement,
+		);
+		if (figures.length === 0) {
+			if (dialog.open) dialog.close();
+			image.removeAttribute("src");
+			image.removeAttribute("width");
+			image.removeAttribute("height");
+			image.alt = "";
+			return;
+		}
+
+		/** @type {(() => void)[]} */
+		const disposers = [];
+
+		const closeLightbox = () => {
+			if (dialog.open) dialog.close();
+		};
+
+		const onDialogClose = () => {
+			image.removeAttribute("src");
+			image.removeAttribute("width");
+			image.removeAttribute("height");
+			image.alt = "";
+		};
+
+		/** @param {HTMLImageElement} source */
+		const openLightbox = (source) => {
+			const src = getLightboxSrc(source);
+			if (!src) return;
+			image.alt = source.alt || "";
+			image.src = src;
+			const applyNaturalSize = () => {
+				if (image.naturalWidth > 0) {
+					image.width = image.naturalWidth;
+					image.height = image.naturalHeight;
+				}
+			};
+			if (image.complete) applyNaturalSize();
+			else image.addEventListener("load", applyNaturalSize, { once: true });
+			if (!dialog.open) dialog.showModal();
+		};
+
+		/** @param {MouseEvent} event */
+		const onDialogClick = (event) => {
+			if (event.target === dialog || event.target === stage) closeLightbox();
+		};
+
+		dialog.addEventListener("click", onDialogClick);
+		dialog.addEventListener("close", onDialogClose);
+		closeButton.addEventListener("click", closeLightbox);
+		disposers.push(() => {
+			closeLightbox();
+			dialog.removeEventListener("click", onDialogClick);
+			dialog.removeEventListener("close", onDialogClose);
+			closeButton.removeEventListener("click", closeLightbox);
+		});
+
+		for (const figure of figures) {
+			const source = figure.querySelector("img");
+			if (!(source instanceof HTMLImageElement)) continue;
+
+			const link = figure.querySelector("a");
+			const trigger = link instanceof HTMLAnchorElement ? link : source;
+			if (!(link instanceof HTMLAnchorElement)) {
+				trigger.setAttribute("role", "button");
+				trigger.setAttribute("tabindex", "0");
+				trigger.setAttribute("aria-haspopup", "dialog");
+				trigger.setAttribute("aria-label", source.alt ? `${source.alt}を実寸で表示` : "画像を実寸で表示");
+			}
+
+			/** @param {Event} event */
+			const onOpen = (event) => {
+				event.preventDefault();
+				openLightbox(source);
+			};
+
+			/** @param {KeyboardEvent} event */
+			const onKeydown = (event) => {
+				if (event.key !== "Enter" && event.key !== " ") return;
+				if (event.target !== trigger) return;
+				event.preventDefault();
+				openLightbox(source);
+			};
+
+			trigger.addEventListener("click", onOpen);
+			trigger.addEventListener("keydown", onKeydown);
+			disposers.push(() => {
+				trigger.removeEventListener("click", onOpen);
+				trigger.removeEventListener("keydown", onKeydown);
+			});
+		}
+
+		disposeLightbox = () => {
+			for (const dispose of disposers) dispose();
+		};
+	}
+
+	initLightbox();
+	document.addEventListener("astro:page-load", initLightbox);
 </script>

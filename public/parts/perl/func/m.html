@@ -1,0 +1,75 @@
+<div class="func-header">
+	<div class="func-format">
+m/PATTERN/gimosx
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>引数<code>PATTERN</code>で文字列検索を行ないます。スカラコンテキストでは、マッチするごとに&quot;真&quot;を返し、最終的にマッチしなくなったときに&quot;偽&quot;を返します。対象の文字列を変更すると、検索位置は先頭にリセットされます。</p>
+
+	<h2 class="func-sample">m//の使い方</h2>
+
+<pre class="brush: perl;">
+# リストコンテキスト
+($a, $b, $c) = ($value =~ /(\d+)/g);
+# スカラコンテキスト
+while ( $value =~ /[a-z]/g ) {
+	....
+} 
+</pre>
+
+	<h3>mの修飾子</h3>
+
+	<div align="center">
+		<table class="table-format01">
+			<tr>
+				<th nowrap>修飾子</th>
+				<th nowrap>意味</th>
+
+			</tr>
+			<tr>
+				<td>g</td>
+				<td>文字列の中で可能な限りマッチを行う</td>
+			</tr>
+			<tr>
+				<td>i</td>
+
+				<td>大文字、小文字を区別しない</td>
+			</tr>
+			<tr>
+				<td>m</td>
+				<td>文字列を複数行として扱う</td>
+			</tr>
+			<tr>
+
+				<td>o</td>
+				<td>パターンのコンパイルを 1 度だけにする</td>
+			</tr>
+			<tr>
+				<td>s</td>
+				<td>文字列を単一行として扱う</td>
+			</tr>
+
+			<tr>
+				<td>x</td>
+				<td>拡張正規表現を使用する</td>
+			</tr>
+		</table>
+	</div>
+
+	<p>区切文字がスラッシュ( / )のときには、最初の<code>m</code>を省略することができます。<code>m</code>を付けるときには、英数字と空白以外の文字のペアを区切文字として使うことができます。これはスラッシュ( / )を含む<code>UNIX</code>のパス名にパターンパッチを行なうときに便利です。</p>
+
+	<p><code>PATTERN</code>には、変数が含まれていてもよく、パターンが評価されるごとに、変数が展開されます。<code>$)</code>と<code>$|</code>は文字列の終わりを調べるパターンであると解釈されるので、展開されません。<br />
+	<code>PATTERN</code>を評価した結果が空文字列となった場合には、最後に実行された正規表現が代わりに使われます。</p>
+	<p>パターンマッチが、リスト値が要求されるコンテキストで使われると、パターンの中のカッコで括られた部分列にマッチしたリストを返します。これは、<code>$1</code>, 
+	<code>$2</code>,<code>$3</code>, ...ということです。マッチが失敗した場合には、空配列が返されます。マッチが成功した場合で、カッコが無い場合には、リスト値が返されます。</p>
+
+</div>

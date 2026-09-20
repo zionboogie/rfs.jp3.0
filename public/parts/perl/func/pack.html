@@ -1,0 +1,202 @@
+<div class="func-header">
+	<div class="func-format">
+pack TEMPLATE, LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>第2引数<code>LIST</code>をバイナリの構造体にパックしたものを文字列をして返します。第1引数<code>TEMPLATE</code>はフォーマット文字を並べて、値の順番と型を示すようにしたものです。</p>
+
+	<p>フォーマット文字には次のものがあります。</p>
+
+	<div align="center">
+
+		<table class="table-format01">
+			<tr>
+				<th>フォーマット</th>
+				<th>意味</th>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">a </td>
+
+				<td>ASCII 文字列</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">A</td>
+				<td>ASCII 文字列、足りない領域はスペース文字で埋める</td>
+			</tr>
+			<tr>
+
+				<td align="center" class="td_strong">b</td>
+				<td>ビット列 (昇ビット順)</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">B</td>
+				<td>ビット列 (降ビット順)</td>
+			</tr>
+
+			<tr>
+				<td align="center" class="td_strong">c</td>
+				<td>符号付き char 値</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">C</td>
+				<td>符号なし char 値</td>
+
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">d</td>
+				<td>機種依存の倍精度浮動小数点数</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">f</td>
+
+				<td>機種依存の単精度浮動小数点数</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">h</td>
+				<td>16進数文字列 (下位ビットが先)</td>
+			</tr>
+			<tr>
+
+				<td align="center" class="td_strong">H</td>
+				<td>16進数文字列 (上位ビットが先)</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">i</td>
+				<td>符号付き int 値</td>
+			</tr>
+
+			<tr>
+				<td align="center" class="td_strong">I</td>
+				<td>符号なし int 値</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">l</td>
+				<td>符号付き long 値</td>
+
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">L</td>
+				<td>符号なし long 値</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">n</td>
+
+				<td>ネットワークバイト順序 (ビッグエンディアン) の short 値</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">N</td>
+				<td>ネットワークバイト順序 (ビッグエンディアン) の long 値</td>
+			</tr>
+			<tr>
+
+				<td align="center" class="td_strong">p</td>
+				<td>文字列へのポインタ</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">P</td>
+				<td>構造体 (固定長文字列) へのポインタ</td>
+			</tr>
+
+			<tr>
+				<td align="center" class="td_strong">s</td>
+				<td>符号付き short 値</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">S</td>
+				<td>符号なし short 値</td>
+
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">v</td>
+				<td>VAXバイト 順序 (リトルエンディアン) の short 値</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">V</td>
+
+				<td>VAXバイト 順序 (リトルエンディアン) の long 値</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">u</td>
+				<td>uuencode した文字列</td>
+			</tr>
+			<tr>
+
+				<td align="center" class="td_strong">x</td>
+				<td>ヌル文字</td>
+			</tr>
+			<tr>
+				<td align="center" class="td_strong">X</td>
+				<td>1バイト後退</td>
+			</tr>
+
+			<tr>
+				<td align="center" class="td_strong">@</td>
+				<td>絶対位置までヌル文字で埋める</td>
+			</tr>
+		</table>
+	</div>
+
+	<h2 class="func-sample">フォーマット文字の使い方</h2>
+
+	<ul>
+		<li>フォーマット文字の後ろには、それを何回繰り返すかを示す数字<code>COUNT</code>を付けることができます。</li>
+		<li><code>COUNT</code>に * を指定すると、残っているすべての要素を使います。</li>
+		<li>フォーマット文字（<code>COUNT</code>も含める）同士の間にはスペースを挟むことができます。</li>
+
+		<li><code>a</code>、<code>A</code>、<code>b</code>、<code>B</code>、<code>h</code>、<code>H</code>以外のフォーマットは、第2引数<code>LIST</code>から<code>COUNT</code>で指定された分の値を使います。</li>
+
+		<li><code>a</code>や<code>A</code>というフォーマットに対して<code>COUNT</code>を使うと、繰り返し数で示す長さの文字列となるように、必要に応じてヌル文字かスペース文字を付け足します。<code><a href="unpack.html">unpack</a></code>するとき、<code>A</code>は後続のスペース文字やヌル文字を取り除きますが、<code>a</code>はそのままにします。<br />
+		同様に、<code>b</code>や<code>B</code>は、繰り返し数で示すビット長のビット列にパックします。　</li>
+
+		<li><code>h</code>や<code>H</code>は、そのニブル長のニブル列にパックします。</li>
+		<li><code>P</code>は、指定した長さの構造体へのポインタをパックします。実数 (<code>float</code>と<code>double</code>) は、機種依存のフォーマットしかありません。あるマシンで
+		パックした浮動小数点数は、別のマシンでは読めない可能性があります。</li>
+	</ul>
+
+	<p><code>Perl</code>は、すべての数値演算で内部的に<code>double</code>を使用しています。ですから、<code>double</code>から<code>float</code>へ変換し、それから再び<code>double</code>に戻すと精度が落ちることになります (<code>unpack(&quot;f&quot;,pack(&quot;f&quot;, $foo)</code>) は、<code>$foo</code>と同じではありません)。</p>
+
+	<h2 class="func-sample"><code>pack</code>の使い方</h2>
+
+
+<pre class="brush: perl;">
+# 次の2行は数値をパックしてバイトの並びにします。
+print pack("cccc",65,66,67,68), "\n";
+> ABCD
+print pack("c4",65,66,67,68), "\n";
+> ABCD
+</pre>
+
+<pre class="brush: perl;">
+# "a" フィールドの長さ指定は、1つの文字だけに適用されます
+print pack("a4","abcdefg","X","Y","Z"), "\n";
+
+> abcd
+</pre>
+
+<pre class="brush: perl;">
+# 上記の制限を回避するには、"a"フィールドを繰り返します
+print pack("a" x 4, "abcdefg","X","Y","Z"), "\n";
+
+> aXYZ
+</pre>
+
+<pre class="brush: perl;">
+# "a" フォーマットは、長さが足りない分をヌル文字で補います
+print pack("A14","abcdefg"), "...\n";
+
+> abcdefg          ... 
+</pre>
+
+	<p><code>pack</code>で使用したものと同じテンプレートが、<a href="unpack.html"><code>unpack</code></a>関数でも使用できます。</p>
+
+</div>

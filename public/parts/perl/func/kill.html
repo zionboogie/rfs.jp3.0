@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+kill LIST 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<!--<span class="ic-mac"></span>-->
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>プロセスのリストにシグナルを送ります。<code>LIST</code>の最初の要素には、送信するシグナルを指定してください。シグナル送信に成功したプロセスの数を返します。</p>
+	<p>プロセスについては用語集「プロセス」、シグナルについては「シグナル」を参照してください。</p>
+
+	<h2 class="func-sample">killの使い方</h2>
+
+<pre class="brush: perl;">
+$cnt = kill 1, $child1, $child2;
+kill 9, @goners; 
+</pre>
+
+	<p>シェルとは異なり、<code>Perl</code>では、シグナルに負の数を与えると、プロセスではなく、プロセスグループに対して<code>kill</code>を行ないます。通常は、負のシグナルは用いず、正のシグナルを使うことになります。シグナル名をクォートして使うこともできます。<!--webbot bot="PurpleText" PREVIEW="詳細はperlipc/&quot;Signals&quot;を参照してください。" --></p>
+	<p>シェルについては用語集「シェル」を参照してください。</p>
+
+</div>

@@ -1,0 +1,30 @@
+<div class="func-header">
+	<div class="func-format">
+getservbyport NO, PROTO 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>サービス名からポート番号を取得します。</p>
+
+	<p><code>getservbyport</code>は<code>http・smtp・ftp</code>などの
+	ポート番号に対応するサービス情報（サービス名/エイリアス/ポート番号/プロトコル名）のリストを返します。スカラコンテキストの場合は、ポート番号を返します。</p>
+
+	<h2 class="func-sample">getservbyportの使い方</h2>
+
+
+<pre class="brush: perl;">
+$port = getservbyport(6, 'tcp');
+</pre>
+
+	<p>プロトコル名とポート番号の対応表は、<code>UNIX</code>なら<code>/etc/services</code>から調べられます。
+
+</div>

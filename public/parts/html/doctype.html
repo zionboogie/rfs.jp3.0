@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja" id="sixapart-standard">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <title>携帯サイトのDOCTYPEについて | HTML講座 [Smart]</title>
+<script type="text/javascript" src="/js/main.js"></script>
+<script type="text/javascript">
+SyntaxHighlighter.config.clipboardSwf = '/js/syntaxhighlighter/scripts/clipboard.swf';
+SyntaxHighlighter.all();
+</script>
+    
+
+    
+        
+        
+        
+        
+        
+        
+        <link rel="stylesheet" href="http://rfs.jp/styles.css" type="text/css" />
+        <link rel="alternate" type="application/atom+xml" title="Atom" href="http://rfs.jp/atom.xml" />
+        <link rel="start" href="http://rfs.jp/" title="Home" />
+        <script type="text/javascript" src="http://rfs.jp/mt.js"></script>
+        
+    
+
+
+    <link rel="prev bookmark" href="http://rfs.jp/sb/javascript/object/object.html" title="JavaScriptのオブジェクト" />
+    <link rel="next bookmark" href="http://rfs.jp/sb/html/cat64/wordpress.html" title="WordPressのモバイル対応" />
+    <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rdf:Description
+    rdf:about="http://rfs.jp/sb/html/cat64/doctype.html"
+    trackback:ping="http://rfs.jp/p/mt/mt-tb.cgi/172"
+    dc:title="携帯サイトのDOCTYPEについて"
+    dc:identifier="http://rfs.jp/sb/html/cat64/doctype.html"
+    dc:subject="モバイル"
+    dc:description="携帯サイトのDOCTYPEについて docomo、au、softbankの携帯端..."
+    dc:creator="リズムファクトリー"
+    dc:date="2011-02-09T11:59:03+09:00" />
+</rdf:RDF>
+-->
+
+
+<meta name="keywords" content="携帯 モバイル DOCTYPE XHTML Mobile Profile Basic1.1 3キャリア">
+<link href="/c/page.css" rel="stylesheet" type="text/css" />
+
+    
+    <script type="text/javascript">
+    /* <![CDATA[ */
+    mtAttachEvent('load', mtUpdateScores);
+    mtAttachEvent('usersignin', mtUpdateScores);
+    /* ]]> */
+    </script>
+
+</head>
+<body id="mt-community-blog" class="mt-entry-archive layout-wtt">
+<div id="wrapper">
+<div id="main">
+
+
+<h1>携帯サイトのDOCTYPEについて</h1>
+<div id="lnav-top">
+	
+	<span id="category-html" class="sprite-etc"></span>
+	
+	<ul>
+		<li class="sprite-etc"><a class="next" href="http://rfs.jp/sb/html/cat64/wordpress.html" title="次のページ">次のページ</a></li>	
+		
+	</ul>
+</div>
+<div id="content">
+
+    <div class="asset-content entry-content">
+
+        <div class="asset-body">
+            <h2>携帯サイトのDOCTYPEについて</h2>
+
+<p>docomo、au、softbankの携帯端末に対応したXHTMLを作る際、DOCTYPEの宣言の違いに注意する必要があります。</p>
+
+<p>現在、キャリアごとに推奨されているDOCTYPEの宣言が異なります。</p>
+
+<h5>docomo</h5>
+
+<h5>例：Compact HTML（CHTML）用のDOCTYPE</h5>
+
+<pre class="brush: html;">
+&lt;!DOCTYPE&nbsp;HTML&nbsp;PUBLIC&nbsp;&quot;-//W3C//DTD&nbsp;Compact&nbsp;HTML&nbsp;1.0&nbsp;Draft//EN&quot;&gt;
+</pre>
+
+<h5>例：iモード対応XHTML 1.0用のDOCTYPE</h5>
+<pre class="brush: html;">
+&lt;!DOCTYPE&nbsp;html&nbsp;PUBLIC&nbsp;&quot;-//i-mode&nbsp;group&nbsp;(ja)//DTD&nbsp;XHTML&nbsp;i-XHTML(Locale/Ver.=ja/1.0)&nbsp;1.0//EN&quot;&nbsp;&quot;i-xhtml_4ja_10.dtd&quot;&gt;
+</pre>
+ 
+<h5>au</h5>
+
+<pre class="brush: html;">
+&lt;!DOCTYPE&nbsp;html&nbsp;PUBLIC&nbsp;&quot;-//W3C//DTD&nbsp;XHTML&nbsp;Basic&nbsp;1.0//EN&quot;&nbsp;&quot;http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd&quot;&gt;
+</pre>
+
+<p>
+※参考:<a href="http://www.au.kddi.com/ezfactory/xhtmlmake/part1_01.html" target="_blank">XHTML Basicの基本</a>
+</p>
+
+<h5>softbank</h5>
+
+<pre class="brush: html;">
+&lt;!DOCTYPE&nbsp;html&nbsp;PUBLIC&nbsp;&quot;-//J-PHONE//DTD&nbsp;XHTML&nbsp;Basic&nbsp;1.0&nbsp;Plus//EN&quot;&nbsp;&quot;xhtml-basic10-plus.dtd&quot;&gt;
+</pre>
+
+<p>
+※参考:<a href="http://creation.mb.softbank.jp/column/column_05_02.html" target="_blank">XHTMLとCSSによる携帯サイト制作</a>
+ </p>
+
+<p>
+ただし、現状の携帯端末の表現能力ではDOCTYPEによる表示の差異はほとんどないので、<a href="http://www001.upp.so-net.ne.jp/hdml/wap2/xhtml/spec.html" target="_blank" class="external"><strong>XHTML Mobile Profile</strong></a>、もしくは<a href="http://www.doraneko.org/webauth/xhtml10/20000126/Overview.html" target="_blank" class="external"><strong>XHTML 1.0 Transitional</strong></a>に準拠したDOCTYPEを3キャリア共通で宣言しても実用上は問題ありません。
+</p>
+
+<p>
+XHTML Mobile Profile、XHTML 1.0 Transitionalに準拠したDOCTYPEの宣言は下記のとおりです。
+</p>
+
+<h5>XHTML Mobile Profile 1.0</h5>
+<pre class="brush: html;">
+&lt;?xml&nbsp;version=&quot;1.0&quot;&nbsp;encoding=&quot;Shift_JIS&quot;?&gt;
+&lt;!DOCTYPE&nbsp;html&nbsp;PUBLIC&nbsp;&quot;-//WAPFORUM//DTD&nbsp;XHTML&nbsp;Mobile&nbsp;1.0//EN&quot;&nbsp;&quot;http://www.wapforum.org/DTD/xhtml-mobile10.dtd&quot;&nbsp;&gt;
+&lt;html&nbsp;xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+</pre>
+
+<h5>XHTML 1.0 Transitional</h5>
+<pre class="brush: html;">
+&lt;?xml&nbsp;version=&quot;1.0&quot;&nbsp;encoding=&quot;Shift_JIS&quot;?&gt;
+&lt;!DOCTYPE&nbsp;html&nbsp;PUBLIC&nbsp;&quot;-//W3C//DTD&nbsp;XHTML&nbsp;1.0&nbsp;Transitional//EN&quot;&nbsp;&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html&nbsp;xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&nbsp;lang=&quot;ja&quot;&nbsp;xml:lang=&quot;ja&quot;&gt;
+</pre>
+
+<p>
+docomoのXHTML対応は注意が必要です。docomoの場合はCSSの記述はインラインのみが対応となっているので、外部CSSが使えません。
+また、機種側にXHTMLモードを認識させるには、Content-Typeを指定する必要があります。
+参考：<a href="http://www.nttdocomo.co.jp/service/imode/make/content/html/notice/basis/#p05" target="_blank" class="external">http://www.nttdocomo.co.jp/service/imode/make/content/html/notice/basis/#p05</a>
+</p>
+
+<p>
+.htaccessなどで下記のようにContent-Typeの設定を行えます。
+</p>
+
+<pre class="brush: plane;">
+AddType application/xhtml+xml .htm .html
+</pre>
+
+<p>phpなどの動的コンテンツでは、HTTPヘッダを出力する必要があります。</p>
+
+<pre class="brush: php;">
+header("Content-type: application/xhtml+xml;charset=Shift_JIS");
+</pre>
+
+<p>
+ご参考までに、3キャリア対応のXHTMLテンプレートは次の通りです。
+</p>
+
+<pre class="brush: html;">
+&lt;?xml&nbsp;version=&quot;1.0&quot;&nbsp;encoding=&quot;Shift_JIS&quot;?&gt;
+&lt;!DOCTYPE&nbsp;html&nbsp;PUBLIC&nbsp;&quot;-//WAPFORUM//DTD&nbsp;XHTML&nbsp;Mobile&nbsp;1.0//EN&quot;&nbsp;&quot;http://www.wapforum.org/DTD/xhtml-mobile10.dtd&quot;&gt;
+&lt;html&nbsp;xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+	&lt;meta&nbsp;http-equiv=&quot;Content-Type&quot;&nbsp;content=&quot;application/xhtml+xml;&nbsp;charset=Shift_JIS&quot;&nbsp;/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+XHTML Mobile Profile 1.0がXHTML Basic1.1に統合されましたが、当分は各キャリアの対応待ちとになるので、しばらくは上記のような方法で問題ないと思います。
+</p>
+
+<h5>参考</h5>
+<ul>
+	<li><a href="http://ke-tai.org/blog/2009/10/14/doctype/" target="_blank" class="external">ケータイ3キャリアに対応するためのDOCTYPE宣言について </a></li>
+	<li><a href="http://dspt.blog59.fc2.com/blog-entry-43.html" target="_blank" class="external">携帯サイトのDOCTYPEについてもう一度考えてみる。</a></li>
+</ul>
+
+        </div>
+
+
+
+    </div>
+
+		<div class="article-bottom">
+			<a href="#">PAGE TOP</a>
+		</div>
+		<div class="box-ads">
+<script type="text/javascript"><!--
+google_ad_client = "pub-9885420769768716";
+/* 468x15, 作成済み 09/05/20 */
+google_ad_slot = "5463951055";
+google_ad_width = 468;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>
+
+
+<!-- content-right [s] -->
+<div id="content-right">
+
+<!-- gamma [s] -->
+<div id="gamma">
+    <div id="gamma-inner">
+        <h2>新着記事</h2>
+<ul id="list-new-articles">
+
+	<li><a href="http://rfs.jp/sb/javascript/jquery_1/easy_slider.html">Easy Slider -画像やコンテンツをスライドで切り替える[jQueryプラグイン] </a></li>
+
+
+
+	<li><a href="http://rfs.jp/sb/javascript/jquery_1/jquery.html">jQueryとは</a></li>
+
+
+
+	<li><a href="http://rfs.jp/sb/html/other/html.html">HTMLエスケープ</a></li>
+
+</ul>
+
+
+
+
+
+<h2>タグクラウド</h2>
+    <div id="box-cloud" class="widget-content">
+        <ul>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=Apache&amp;limit=20';return false;" rel="tag">Apache</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=CASE&amp;limit=20';return false;" rel="tag">CASE</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=DBI&amp;limit=20';return false;" rel="tag">DBI</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=DELETE&amp;limit=20';return false;" rel="tag">DELETE</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=INSERT&amp;limit=20';return false;" rel="tag">INSERT</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=like&amp;limit=20';return false;" rel="tag">like</a></li>
+    
+            <li class="rank-1"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=MySQL&amp;limit=20';return false;" rel="tag">MySQL</a></li>
+    
+            <li class="rank-2"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=Perl&amp;limit=20';return false;" rel="tag">Perl</a></li>
+    
+            <li class="rank-2"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=query&amp;limit=20';return false;" rel="tag">query</a></li>
+    
+            <li class="rank-3"><a href="javascript:void(0)" onclick="location.href='http://rfs.jp/p/mt/mt-search.cgi?blog_id=1&amp;tag=SELECT&amp;limit=20';return false;" rel="tag">SELECT</a></li>
+    
+        </ul>
+    </div>
+
+<h2>Smartからのお知らせ</h2>
+<ul id="list-information">
+<!--    <li><a href="">PR広告のご案内</a></li>-->
+    <li><a href="http://www.rhythmfactory.jp/">サイト構築の受注</a></li>
+</ul>
+
+<h2>関連サイト</h2>
+<ul id="list-related-sites">
+    <li><a href="http://www.rhythmfactory.jp/" target="_blank">rhythmfactory.jp</a></li>
+    <li><a href="http://ameblo.jp/rhythmfactory/" target="_blank">中目黒webデザインブログ</a></li>
+</ul>
+
+<div class="box-ads">
+<script type="text/javascript"><!--
+google_ad_client = "pub-9885420769768716";
+/* 160x90, 作成済み 09/05/20 */
+google_ad_slot = "5731771695";
+google_ad_width = 160;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+		</div>
+    </div>
+</div>
+<!-- gamma [e] -->
+
+<!-- beta [s] -->
+<div id="beta">
+    <div id="beta-inner">
+        
+
+        <div class="widget-syndication widget">
+    <div class="widget-content">
+        <ul>
+            <li><img src="http://rfs.jp/mt-static/images/status_icons/feed.gif" alt="購読する" width="9" height="9" /> <a href="http://rfs.jp/atom.xml">Smartを購読</a></li>
+
+        </ul>
+    </div>
+</div>
+
+
+    </div>
+</div>
+<!-- beta [e] -->
+</div>
+<!-- content-right [e] -->
+
+
+
+<div id="lnav-bottom">
+<span class="sprite-etc"><a href="http://rfs.jp/sb/html/" title="講座TOP">講座TOP</a></span>
+<ul>
+<li class="sprite-etc"><a class="next" href="http://rfs.jp/sb/html/cat64/wordpress.html" title="次のページ">次のページ</a></li>
+
+</ul>
+</div>
+
+</div>
+
+<!-- right [s] -->
+<div id="right">
+	<!-- box-bnr [s] -->
+	<div class="box-bnr">
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab" id="Player_add2901a-1ee3-4797-b801-1d9230616198"  WIDTH="250px" HEIGHT="250px"> <PARAM NAME="movie" VALUE="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=GetDisplayTemplate"><PARAM NAME="quality" VALUE="high"><PARAM NAME="bgcolor" VALUE="#FFFFFF"><PARAM NAME="allowscriptaccess" VALUE="always"><embed src="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=GetDisplayTemplate" id="Player_add2901a-1ee3-4797-b801-1d9230616198" quality="high" bgcolor="#ffffff" name="Player_add2901a-1ee3-4797-b801-1d9230616198" allowscriptaccess="always"  type="application/x-shockwave-flash" align="middle" height="250px" width="250px"></embed></OBJECT> <NOSCRIPT><A HREF="http://ws.amazon.co.jp/widgets/q?ServiceVersion=20070822&MarketPlace=JP&ID=V20070822%2FJP%2Fsmart-22%2F8003%2Fadd2901a-1ee3-4797-b801-1d9230616198&Operation=NoScript">Amazon.co.jp ウィジェット</A></NOSCRIPT>
+	</div>
+	<!-- box-bnr [e] -->
+	<!-- box-recommend [s] -->
+	<div class="box-recommend">
+		<img src="/img/book_01.jpg">
+		<h2>はじめて学ぶMySQL</h2>
+		<span>￥ 2,394 (税込)</span>
+		<a class="btn-amazon" href="http://www.amazon.co.jp/%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E5%AD%A6%E3%81%B6-MySQL-%E7%8E%89%E5%B7%9D-%E7%B4%94/dp/4881666282" target="_blank">amazon.co.jpで購入</a>
+		<p>データベースを操作するためのSQL言語を、広く普及しているMySQLを使って基本から学習してきます。<br />
+SQL文ごとに復習問題もあるので、理解度もしっかりチェックできます。</p>
+	</div>
+	<!-- box-recommend [s] -->
+</div>
+<!-- right [e] -->
+
+	<div id="wrapper-bottom"></div>
+</div>
+<!-- wrapper [e] -->
+
+<!-- footer [s] -->
+<div id="footer" class="sprite-bg">
+	<div id="footer-top">
+<!-- list-gnav-footer [s]-->
+<ul id="list-gnav-footer">
+	<li><a href="/sb/html" title="HTML講座">HTML</a></li>
+	<li><a href="/sb/javascript" title="JavaScript講座">JavaScript</a></li>
+	<li><a href="/sb/perl" title="Perl講座">Perl</a></li>
+	<li><a href="/sb/sql" title="SQL講座">SQL</a></li>
+	<li><a href="/sb/business" title="注目技術・アクセス向上">注目技術・アクセス向上</a></li>
+	<li><a href="/server/apache" title="Apache講座">Apache</a></li>
+	<li><a href="/server/bind" title="BIND講座">BIND</a></li>
+	<li><a href="/server/mysql" title="MySQL講座">MySQL</a></li>
+	<li><a href="/server/namazu" title="Namazu講座">Namazu</a></li>
+	<li><a href="/server/samba" title="Samba講座">Samba</a></li>
+	<li><a href="/server/netatalk" title="netatalk講座">netatalk</a></li>
+</ul>
+<!-- list-gnav-footer [e]-->
+
+	</div>
+	<!-- footer-bottom [s] -->
+	<div id="footer-bottom">
+		<div class="box-bnr">
+			<iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=smart-22&o=9&p=13&l=ur1&category=software&banner=1WE6BBZ979NVFYAW9582&f=ifr" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		</div>
+		<ul id="list-information-footer">
+<!--					<li id="list-information-footer-pr"><a class="sprite-etc" href="/p/fmail/prform.cgi" title="PR広告のご案内">PR広告のご案内</a></li>-->
+			<li id="list-information-footer-order"><a class="sprite-etc" href="http://www.rhythmfactory.jp/" title="サイト構築の受注">サイト構築の受注</a></li>
+		</ul>
+		<!-- box-copyright [s] -->
+		<div id="box-copyright" class="sprite-bg">
+			<ul id="list-rhythmfactory">
+			<!--				<li id="list-rhythmfactory-inquiry"><a class="sprite-icon" href="#" title="ご意見メール">ご意見メール</a></li>-->
+				<li id="list-rhythmfactory-company"><a class="sprite-icon" href="http://www.rhythmfactory.jp/about/" title="会社情報">会社情報</a></li>
+			</ul>
+			<span id="copyright" class="sprite-etc">copyright (c) 2020 rhythmfactory Ltd. All rights reserved. </span>
+		</div>
+		<!-- box-copyright [e] -->
+	</div>
+	<!-- footer-bottom [s] -->
+</div>
+<!-- footer [e] -->
+
+
+
+<!-- header [s] -->
+<div id="header">
+	<!-- header-top [s] -->
+	<div id="header-top">
+		<a id="logo" class="sprite-etc" href="http://rfs.jp/" accesskey="1">Smart</a>
+		<div class="box-bnr">
+			<iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=smart-22&o=9&p=13&l=ur1&category=computerinternetbooks&banner=0VS5BBRF0XHDCN8XYG82&f=ifr" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		</div>
+	</div>
+	<!-- header-top [e] -->
+<!-- header-gnav [s] -->
+<div id="header-gnav" class="sprite-bg">
+	<ul class="list-gnav">
+		<li><a id="gnav-html" class="sprite-gnav" href="/sb/html" title="HTML講座">HTML講座</a></li>
+		<li><a id="gnav-javascript" class="sprite-gnav" href="/sb/javascript" title="JavaScript講座">JavaScript講座</a></li>
+		<li><a id="gnav-perl" class="sprite-gnav" href="/sb/perl" title="Perl講座">Perl講座</a></li>
+		<li><a id="gnav-sql" class="sprite-gnav" href="/sb/sql" title="SQL講座">SQL講座</a></li>
+		<li><a id="gnav-feature" class="sprite-gnav" href="/sb/business" title="注目技術・アクセス向上">注目技術・アクセス向上</a></li>
+	</ul>
+	<ul class="list-gnav">
+		<li><a id="gnav-apache" class="sprite-gnav" href="/server/apache" title="Apache講座">Apache講座</a></li>
+		<li><a id="gnav-bind" class="sprite-gnav" href="/server/bind" title="BIND講座">BIND講座</a></li>
+		<li><a id="gnav-mysql" class="sprite-gnav" href="/server/mysql" title="MySQL講座">MySQL講座</a></li>
+		<li><a id="gnav-namazu" class="sprite-gnav" href="/server/namazu" title="Namazu講座">Namazu講座</a></li>
+		<li><a id="gnav-samba" class="sprite-gnav" href="/server/samba" title="Samba講座">Samba講座</a></li>
+		<li><a id="gnav-netatalk" class="sprite-gnav" href="/server/netatalk" title="netatalk講座">netatalk講座</a></li>
+	</ul>
+</div>
+<!-- header-gnav [e] -->
+
+	<!-- header-bottom [s] -->
+	<div id="header-bottom" class="sprite-bg">
+<ul id="list-topic-path">
+    <li><a href="http://rfs.jp/">SmartのWEB講座</a></li>
+
+    	<!--　アーカイブインデックス [s]-->
+        
+	<!--　アーカイブインデックス [e]-->
+
+    	<!--　システムテンプレート [s]-->
+        
+	<!--　システムテンプレート　[e]-->
+
+	<!--　アーカイブ（年月日）　[s]-->
+        
+	<!--　アーカイブ（年月日）　[e]-->
+
+	<!--　ユーザーアーカイブ　[s]-->
+        
+	<!--　ユーザーアーカイブ　[e]-->
+
+	<!--　カテゴリーアーカイブ　[s]-->
+        
+	<!--　カテゴリーアーカイブ　[e]-->
+
+		<!--　ブログ記事　[s]-->
+		
+			
+				<li>　>　<a href="http://rfs.jp/sb/html/">HTML講座</a></li>
+			
+			<li>　>　携帯サイトのDOCTYPEについて</li>
+		
+		<!--　ブログ記事 [e]-->
+
+    </ul>
+
+
+<form id="form-search" method="get" action="http://rfs.jp/p/mt/mt-search.cgi">
+
+        <input type="hidden" name="IncludeBlogs" value="1" />
+
+        <input id="search-text" class="sprite-etc" type="hidden" name="limit" value="20" />
+        <input id="search-text" class="sprite-etc" class="query" type="text" onfocus="if (this.value == 'サイト内検索') this.value = '';" onblur="if (this.value == '') this.value = 'サイト内検索';" name="search" value="サイト内検索" />
+        <input id="search-btn" class="sprite-etc" class="submit" type="submit" value="検索" />
+    </form>
+
+	</div>
+	<!-- header-bottom [e] -->
+</div>
+<!-- header [e] -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8725980-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
+

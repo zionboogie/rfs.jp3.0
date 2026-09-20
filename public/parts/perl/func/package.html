@@ -1,0 +1,29 @@
+<div class="func-header">
+	<div class="func-format">
+pakage NAME 
+	</div>
+
+	<div class="func-compat">
+		<span class="ic-perl4"></span>
+		<span class="ic-perl5"></span>
+		<span class="ic-win"></span>
+		<span class="ic-mac"></span>
+	</div>
+</div>
+
+<div class="func-detail">
+
+	<p>取り込む一番内側のブロック、サブルーチン、<code><a href="eval.html">eval</a></code>、またはファイルの残りの部分が、名前空間<code>NAME</code>に属することを宣言します。</p>
+	<p><code>package</code>宣言より後ろでは、修飾されていないグローバル識別子は、宣言されたパッケージのシンボルテーブルを探すことによって解決されます。<code>package</code>宣言は、グローバル変数だけに影響を与えます。<code><a href="my.html">my</a></code>によって生成したローカル変数には影響を与えません。</p>
+
+	<p>通常、<code>package</code>宣言は、<code><a href="require.html">require</a></code>や<code><a href="use.html">use</a></code>によって取り込まれるファイルの一番先頭に置かれます。しかし、文を置ける場所なら、どこにでも置くことが可能です。クラスやモジュールファイルを定義するときには、混乱を避けるためにパッケージとファイルに同じ名前をつける習慣になっています。なお、パッケージは大文字で始まる習慣になっています。</p>
+
+	<h2 class="func-sample">packageの使い方</h2>
+
+<pre class="brush: perl;">
+package same_module;... 
+</pre>
+
+	<p>使い方は<a href="04/01.html">パッケージとモジュール</a>を参照してください。</p>
+
+</div>
