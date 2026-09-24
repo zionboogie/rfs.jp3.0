@@ -6,7 +6,6 @@ import ArticleSidebar from "./ArticleSidebar.astro";
 import { hiddenArchiveTitles, navMenus } from "../data/courses";
 import {
 	formatDateJa,
-	getPopularArticles,
 	getRelatedArticles,
 	getSidebarLearnSections,
 	getSidebarTags,
@@ -25,8 +24,7 @@ interface Props {
 const { article } = Astro.props;
 const learnHrefs = navMenus.filter((menu) => !isArchivePageHref(menu.href)).map((menu) => menu.href);
 const archiveNav = navMenus.find((menu) => isArchivePageHref(menu.href));
-const [popularArticles, sidebarTags, archiveGroups, relatedArticles, learnSections] = await Promise.all([
-	getPopularArticles(),
+const [sidebarTags, archiveGroups, relatedArticles, learnSections] = await Promise.all([
 	getSidebarTags(),
 	getVisibleArchiveGroups(hiddenArchiveTitles),
 	getRelatedArticles(article.id),
@@ -267,7 +265,6 @@ const shareRel = "noopener noreferrer";
 			archiveGroups={archiveGroups}
 			archiveTitle={archiveNav?.label ?? "過去アーカイブ"}
 			archiveHref={archiveNav?.href ?? "/archive/"}
-			popularArticles={popularArticles}
 			tags={sidebarTags}
 		/>
 	</div>

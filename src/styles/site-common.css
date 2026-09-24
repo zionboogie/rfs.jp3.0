@@ -115,6 +115,131 @@ course-list（ホバー・疑似要素）
 }
 
 /* ----------------------------------------
+learn-category-preview（ホバー・疑似要素）
+---------------------------------------- */
+.learn-category-preview {
+	--learn-preview-indent: 2.75rem;
+}
+
+.learn-category-preview__title {
+	padding-left: var(--learn-preview-indent);
+	transition: color 0.45s ease;
+}
+
+.learn-category-preview__title-text,
+.learn-category-preview__article-text {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+	transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.learn-category-preview__title-text::before,
+.learn-category-preview__article-text::before {
+	content: "☞";
+	position: absolute;
+	right: 100%;
+	margin-right: 0.35em;
+	color: var(--color-logo);
+	opacity: 0;
+	transform: translate3d(-0.4em, 0, 0);
+	transition:
+		opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.learn-category-preview__title:hover,
+.learn-category-preview__title:focus-visible,
+.learn-category-preview__article:hover,
+.learn-category-preview__article:focus-visible {
+	color: var(--color-logo);
+}
+
+.learn-category-preview__title:hover .learn-category-preview__title-text,
+.learn-category-preview__title:focus-visible .learn-category-preview__title-text,
+.learn-category-preview__article:hover .learn-category-preview__article-text,
+.learn-category-preview__article:focus-visible .learn-category-preview__article-text {
+	transform: translate3d(0.15em, 0, 0);
+}
+
+.learn-category-preview__title:hover .learn-category-preview__title-text::before,
+.learn-category-preview__title:focus-visible .learn-category-preview__title-text::before,
+.learn-category-preview__article:hover .learn-category-preview__article-text::before,
+.learn-category-preview__article:focus-visible .learn-category-preview__article-text::before {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.learn-category-preview__article {
+	display: block;
+	padding-block: var(--spacing-xs);
+	padding-left: var(--learn-preview-indent);
+	font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+	font-weight: 700;
+	line-height: 1.45;
+	letter-spacing: 0.02em;
+	color: inherit;
+	text-decoration: none;
+	transition: color 0.45s ease;
+}
+
+.learn-category-preview__more {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	transition: color 0.45s ease;
+}
+
+.learn-category-preview__more .article-pager__arrow {
+	transition:
+		background-color 0.45s ease,
+		border-color 0.45s ease,
+		color 0.45s ease;
+}
+
+.learn-category-preview__more:hover,
+.learn-category-preview__more:focus-visible {
+	color: var(--color-logo);
+}
+
+.learn-category-preview__more:hover .article-pager__arrow,
+.learn-category-preview__more:focus-visible .article-pager__arrow {
+	background-color: var(--color-logo);
+	border-color: var(--color-logo);
+	color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.learn-category-preview__title,
+	.learn-category-preview__title-text,
+	.learn-category-preview__title-text::before,
+	.learn-category-preview__article,
+	.learn-category-preview__article-text,
+	.learn-category-preview__article-text::before,
+	.learn-category-preview__more,
+	.learn-category-preview__more .article-pager__arrow {
+		transition: none;
+	}
+
+	.learn-category-preview__title:hover .learn-category-preview__title-text,
+	.learn-category-preview__title:focus-visible .learn-category-preview__title-text,
+	.learn-category-preview__article:hover .learn-category-preview__article-text,
+	.learn-category-preview__article:focus-visible .learn-category-preview__article-text {
+		transform: none;
+	}
+
+	.learn-category-preview__title:hover .learn-category-preview__title-text::before,
+	.learn-category-preview__title:focus-visible .learn-category-preview__title-text::before,
+	.learn-category-preview__article:hover .learn-category-preview__article-text::before,
+	.learn-category-preview__article:focus-visible .learn-category-preview__article-text::before {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* ----------------------------------------
 パンくず
 ---------------------------------------- */
 .site-breadcrumb {

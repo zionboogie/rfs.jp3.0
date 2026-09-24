@@ -38,14 +38,26 @@
 
 	h4 {
 		margin: var(--spacing-lg, 40px) 0 var(--spacing-md, 24px);
+		/* 記事内 H4: 18〜20px（H3 の 22〜24px と差をつける） */
+		font-size: clamp(1.125rem, 1.3vw, 1.25rem);
+		font-weight: 700;
+		letter-spacing: 0.02em;
 	}
 
 	h5 {
 		margin: var(--spacing-md, 24px) 0 var(--spacing-md, 24px);
+		/* 記事内 H5: 16px */
+		font-size: 1rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
 	}
 
 	h6 {
 		margin: var(--spacing-sm, 16px) 0 var(--spacing-md, 24px);
+		/* 記事内 H6: 15px */
+		font-size: 0.9375rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
 	}
 
 	p {
@@ -67,8 +79,10 @@
 		list-style: none;
 		padding-left: 2.25em;
 	}
-	ol{
-		list-style: decimal;
+	ol {
+		list-style: none;
+		padding-left: 2.25em;
+		counter-reset: article-ol;
 	}
 
 	ul > li {
@@ -84,11 +98,28 @@
 		line-height: 2;
 		padding-right: 10px;
 	}
-	ol > li::marker {
-		color: #ee0979;
-		font-size: 35px;
-		line-height: 2;
-		padding-right: 10px;
+
+	ol > li {
+		position: relative;
+		counter-increment: article-ol;
+	}
+
+	ol > li::before {
+		content: counter(article-ol);
+		position: absolute;
+		left: -2.1em;
+		top: calc((1.95em - 1.5rem) / 2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		background-color: #ee0979;
+		color: #fff;
+		font-size: 0.75rem;
+		font-weight: 700;
+		line-height: 1;
 	}
 
 	li + li {

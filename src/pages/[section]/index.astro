@@ -1,8 +1,18 @@
 ---
 import Layout from "../../components/Layout.astro";
 import CourseListItem from "../../components/CourseListItem.astro";
+import LearnCategoryPreview from "../../components/LearnCategoryPreview.astro";
 import { hiddenArchiveTitles } from "../../data/courses";
-import { findArchiveCategory, getChildSummaries, getLatestCategoryArticles, toSitePath, wpText, type WpCategory } from "../../lib/wordpress";
+import {
+	findArchiveCategory,
+	getChildSummaries,
+	getLatestCategoryArticles,
+	getLearnCategoryPreviews,
+	toSitePath,
+	wpText,
+	type CoursePreview,
+	type WpCategory,
+} from "../../lib/wordpress";
 import { collectionJsonLd } from "../../lib/structured-data";
 import { categoryListTitle } from "../../lib/seo";
 
@@ -27,10 +37,13 @@ interface Props {
 }
 
 const { category } = Astro.props;
-const [childSummaries, latestArticles] = await Promise.all([getChildSummaries(category), getLatestCategoryArticles(category)]);
-const children = childSummaries.filter(
-	(child) => category.slug === "learn" || !hiddenArchiveTitles.has(child.title),
-);
+const isLearn = category.taxonomy === "learn_cat" || category.slug === "learn";
+const [childSummaries, latestArticles, learnPreviews] = await Promise.all([
+	isLearn ? Promise.resolve([]) : getChildSummaries(category),
+	getLatestCategoryArticles(category),
+	isLearn ? getLearnCategoryPreviews(category) : Promise.resolve([] as CoursePreview[]),
+]);
+const children = childSummaries.filter((child) => !hiddenArchiveTitles.has(child.title));
 const title = wpText(category.name);
 const description = wpText(category.description).trim();
 const pageDescription = description || `${title}の一覧`;
@@ -51,8 +64,16 @@ const jsonLd = collectionJsonLd({
 					{title}
 				</h1>
 				{description ? <p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">{description}</p> : null}
-				<div class="course-list mt-xl border-t border-[rgb(33_5_5_/_18%)]">
-					{children.map((child, index) => <CourseListItem index={index + 1} title={child.title} description={child.description} href={child.href} />)}
+				<div class:list={["course-list mt-xl", !isLearn && "border-t border-[rgb(33_5_5_/_18%)]"]}>
+					{
+						isLearn
+							? learnPreviews.map((course) => (
+									<LearnCategoryPreview title={course.title} href={course.href} articles={course.articles} />
+								))
+							: children.map((child, index) => (
+									<CourseListItem index={index + 1} title={child.title} description={child.description} href={child.href} />
+								))
+					}
 				</div>
 			</div>
 		</header>

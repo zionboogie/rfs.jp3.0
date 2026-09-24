@@ -1,12 +1,15 @@
 ---
 import ArticleListItem from "./ArticleListItem.astro";
-import type { CategoryPageData } from "../lib/wordpress";
+import LearnCategoryPreview from "./LearnCategoryPreview.astro";
+import { COURSE_PREVIEW_ARTICLE_COUNT, type CategoryPageData } from "../lib/wordpress";
 
 interface Props {
 	category: CategoryPageData;
 }
 
 const { category } = Astro.props;
+const normalizedPath = category.path.endsWith("/") ? category.path : `${category.path}/`;
+const isLearn = normalizedPath === "/learn/" || normalizedPath.startsWith("/learn/");
 
 function chapterLabel(index: number): string {
 	return String(index).padStart(2, "0");
@@ -31,6 +34,21 @@ function chapterLabel(index: number): string {
 		category.chapters.map((chapter, chapterIndex) => {
 			const chapterNumber = chapterLabel(chapterIndex + 1);
 			const headingId = `chapter-${chapterNumber}`;
+			const showLearnPreview = isLearn && Boolean(chapter.href);
+
+			if (showLearnPreview && chapter.href) {
+				return (
+					<div class="container">
+						<LearnCategoryPreview
+							title={chapter.title}
+							href={chapter.href}
+							articles={chapter.articles.slice(0, COURSE_PREVIEW_ARTICLE_COUNT)}
+							headingLevel={2}
+							headingId={headingId}
+						/>
+					</div>
+				);
+			}
 
 			return (
 				<section class="category-chapter pb-xl" aria-labelledby={headingId}>

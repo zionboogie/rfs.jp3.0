@@ -180,6 +180,7 @@ export type CategoryArticle = {
 /** カテゴリページ内の章（子カテゴリ単位） */
 export type CategoryChapter = {
 	title: string;
+	href?: string;
 	articles: CategoryArticle[];
 };
 
@@ -215,9 +216,14 @@ export type CategorySummary = {
 	href: string;
 };
 
+/** 学習コース一覧の1件（カテゴリ名＋先頭記事） */
+export type CoursePreview = CategorySummary & {
+	articles: CategoryArticle[];
+};
+
 /** トップ用: /learn 直下カテゴリと、その中のコース一覧 */
 export type LearnCourseSection = CategorySummary & {
-	courses: CategorySummary[];
+	courses: CoursePreview[];
 };
 
 /** 記事サイドバー用: 学習カテゴリの最新記事と講座リスト */
@@ -322,9 +328,6 @@ async function fetchCollection<T>(resource: string, searchParams: Record<string,
 	return items;
 }
 
-/** サイドバー「人気記事」の件数 */
-const POPULAR_ARTICLE_LIMIT = 5;
-
 /** 記事詳細「興味があるかも」の件数 */
 const RELATED_ARTICLE_LIMIT = 3;
 
@@ -336,7 +339,6 @@ let learnTermCache: Promise<WpCategory[]> | null = null;
 let learnPostCache: Promise<WpPost[]> | null = null;
 let tagCache: Promise<WpTag[]> | null = null;
 let userCache: Promise<WpUser[]> | null = null;
-let popularArticleCache: Promise<CategoryArticle[]> | null = null;
 let featuredMediaCache: Promise<Map<number, WpMedia>> | null = null;
 let sidebarLearnSectionCache: Promise<SidebarLearnSection[]> | null = null;
 const relatedArticleCache = new Map<number, Promise<RelatedArticle[]>>();
@@ -483,6 +485,7 @@ function articlesFromPosts(posts: WpPost[], defaultSort: number | null): Categor
 }
 
 const LATEST_ARTICLE_LIMIT = 3;
+export const COURSE_PREVIEW_ARTICLE_COUNT = 3;
 
 function toCategoryArticle(post: WpPost): CategoryArticle {
 	return {
@@ -612,6 +615,7 @@ export async function getCategoryPageData(category: WpCategory): Promise<Categor
 			? children
 					.map((child) => ({
 						title: wpText(child.name),
+						href: summaryFromCategory(child).href,
 						articles: articlesForNode(categories, posts, child.id),
 					}))
 					.filter((chapter) => chapter.articles.length > 0)
@@ -739,6 +743,18 @@ export function getSidebarLearnSections(hrefs: readonly string[]): Promise<Sideb
 	return sidebarLearnSectionCache;
 }
 
+/** 学習カテゴリの直下を、先頭記事つきのコース一覧にする */
+export async function getLearnCategoryPreviews(parent: WpCategory): Promise<CoursePreview[]> {
+	const [terms, posts] = await Promise.all([getLearnTerms(), getLearnPosts()]);
+	const parentId = parent.id === LEARN_ROOT_ID ? 0 : parent.id;
+	return childrenOf(terms, parentId)
+		.filter((child) => categoryHasArticles(terms, posts, child.id))
+		.map((child) => ({
+			...summaryFromCategory(child),
+			articles: articlesForNode(terms, posts, child.id).slice(0, COURSE_PREVIEW_ARTICLE_COUNT),
+		}));
+}
+
 /** トップ用: /learn 直下のカテゴリごとに、子カテゴリ（なければ記事）を並べる */
 export async function getLearnCourseSections(): Promise<LearnCourseSection[]> {
 	const [terms, posts] = await Promise.all([getLearnTerms(), getLearnPosts()]);
@@ -747,13 +763,17 @@ export async function getLearnCourseSections(): Promise<LearnCourseSection[]> {
 		.map((root) => {
 			const childTerms = childrenOf(terms, root.id).filter((child) => categoryHasArticles(terms, posts, child.id));
 			const defaultSort = sortNumber(readAcf(root.acf).sort);
-			const courses =
+			const courses: CoursePreview[] =
 				childTerms.length > 0
-					? childTerms.map(summaryFromCategory)
+					? childTerms.map((child) => ({
+							...summaryFromCategory(child),
+							articles: articlesForNode(terms, posts, child.id).slice(0, COURSE_PREVIEW_ARTICLE_COUNT),
+						}))
 					: articlesFromPosts(postsForCategory(posts, root.id), defaultSort).map((article) => ({
 							title: article.title,
 							description: "",
 							href: article.href,
+							articles: [],
 						}));
 
 			return {
@@ -1074,43 +1094,6 @@ export function toArticlePath(link: string): string {
 function isArchiveArticleLink(link: string): boolean {
 	const path = toSitePath(link);
 	return path.startsWith("/sb/") || path.startsWith("/server/") || path.startsWith("/learn/");
-}
-
-/**
- * WordPress Popular Posts の REST から人気記事を取得
- * GET /wordpress-popular-posts/v1/popular-posts
- */
-async function fetchPopularArticles(): Promise<CategoryArticle[]> {
-	const url = new URL(`${getApiUrl()}/wordpress-popular-posts/v1/popular-posts`);
-	url.searchParams.set("range", "all");
-	url.searchParams.set("limit", String(POPULAR_ARTICLE_LIMIT));
-	url.searchParams.set("post_type", `post,${LEARN_POST_TYPE}`);
-	url.searchParams.set("_fields", "id,link,title,date,modified");
-
-	try {
-		const response = await fetch(url);
-		if (!response.ok) return [];
-
-		const data = (await response.json()) as WpPost[];
-		if (!Array.isArray(data)) return [];
-
-		return data
-			.filter((post) => post.link && isArchiveArticleLink(post.link))
-			.slice(0, POPULAR_ARTICLE_LIMIT)
-			.map((post) => ({
-				title: wpText(post.title.rendered),
-				href: toArticlePath(post.link),
-				updatedAt: post.modified || post.date,
-			}));
-	} catch {
-		return [];
-	}
-}
-
-/** サイドバー用の人気記事（キャッシュあり） */
-export function getPopularArticles(): Promise<CategoryArticle[]> {
-	popularArticleCache ??= fetchPopularArticles();
-	return popularArticleCache;
 }
 
 /**

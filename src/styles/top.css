@@ -386,6 +386,38 @@ About イントロ
 	border-top-color: rgb(255 255 255 / 28%);
 }
 
+.section.learn.learn-accent .learn-category-preview__title {
+	border-color: rgb(255 255 255 / 28%);
+}
+
+.section.learn.learn-accent .learn-category-preview a:hover,
+.section.learn.learn-accent .learn-category-preview a:focus-visible {
+	color: var(--color-logo);
+}
+
+.section.learn.learn-accent .learn-category-preview__title-text::before,
+.section.learn.learn-accent .learn-category-preview__article-text::before {
+	color: #fff;
+}
+
+.section.learn.learn-accent .learn-category-preview__title:hover .learn-category-preview__title-text::before,
+.section.learn.learn-accent .learn-category-preview__title:focus-visible .learn-category-preview__title-text::before,
+.section.learn.learn-accent .learn-category-preview__article:hover .learn-category-preview__article-text::before,
+.section.learn.learn-accent .learn-category-preview__article:focus-visible .learn-category-preview__article-text::before {
+	color: var(--color-logo);
+}
+
+.section.learn.learn-accent .learn-category-preview__more .article-pager__arrow {
+	border-color: rgb(255 255 255 / 28%);
+}
+
+.section.learn.learn-accent .learn-category-preview__more:hover .article-pager__arrow,
+.section.learn.learn-accent .learn-category-preview__more:focus-visible .article-pager__arrow {
+	background-color: var(--color-logo);
+	border-color: var(--color-logo);
+	color: #fff;
+}
+
 .section.learn.learn-accent .course-list__item {
 	position: relative;
 	isolation: isolate;

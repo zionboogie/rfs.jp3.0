@@ -1,12 +1,11 @@
 ---
-import { formatUpdatedAt, type ArchiveGroup, type ArticleTag, type CategoryArticle, type SidebarLearnSection } from "../lib/wordpress";
+import { type ArchiveGroup, type ArticleTag, type SidebarLearnSection } from "../lib/wordpress";
 
 interface Props {
 	learnSections: SidebarLearnSection[];
 	archiveGroups?: ArchiveGroup[];
 	archiveTitle?: string;
 	archiveHref?: string;
-	popularArticles: CategoryArticle[];
 	tags: ArticleTag[];
 }
 
@@ -15,7 +14,6 @@ const {
 	archiveGroups = [],
 	archiveTitle = "過去アーカイブ",
 	archiveHref = "/archive/",
-	popularArticles,
 	tags,
 } = Astro.props;
 ---
@@ -100,27 +98,12 @@ const {
 		) : null
 	}
 
-	{
-		popularArticles.length > 0 ? (
-			<section aria-labelledby="article-side-popular-heading">
-				<h2 class="article-side__heading" id="article-side-popular-heading">
-					人気記事
-				</h2>
-				<ul class="m-0 flex list-none flex-col p-0">
-					{popularArticles.map((article) => (
-						<li class="border-b border-[rgb(33_5_5_/_18%)]">
-							<a class="article-side__link block py-sm no-underline" href={article.href}>
-								<span class="article-side__text">{article.title}</span>
-								<time class="mt-xs block text-sm tracking-[0.04em] text-muted" datetime={article.updatedAt}>
-									{formatUpdatedAt(article.updatedAt)}
-								</time>
-							</a>
-						</li>
-					))}
-				</ul>
-			</section>
-		) : null
-	}
+	<section data-popular-articles hidden aria-labelledby="article-side-popular-heading">
+		<h2 class="article-side__heading" id="article-side-popular-heading">
+			人気記事
+		</h2>
+		<ul class="m-0 flex list-none flex-col p-0" data-popular-articles-list></ul>
+	</section>
 
 	{
 		tags.length > 0 ? (
@@ -139,3 +122,46 @@ const {
 		) : null
 	}
 </aside>
+
+<script>
+	const POPULAR_ARTICLES_URL = "/popular-articles.json";
+	const POPULAR_ARTICLE_LIMIT = 5;
+
+	function renderPopularArticles(articles) {
+		const section = document.querySelector("[data-popular-articles]");
+		const list = document.querySelector("[data-popular-articles-list]");
+		if (!(section instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+
+		list.replaceChildren();
+		for (const article of articles.slice(0, POPULAR_ARTICLE_LIMIT)) {
+			if (!article?.title || !article?.href) continue;
+			const item = document.createElement("li");
+			item.className = "border-b border-[rgb(33_5_5_/_18%)]";
+			const link = document.createElement("a");
+			link.className = "article-side__link block py-sm no-underline";
+			link.href = article.href;
+			const text = document.createElement("span");
+			text.className = "article-side__text";
+			text.textContent = article.title;
+			link.append(text);
+			item.append(link);
+			list.append(item);
+		}
+		section.hidden = list.childElementCount === 0;
+	}
+
+	async function loadPopularArticles() {
+		try {
+			const response = await fetch(POPULAR_ARTICLES_URL, { cache: "no-store" });
+			if (!response.ok) return;
+			const data = await response.json();
+			const articles = Array.isArray(data?.articles) ? data.articles : [];
+			renderPopularArticles(articles);
+		} catch {
+			renderPopularArticles([]);
+		}
+	}
+
+	loadPopularArticles();
+</script>
+
