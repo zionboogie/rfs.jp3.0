@@ -139,6 +139,8 @@ export type ArticleDetail = {
 	authorAvatar: string;
 	path: string;
 	lessonNumber: string;
+	/** 所属カテゴリの記事（カテゴリ一覧と同じ並び） */
+	categoryArticles: CategoryArticle[];
 	imageUrl: string | null;
 	imageWidth: number | null;
 	imageHeight: number | null;
@@ -1237,6 +1239,7 @@ function buildArticleDetail(
 		authorAvatar: user?.avatar_urls?.["96"] ?? user?.avatar_urls?.["48"] ?? "",
 		path: toArticlePath(post.link),
 		lessonNumber,
+		categoryArticles: articlesInPostCategory(post, categories, posts),
 		...imageFromPost(post, mediaMap),
 		previousArticle: previous,
 		nextArticle: next,

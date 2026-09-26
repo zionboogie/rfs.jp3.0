@@ -266,6 +266,9 @@ const shareRel = "noopener noreferrer";
 			archiveTitle={archiveNav?.label ?? "過去アーカイブ"}
 			archiveHref={archiveNav?.href ?? "/archive/"}
 			tags={sidebarTags}
+			categoryName={article.categoryName}
+			categoryArticles={article.categoryArticles}
+			currentArticleHref={article.path}
 		/>
 	</div>
 </main>
