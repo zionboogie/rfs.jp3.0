@@ -3,12 +3,12 @@
  * 本番サーバーの cron で毎日実行する想定。
  *
  * 手動:
- *   node scripts/fetch-popular-articles.mjs
+ *   node public/scripts/fetch-popular-articles.mjs
  *
- * 本番 crontab 例（毎日 5:00 JST）:
- *   0 5 * * * cd /path/to/rfs.jp3.0 && /usr/bin/node scripts/fetch-popular-articles.mjs >> /var/log/popular-articles.log 2>&1
+ * 本番 crontab 例（毎日 5:00 JST・デプロイ後は dist 直下の scripts/）:
+ *   0 5 * * * cd /path/to/current && /usr/bin/node scripts/fetch-popular-articles.mjs >> /var/log/popular-articles.log 2>&1
  *
- * 環境変数（リポジトリ直下の .env でも可）:
+ * 環境変数（scripts/・public/・リポジトリ直下の .env でも可）:
  *   GA4_PROPERTY_ID            必須（例: 123456789 または properties/123456789）
  *   GA4_SERVICE_ACCOUNT_JSON   サービスアカウント JSON（文字列）
  *   または GA4_CLIENT_EMAIL + GA4_PRIVATE_KEY
@@ -16,15 +16,16 @@
  *   GA4_HOSTNAME               任意。指定時はそのホストだけ集計（本番は rfs.jp）
  *   POPULAR_ARTICLES_PATH      任意。公開ディレクトリの絶対パスを指定する
  *                              例: /var/www/html/popular-articles.json
- *                              未指定時は public/popular-articles.json
+ *                              未指定時は public/popular-articles.json（デプロイ後はサイト直下）
  */
 import { createSign } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ROOT = dirname(fileURLToPath(import.meta.url));
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
+/** public/（リポジトリ）またはサイト直下（dist デプロイ後） */
+const ROOT = join(SCRIPT_DIR, "..");
 const LIMIT = 5;
 const RANGE_DAYS = 7;
 const PATH_PREFIXES = ["/learn/", "/sb/", "/server/"];
@@ -34,7 +35,9 @@ const CATEGORY_LIST_TITLE_MARK = "コース一覧";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
 
+loadDotEnv(join(SCRIPT_DIR, ".env"));
 loadDotEnv(join(ROOT, ".env"));
+loadDotEnv(join(ROOT, "..", ".env"));
 
 const propertyId = normalizePropertyId(requiredEnv("GA4_PROPERTY_ID"));
 const credentials = loadCredentials();
@@ -124,7 +127,7 @@ function normalizePrivateKey(value) {
 }
 
 function resolveOutPath(raw) {
-	const value = raw?.trim() || "public/popular-articles.json";
+	const value = raw?.trim() || "popular-articles.json";
 	return isAbsolute(value) ? value : join(ROOT, value);
 }
 
@@ -257,8 +260,7 @@ function normalizePath(value) {
  * - /learn/ /sb/ /server/ 配下
  * - セクション直下（/learn/ 等）は除外
  * - カテゴリ一覧（タイトルに「コース一覧」）は除外
- * - /sb/ /server/ は /section/category/article/ 以上（3段）のみ
- * - /learn/ は /learn/slug/ 以上（記事 CPT がこの深さのため）
+ * - /sb/ /server/ /learn/ は /section/category/article/ 以上（3段）のみ
  */
 function isArticleDetailPath(href, pageTitle) {
 	if (!href || ROOT_PATHS.has(href)) return false;
@@ -267,11 +269,8 @@ function isArticleDetailPath(href, pageTitle) {
 
 	const segments = href.split("/").filter(Boolean);
 	const section = segments[0];
-	if (section === "sb" || section === "server") {
+	if (section === "sb" || section === "server" || section === "learn") {
 		return segments.length >= 3;
-	}
-	if (section === "learn") {
-		return segments.length >= 2;
 	}
 	return false;
 }

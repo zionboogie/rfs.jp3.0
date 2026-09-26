@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "popular-articles": "node scripts/fetch-popular-articles.mjs"
+    "popular-articles": "node public/scripts/fetch-popular-articles.mjs"
   },
   "dependencies": {
     "@lucide/astro": "^1.34.0",
