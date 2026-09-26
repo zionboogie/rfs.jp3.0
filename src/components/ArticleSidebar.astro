@@ -1,5 +1,10 @@
 ---
-import { type ArchiveGroup, type ArticleTag, type SidebarLearnSection } from "../lib/wordpress";
+import {
+	type ArchiveGroup,
+	type ArticleTag,
+	type CategoryArticle,
+	type SidebarLearnSection,
+} from "../lib/wordpress";
 
 interface Props {
 	learnSections: SidebarLearnSection[];
@@ -7,6 +12,9 @@ interface Props {
 	archiveTitle?: string;
 	archiveHref?: string;
 	tags: ArticleTag[];
+	categoryName?: string;
+	categoryArticles?: CategoryArticle[];
+	currentArticleHref?: string;
 }
 
 const {
@@ -15,14 +23,46 @@ const {
 	archiveTitle = "過去アーカイブ",
 	archiveHref = "/archive/",
 	tags,
+	categoryName = "",
+	categoryArticles = [],
+	currentArticleHref = "",
 } = Astro.props;
+
+function isCurrentArticle(href: string): boolean {
+	const normalize = (value: string) => value.replace(/\/+$/, "");
+	return normalize(href) === normalize(currentArticleHref);
+}
 ---
 
 <aside class="article-side flex flex-col gap-xl lg:sticky lg:top-md">
 	{
+		categoryName && categoryArticles.length > 0 ? (
+			<section aria-labelledby="article-side-category-heading">
+				<h2 class="article-side__heading" id="article-side-category-heading">
+					{categoryName}
+				</h2>
+				<ol class="m-0 flex list-decimal flex-col gap-xs pl-[1.5em]">
+					{categoryArticles.map((item) => {
+						const isCurrent = isCurrentArticle(item.href);
+						return (
+							<li class:list={[isCurrent ? "text-accent" : "text-muted"]}>
+								<a
+									class="block py-xs text-inherit no-underline"
+									href={item.href}
+									aria-current={isCurrent ? "page" : undefined}
+								>
+									{item.title}
+								</a>
+							</li>
+						);
+					})}
+				</ol>
+			</section>
+		) : null
+	}
+	{
 		learnSections.map((section) => {
 			const headingId = `article-side-learn-${section.slug}`;
-			const latestHeadingId = `article-side-learn-latest-${section.slug}`;
 			const courseHeadingId = `article-side-learn-courses-${section.slug}`;
 			return (
 				<section aria-labelledby={headingId}>
@@ -31,24 +71,6 @@ const {
 							{section.title}
 						</a>
 					</h2>
-					{
-						section.latestArticles.length > 0 ? (
-							<div>
-								<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]" id={latestHeadingId}>
-									最新記事
-								</h3>
-								<ul class="m-0 flex list-none flex-col overflow-hidden rounded-md border border-border p-sm" aria-labelledby={latestHeadingId}>
-									{section.latestArticles.map((article) => (
-										<li>
-											<a class="article-side__link block py-xs no-underline" href={article.href}>
-												<span class="article-side__text">{article.title}</span>
-											</a>
-										</li>
-									))}
-								</ul>
-							</div>
-						) : null
-					}
 					{
 						section.courses.length > 0 ? (
 							<div class="mt-md">
