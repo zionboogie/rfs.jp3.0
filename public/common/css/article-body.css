@@ -77,11 +77,11 @@
 
 	ul {
 		list-style: none;
-		padding-left: 2.25em;
+		padding-left: 2.75em;
 	}
 	ol {
 		list-style: none;
-		padding-left: 2.25em;
+		padding-left: 2.75em;
 		counter-reset: article-ol;
 	}
 
@@ -91,12 +91,12 @@
 
 	ul > li::before {
 		content: "●";
-		/* position: absolute;
-		left: -1.85em; */
+		position: absolute;
+		left: -1.55em;
+		top: 0.15em;
 		color: #ee0979;
 		font-size: 20px;
-		line-height: 2;
-		padding-right: 10px;
+		line-height: 1;
 	}
 
 	ol > li {
@@ -107,8 +107,8 @@
 	ol > li::before {
 		content: counter(article-ol);
 		position: absolute;
-		left: -2.1em;
-		top: calc((1.95em - 1.5rem) / 2);
+		left: -2.35em;
+		top: 0.4em;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -130,7 +130,7 @@
 		text-decoration: none;
 		background-image: linear-gradient(to right, #24fe41, #fdfc47);
 		transition: all 0.25s ease-in;
-		background-size: 100% 30%;
+		background-size: 100% 20%;
 		background-repeat: no-repeat;
 		background-position: bottom;
 	}
@@ -614,6 +614,47 @@
 	}
 
 	@media (max-width: 767px) {
+		ul,
+		ol {
+			padding-left: 0;
+		}
+
+		ul {
+			padding-left: 0;
+		}
+
+		ol {
+			padding-left: 0;
+		}
+
+		ul > li {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5em;
+		}
+
+		ul > li::before {
+			position: static;
+			top: auto;
+			left: auto;
+			flex-shrink: 0;
+			line-height: 1.95;
+		}
+
+		ol > li {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5em;
+		}
+
+		ol > li::before {
+			position: static;
+			top: auto;
+			left: auto;
+			flex-shrink: 0;
+			margin-top: 0.4em;
+		}
+
 		.column {
 			grid-template-columns: minmax(0, 1fr);
 			width: 100%;
