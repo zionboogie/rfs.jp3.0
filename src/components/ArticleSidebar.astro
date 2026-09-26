@@ -41,16 +41,30 @@ function isCurrentArticle(href: string): boolean {
 				<h2 class="article-side__heading" id="article-side-category-heading">
 					{categoryName}
 				</h2>
-				<ol class="m-0 flex list-decimal flex-col gap-xs pl-[1.5em]">
-					{categoryArticles.map((item) => {
+				<ol class="m-0 flex list-none flex-col gap-xs p-0">
+					{categoryArticles.map((item, index) => {
 						const isCurrent = isCurrentArticle(item.href);
 						return (
-							<li class:list={[isCurrent ? "text-accent" : "text-muted"]}>
+							<li>
 								<a
-									class="block py-xs text-inherit no-underline"
+									class:list={[
+										"flex items-start gap-xs py-xs no-underline",
+										isCurrent ? "text-logo" : "text-muted",
+									]}
 									href={item.href}
 									aria-current={isCurrent ? "page" : undefined}
 								>
+									<span
+										class:list={[
+											"grid size-8 shrink-0 place-items-center rounded-sm border text-sm font-bold leading-none tabular-nums",
+											isCurrent
+												? "border-logo bg-logo text-white"
+												: "border-border bg-transparent text-text",
+										]}
+										aria-hidden="true"
+									>
+										{index + 1}
+									</span>
 									{item.title}
 								</a>
 							</li>
