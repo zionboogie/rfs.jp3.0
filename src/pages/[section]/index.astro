@@ -2,7 +2,7 @@
 import Layout from "../../components/Layout.astro";
 import CourseListItem from "../../components/CourseListItem.astro";
 import { hiddenArchiveTitles } from "../../data/courses";
-import { findArchiveCategory, getChildSummaries, getLatestCategoryArticles, toSitePath, wpText, type WpCategory } from "../../lib/wordpress";
+import { findArchiveCategory, getChildSummaries, toSitePath, wpText, type WpCategory } from "../../lib/wordpress";
 import { collectionJsonLd } from "../../lib/structured-data";
 import { categoryListTitle } from "../../lib/seo";
 
@@ -27,7 +27,7 @@ interface Props {
 }
 
 const { category } = Astro.props;
-const [childSummaries, latestArticles] = await Promise.all([getChildSummaries(category), getLatestCategoryArticles(category)]);
+const childSummaries = await getChildSummaries(category);
 const children = childSummaries.filter(
 	(child) => category.slug === "learn" || !hiddenArchiveTitles.has(child.title),
 );
@@ -39,7 +39,11 @@ const jsonLd = collectionJsonLd({
 	name: title,
 	description: pageDescription,
 	url: toSitePath(category.link),
-	items: latestArticles.map((article) => ({ name: article.title, url: article.href })),
+	items: children.map((child) => ({
+		name: child.title,
+		url: child.href,
+		description: child.description,
+	})),
 });
 ---
 

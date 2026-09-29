@@ -15,7 +15,13 @@ const jsonLd = collectionJsonLd({
 	name: title,
 	description: pageDescription,
 	url: archiveHref,
-	items: archiveGroups.flatMap((group) => group.children.map((child) => ({ name: child.title, url: child.href }))),
+	items: archiveGroups.flatMap((group) =>
+		group.children.map((child) => ({
+			name: child.title,
+			url: child.href,
+			description: child.description,
+		})),
+	),
 });
 ---
 

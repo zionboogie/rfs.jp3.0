@@ -3,6 +3,7 @@ import Layout from "../../components/Layout.astro";
 import CategoryListing from "../../components/CategoryListing.astro";
 import ArticlePage from "../../components/ArticlePage.astro";
 import {
+	articleStructuredDescription,
 	getArchiveArticlePosts,
 	getArchiveCategories,
 	getArticleDetail,
@@ -79,7 +80,7 @@ const title =
 		: categoryListTitle(props.page.title);
 const description =
 	props.kind === "article"
-		? props.article.lead || props.article.title
+		? articleStructuredDescription(props.article)
 		: props.page.description.trim() || `${props.page.title}の記事一覧`;
 const jsonLd =
 	props.kind === "article"

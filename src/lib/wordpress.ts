@@ -631,7 +631,7 @@ export async function getCategoryPageData(category: WpCategory): Promise<Categor
 	};
 }
 
-/** カテゴリ配下の最新記事（構造化データ用。公開日の新しい順） */
+/** カテゴリ配下の最新記事（公開日の新しい順） */
 export async function getLatestCategoryArticles(
 	category: WpCategory,
 	limit = LATEST_ARTICLE_LIMIT,
@@ -1213,6 +1213,31 @@ function adjacentArticles(
 		previous: neighborFromArticle(articles[index - 1]),
 		next: neighborFromArticle(articles[index + 1]),
 	};
+}
+
+/** 構造化データ用の description。抜粋が空、または見出しと同じときは本文のリードを使う */
+export function articleStructuredDescription(article: Pick<ArticleDetail, "title" | "lead" | "body">): string {
+	const title = article.title.trim();
+	const lead = article.lead.trim();
+	if (lead && lead !== title) return lead;
+
+	const intro = introParagraphs(article.body, title);
+	return intro || title;
+}
+
+/** 最初の見出しより前の段落。見出しが先にある記事は本文の最初の段落 */
+function introParagraphs(html: string, title: string): string {
+	const headingAt = html.search(/<h[1-6]\b/i);
+	const beforeHeading = headingAt >= 0 ? html.slice(0, headingAt) : "";
+	const fromLead = paragraphTexts(beforeHeading, title);
+	if (fromLead.length > 0) return fromLead.join("");
+	return paragraphTexts(html, title)[0] ?? "";
+}
+
+function paragraphTexts(html: string, title: string): string[] {
+	return [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)]
+		.map((match) => wpText(match[1]).replace(/\s+/g, " ").trim())
+		.filter((text) => text.length > 0 && text !== title);
 }
 
 function buildArticleDetail(

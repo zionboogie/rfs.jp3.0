@@ -8,6 +8,7 @@ export const AUTHOR_PATH = "/author/";
 export type JsonLdListItem = {
 	name: string;
 	url: string;
+	description?: string;
 };
 
 export function stringifyJsonLd(data: unknown): string {
@@ -35,12 +36,17 @@ function publisher() {
 }
 
 function itemListElement(origin: string, items: JsonLdListItem[]) {
-	return items.map((item, index) => ({
-		"@type": "ListItem",
-		position: index + 1,
-		name: item.name,
-		url: toPageUrl(origin, item.url),
-	}));
+	return items.map((item, index) => {
+		const entry: Record<string, unknown> = {
+			"@type": "ListItem",
+			position: index + 1,
+			name: item.name,
+			url: toPageUrl(origin, item.url),
+		};
+		const description = item.description?.trim();
+		if (description) entry.description = description;
+		return entry;
+	});
 }
 
 function articleImage(origin: string, imageUrl: string | null, imageWidth: number | null, imageHeight: number | null) {
