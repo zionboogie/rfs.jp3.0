@@ -1,0 +1,42 @@
+---
+import Layout from "../components/Layout.astro";
+import "../styles/category.css";
+---
+
+<Layout
+	title="ページが見つかりません"
+	description="お探しのページは存在しないか、移動した可能性があります。"
+	skipIntro
+	noindex
+>
+	<main>
+		<header class="category-hero pt-xl pb-xl">
+			<div class="container">
+				<p class="mb-md text-sm font-bold tracking-[0.12em] text-muted">404</p>
+				<h1 class="category-hero__title mb-md font-bold tracking-[0.04em] text-h1 leading-heading">
+					ページが見つかりません
+				</h1>
+				<p class="category-hero__lead m-0 max-w-[40rem] text-muted leading-body">
+					お探しのページは存在しないか、移動した可能性があります。
+				</p>
+			</div>
+		</header>
+
+		<section class="pb-xl" aria-label="案内">
+			<div class="container flex flex-wrap gap-sm">
+				<a
+					class="inline-flex cursor-pointer rounded-sm border-0 bg-text px-4 py-2 font-bold text-white no-underline"
+					href="/"
+				>
+					トップへ戻る
+				</a>
+				<a
+					class="inline-flex cursor-pointer rounded-sm border border-border bg-transparent px-4 py-2 font-bold text-text no-underline"
+					href="/search/"
+				>
+					サイト内検索
+				</a>
+			</div>
+		</section>
+	</main>
+</Layout>

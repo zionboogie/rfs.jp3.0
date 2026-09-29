@@ -2,7 +2,7 @@
 /**
  * Plugin Name: RFS Learn Permalinks
  * Description: learn 記事のパーマリンクを /learn/{learn_cat}/{postname}/ にする（Headless / REST link 用）
- * Version: 1.0.0
+ * Version: 1.0.1
  */
 
 declare(strict_types=1);
@@ -11,22 +11,7 @@ const RFS_LEARN_POST_TYPE = 'learn';
 const RFS_LEARN_TAXONOMY = 'learn_cat';
 
 /**
- * CPT の rewrite を learn/%learn_cat% に寄せる（既存の register_post_type を上書き）
- */
-add_filter('register_post_type_args', static function (array $args, string $post_type): array {
-	if ($post_type !== RFS_LEARN_POST_TYPE) {
-		return $args;
-	}
-	$args['rewrite'] = [
-		'slug' => 'learn/%' . RFS_LEARN_TAXONOMY . '%',
-		'with_front' => false,
-	];
-	$args['has_archive'] = false;
-	return $args;
-}, 20, 2);
-
-/**
- * %learn_cat% を実タームスラッグに置換し、/learn/{cat}/{postname}/ を返す
+ * /learn/{cat}/{postname}/ を返す（CPT rewrite は触らない＝管理画面のスラッグ編集を壊さない）
  */
 add_filter('post_type_link', static function (string $post_link, WP_Post $post): string {
 	if ($post->post_type !== RFS_LEARN_POST_TYPE) {

@@ -48,18 +48,18 @@ function isCurrentArticle(href: string): boolean {
 							<li>
 								<a
 									class:list={[
-										"flex items-start gap-xs py-xs no-underline",
-										isCurrent ? "text-logo" : "text-muted",
+										"group flex items-start gap-xs py-xs no-underline transition-colors duration-300 ease-out motion-reduce:transition-none",
+										isCurrent ? "text-logo" : "text-muted hover:text-logo focus-visible:text-logo",
 									]}
 									href={item.href}
 									aria-current={isCurrent ? "page" : undefined}
 								>
 									<span
 										class:list={[
-											"grid size-8 shrink-0 place-items-center rounded-sm border text-sm font-bold leading-none tabular-nums",
+											"grid size-8 shrink-0 place-items-center rounded-sm border text-sm font-bold leading-none tabular-nums transition-colors duration-300 ease-out motion-reduce:transition-none",
 											isCurrent
 												? "border-logo bg-logo text-white"
-												: "border-border bg-transparent text-text",
+												: "border-border bg-transparent text-text group-hover:border-logo group-hover:bg-logo group-hover:text-white group-focus-visible:border-logo group-focus-visible:bg-logo group-focus-visible:text-white",
 										]}
 										aria-hidden="true"
 									>

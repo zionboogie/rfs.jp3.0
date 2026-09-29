@@ -28,6 +28,15 @@
 		letter-spacing: 0.02em;
 	}
 
+	h2::after {
+		content: "";
+		display: block;
+		width: 100px;
+		height: 2px;
+		margin-top: var(--spacing-sm, 16px);
+		background-color: var(--color-logo, rgb(217 30 24));
+	}
+
 	h3 {
 		margin: var(--spacing-xl, 64px) 0 var(--spacing-md, 24px);
 		/* 記事内 H3: 22〜24px */
@@ -69,27 +78,27 @@
 		height: auto;
 	}
 
-	ul,
-	ol {
+	ul:not(.prettyprint, .prettyprint *),
+	ol:not(.prettyprint, .prettyprint *) {
 		margin: 0 0 var(--spacing-md, 24px);
 		padding-left: 1.5em;
 	}
 
-	ul {
+	ul:not(.prettyprint, .prettyprint *) {
 		list-style: none;
 		padding-left: 2.75em;
 	}
-	ol {
+	ol:not(.prettyprint, .prettyprint *) {
 		list-style: none;
 		padding-left: 2.75em;
 		counter-reset: article-ol;
 	}
 
-	ul > li {
+	ul:not(.prettyprint, .prettyprint *) > li {
 		position: relative;
 	}
 
-	ul > li::before {
+	ul:not(.prettyprint, .prettyprint *) > li::before {
 		content: "●";
 		position: absolute;
 		left: -1.55em;
@@ -99,12 +108,12 @@
 		line-height: 1;
 	}
 
-	ol > li {
+	ol:not(.prettyprint, .prettyprint *) > li {
 		position: relative;
 		counter-increment: article-ol;
 	}
 
-	ol > li::before {
+	ol:not(.prettyprint, .prettyprint *) > li::before {
 		content: counter(article-ol);
 		position: absolute;
 		left: -2.35em;
@@ -122,7 +131,7 @@
 		line-height: 1;
 	}
 
-	li + li {
+	:is(ul, ol):not(.prettyprint, .prettyprint *) > li + li {
 		margin-top: var(--spacing-xs, 8px);
 	}
 
@@ -331,6 +340,7 @@
 		/* width: auto; */
 		max-width: 100%;
 		height: auto;
+		border-radius: var(--radius-md, 8px);
 	}
 
 	.illust figcaption {
@@ -383,6 +393,7 @@
 		display: block;
 		max-width: 100%;
 		height: auto;
+		border-radius: var(--radius-md, 8px);
 		cursor: zoom-in;
 	}
 
@@ -614,26 +625,18 @@
 	}
 
 	@media (max-width: 767px) {
-		ul,
-		ol {
+		ul:not(.prettyprint, .prettyprint *),
+		ol:not(.prettyprint, .prettyprint *) {
 			padding-left: 0;
 		}
 
-		ul {
-			padding-left: 0;
-		}
-
-		ol {
-			padding-left: 0;
-		}
-
-		ul > li {
+		ul:not(.prettyprint, .prettyprint *) > li {
 			display: flex;
 			align-items: flex-start;
 			gap: 0.5em;
 		}
 
-		ul > li::before {
+		ul:not(.prettyprint, .prettyprint *) > li::before {
 			position: static;
 			top: auto;
 			left: auto;
@@ -641,13 +644,13 @@
 			line-height: 1.95;
 		}
 
-		ol > li {
+		ol:not(.prettyprint, .prettyprint *) > li {
 			display: flex;
 			align-items: flex-start;
 			gap: 0.5em;
 		}
 
-		ol > li::before {
+		ol:not(.prettyprint, .prettyprint *) > li::before {
 			position: static;
 			top: auto;
 			left: auto;
@@ -810,6 +813,10 @@
 			margin: 0 !important;
 			font-size: 2rem;
 			border: none;
+		}
+
+		h2::after {
+			content: none;
 		}
 	}
 	.box-browser {

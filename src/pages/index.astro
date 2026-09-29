@@ -11,7 +11,8 @@ import "../styles/top.css";
 
 /** トップのブラウザタブ・OG タイトル。変更する場合はこの1行だけ直す */
 const pageTitle = "AI時代のプログラミング学習講座 | Smart";
-const pageDescription = "プログラミングとWeb開発の入門コース一覧";
+const pageDescription =
+	"Web制作やAIを活用した学習方法を中心に、HTML・CSS・JavaScript・PHP・Astroなどの基礎から、AIとコードを書きながら学ぶWeb制作まで、初心者にもわかりやすく解説します。";
 
 const gettingStartedHref = navMenus.find((menu) => menu.id === "getting-started")?.href;
 const aiWebHref = navMenus.find((menu) => menu.id === "ai-web-development")?.href;
@@ -39,10 +40,10 @@ const jsonLd = websiteJsonLd({
 	<main>
 		<AboutIntro />
 
-		<section class="top-rhythm overflow-hidden py-xl" aria-label="rhythmfactory">
-			<div class="top-rhythm__inner container flex items-center">
+		<section class="top-rhythm overflow-hidden py-md md:py-xl" aria-label="rhythmfactory">
+			<div class="top-rhythm__inner container flex items-center justify-center">
 				<a
-					class="top-rhythm__logo block w-full leading-none text-black no-underline"
+					class="top-rhythm__logo block w-1/2 leading-none text-black no-underline md:w-full"
 					href="https://rhythmfactory.jp/"
 					target="_blank"
 					rel="noopener noreferrer"
