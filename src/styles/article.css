@@ -394,9 +394,12 @@
 
 .article-pager__link:hover,
 .article-pager__link:focus-visible {
-	border-color: rgb(33 5 5 / 18%);
 	color: var(--color-logo);
 	outline: none;
+}
+
+.article-pager__link:focus-visible {
+	border-color: rgb(33 5 5 / 18%);
 }
 
 .article-pager__link:hover .article-pager__arrow,

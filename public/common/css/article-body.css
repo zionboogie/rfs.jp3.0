@@ -28,6 +28,15 @@
 		letter-spacing: 0.02em;
 	}
 
+	h2::after {
+		content: "";
+		display: block;
+		width: 100px;
+		height: 2px;
+		margin-top: var(--spacing-sm, 16px);
+		background-color: var(--color-logo, rgb(217 30 24));
+	}
+
 	h3 {
 		margin: var(--spacing-xl, 64px) 0 var(--spacing-md, 24px);
 		/* 記事内 H3: 22〜24px */
@@ -38,14 +47,26 @@
 
 	h4 {
 		margin: var(--spacing-lg, 40px) 0 var(--spacing-md, 24px);
+		/* 記事内 H4: 18〜20px（H3 の 22〜24px と差をつける） */
+		font-size: clamp(1.125rem, 1.3vw, 1.25rem);
+		font-weight: 700;
+		letter-spacing: 0.02em;
 	}
 
 	h5 {
 		margin: var(--spacing-md, 24px) 0 var(--spacing-md, 24px);
+		/* 記事内 H5: 16px */
+		font-size: 1rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
 	}
 
 	h6 {
 		margin: var(--spacing-sm, 16px) 0 var(--spacing-md, 24px);
+		/* 記事内 H6: 15px */
+		font-size: 0.9375rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
 	}
 
 	p {
@@ -57,41 +78,60 @@
 		height: auto;
 	}
 
-	ul,
-	ol {
+	ul:not(.prettyprint, .prettyprint *),
+	ol:not(.prettyprint, .prettyprint *) {
 		margin: 0 0 var(--spacing-md, 24px);
 		padding-left: 1.5em;
 	}
 
-	ul {
+	ul:not(.prettyprint, .prettyprint *) {
 		list-style: none;
-		padding-left: 2.25em;
+		padding-left: 2.75em;
 	}
-	ol{
-		list-style: decimal;
+	ol:not(.prettyprint, .prettyprint *) {
+		list-style: none;
+		padding-left: 2.75em;
+		counter-reset: article-ol;
 	}
 
-	ul > li {
+	ul:not(.prettyprint, .prettyprint *) > li {
 		position: relative;
 	}
 
-	ul > li::before {
+	ul:not(.prettyprint, .prettyprint *) > li::before {
 		content: "●";
-		/* position: absolute;
-		left: -1.85em; */
+		position: absolute;
+		left: -1.55em;
+		top: 0.15em;
 		color: #ee0979;
 		font-size: 20px;
-		line-height: 2;
-		padding-right: 10px;
-	}
-	ol > li::marker {
-		color: #ee0979;
-		font-size: 35px;
-		line-height: 2;
-		padding-right: 10px;
+		line-height: 1;
 	}
 
-	li + li {
+	ol:not(.prettyprint, .prettyprint *) > li {
+		position: relative;
+		counter-increment: article-ol;
+	}
+
+	ol:not(.prettyprint, .prettyprint *) > li::before {
+		content: counter(article-ol);
+		position: absolute;
+		left: -2.35em;
+		top: 0.4em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		background-color: #ee0979;
+		color: #fff;
+		font-size: 0.75rem;
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	:is(ul, ol):not(.prettyprint, .prettyprint *) > li + li {
 		margin-top: var(--spacing-xs, 8px);
 	}
 
@@ -99,7 +139,7 @@
 		text-decoration: none;
 		background-image: linear-gradient(to right, #24fe41, #fdfc47);
 		transition: all 0.25s ease-in;
-		background-size: 100% 30%;
+		background-size: 100% 20%;
 		background-repeat: no-repeat;
 		background-position: bottom;
 	}
@@ -300,6 +340,7 @@
 		/* width: auto; */
 		max-width: 100%;
 		height: auto;
+		border-radius: var(--radius-md, 8px);
 	}
 
 	.illust figcaption {
@@ -352,6 +393,7 @@
 		display: block;
 		max-width: 100%;
 		height: auto;
+		border-radius: var(--radius-md, 8px);
 		cursor: zoom-in;
 	}
 
@@ -583,6 +625,39 @@
 	}
 
 	@media (max-width: 767px) {
+		ul:not(.prettyprint, .prettyprint *),
+		ol:not(.prettyprint, .prettyprint *) {
+			padding-left: 0;
+		}
+
+		ul:not(.prettyprint, .prettyprint *) > li {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5em;
+		}
+
+		ul:not(.prettyprint, .prettyprint *) > li::before {
+			position: static;
+			top: auto;
+			left: auto;
+			flex-shrink: 0;
+			line-height: 1.95;
+		}
+
+		ol:not(.prettyprint, .prettyprint *) > li {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5em;
+		}
+
+		ol:not(.prettyprint, .prettyprint *) > li::before {
+			position: static;
+			top: auto;
+			left: auto;
+			flex-shrink: 0;
+			margin-top: 0.4em;
+		}
+
 		.column {
 			grid-template-columns: minmax(0, 1fr);
 			width: 100%;
@@ -738,6 +813,10 @@
 			margin: 0 !important;
 			font-size: 2rem;
 			border: none;
+		}
+
+		h2::after {
+			content: none;
 		}
 	}
 	.box-browser {

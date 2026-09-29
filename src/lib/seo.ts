@@ -32,7 +32,7 @@ export function resolveSiteOrigin(site: URL | undefined, fallbackOrigin: string)
 function documentTitle(pageTitle?: string): string {
 	const trimmed = pageTitle?.trim();
 	if (!trimmed || trimmed === SITE_NAME) return SITE_NAME;
-	if (trimmed.endsWith("[Smart]")) return trimmed;
+	if (trimmed.endsWith("[Smart]") || trimmed.endsWith("| Smart")) return trimmed;
 	return `${trimmed} | ${SITE_NAME}`;
 }
 

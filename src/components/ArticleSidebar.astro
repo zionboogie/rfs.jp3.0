@@ -1,13 +1,20 @@
 ---
-import { formatUpdatedAt, type ArchiveGroup, type ArticleTag, type CategoryArticle, type SidebarLearnSection } from "../lib/wordpress";
+import {
+	type ArchiveGroup,
+	type ArticleTag,
+	type CategoryArticle,
+	type SidebarLearnSection,
+} from "../lib/wordpress";
 
 interface Props {
 	learnSections: SidebarLearnSection[];
 	archiveGroups?: ArchiveGroup[];
 	archiveTitle?: string;
 	archiveHref?: string;
-	popularArticles: CategoryArticle[];
 	tags: ArticleTag[];
+	categoryName?: string;
+	categoryArticles?: CategoryArticle[];
+	currentArticleHref?: string;
 }
 
 const {
@@ -15,16 +22,61 @@ const {
 	archiveGroups = [],
 	archiveTitle = "過去アーカイブ",
 	archiveHref = "/archive/",
-	popularArticles,
 	tags,
+	categoryName = "",
+	categoryArticles = [],
+	currentArticleHref = "",
 } = Astro.props;
+
+function isCurrentArticle(href: string): boolean {
+	const normalize = (value: string) => value.replace(/\/+$/, "");
+	return normalize(href) === normalize(currentArticleHref);
+}
 ---
 
 <aside class="article-side flex flex-col gap-xl lg:sticky lg:top-md">
 	{
+		categoryName && categoryArticles.length > 0 ? (
+			<section aria-labelledby="article-side-category-heading">
+				<h2 class="article-side__heading" id="article-side-category-heading">
+					{categoryName}
+				</h2>
+				<ol class="m-0 flex list-none flex-col gap-xs p-0">
+					{categoryArticles.map((item, index) => {
+						const isCurrent = isCurrentArticle(item.href);
+						return (
+							<li>
+								<a
+									class:list={[
+										"group flex items-start gap-xs py-xs no-underline transition-colors duration-300 ease-out motion-reduce:transition-none",
+										isCurrent ? "text-logo" : "text-muted hover:text-logo focus-visible:text-logo",
+									]}
+									href={item.href}
+									aria-current={isCurrent ? "page" : undefined}
+								>
+									<span
+										class:list={[
+											"grid size-8 shrink-0 place-items-center rounded-sm border text-sm font-bold leading-none tabular-nums transition-colors duration-300 ease-out motion-reduce:transition-none",
+											isCurrent
+												? "border-logo bg-logo text-white"
+												: "border-border bg-transparent text-text group-hover:border-logo group-hover:bg-logo group-hover:text-white group-focus-visible:border-logo group-focus-visible:bg-logo group-focus-visible:text-white",
+										]}
+										aria-hidden="true"
+									>
+										{index + 1}
+									</span>
+									{item.title}
+								</a>
+							</li>
+						);
+					})}
+				</ol>
+			</section>
+		) : null
+	}
+	{
 		learnSections.map((section) => {
 			const headingId = `article-side-learn-${section.slug}`;
-			const latestHeadingId = `article-side-learn-latest-${section.slug}`;
 			const courseHeadingId = `article-side-learn-courses-${section.slug}`;
 			return (
 				<section aria-labelledby={headingId}>
@@ -33,24 +85,6 @@ const {
 							{section.title}
 						</a>
 					</h2>
-					{
-						section.latestArticles.length > 0 ? (
-							<div>
-								<h3 class="mb-xs mt-0 text-sm font-bold tracking-[0.08em]" id={latestHeadingId}>
-									最新記事
-								</h3>
-								<ul class="m-0 flex list-none flex-col overflow-hidden rounded-md border border-border p-sm" aria-labelledby={latestHeadingId}>
-									{section.latestArticles.map((article) => (
-										<li>
-											<a class="article-side__link block py-xs no-underline" href={article.href}>
-												<span class="article-side__text">{article.title}</span>
-											</a>
-										</li>
-									))}
-								</ul>
-							</div>
-						) : null
-					}
 					{
 						section.courses.length > 0 ? (
 							<div class="mt-md">
@@ -100,27 +134,12 @@ const {
 		) : null
 	}
 
-	{
-		popularArticles.length > 0 ? (
-			<section aria-labelledby="article-side-popular-heading">
-				<h2 class="article-side__heading" id="article-side-popular-heading">
-					人気記事
-				</h2>
-				<ul class="m-0 flex list-none flex-col p-0">
-					{popularArticles.map((article) => (
-						<li class="border-b border-[rgb(33_5_5_/_18%)]">
-							<a class="article-side__link block py-sm no-underline" href={article.href}>
-								<span class="article-side__text">{article.title}</span>
-								<time class="mt-xs block text-sm tracking-[0.04em] text-muted" datetime={article.updatedAt}>
-									{formatUpdatedAt(article.updatedAt)}
-								</time>
-							</a>
-						</li>
-					))}
-				</ul>
-			</section>
-		) : null
-	}
+	<section data-popular-articles hidden aria-labelledby="article-side-popular-heading">
+		<h2 class="article-side__heading" id="article-side-popular-heading">
+			人気記事
+		</h2>
+		<ul class="m-0 flex list-none flex-col p-0" data-popular-articles-list></ul>
+	</section>
 
 	{
 		tags.length > 0 ? (
@@ -139,3 +158,46 @@ const {
 		) : null
 	}
 </aside>
+
+<script>
+	const POPULAR_ARTICLES_URL = "/popular-articles.json";
+	const POPULAR_ARTICLE_LIMIT = 5;
+
+	function renderPopularArticles(articles) {
+		const section = document.querySelector("[data-popular-articles]");
+		const list = document.querySelector("[data-popular-articles-list]");
+		if (!(section instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+
+		list.replaceChildren();
+		for (const article of articles.slice(0, POPULAR_ARTICLE_LIMIT)) {
+			if (!article?.title || !article?.href) continue;
+			const item = document.createElement("li");
+			item.className = "border-b border-[rgb(33_5_5_/_18%)]";
+			const link = document.createElement("a");
+			link.className = "article-side__link block py-sm no-underline";
+			link.href = article.href;
+			const text = document.createElement("span");
+			text.className = "article-side__text";
+			text.textContent = article.title;
+			link.append(text);
+			item.append(link);
+			list.append(item);
+		}
+		section.hidden = list.childElementCount === 0;
+	}
+
+	async function loadPopularArticles() {
+		try {
+			const response = await fetch(POPULAR_ARTICLES_URL, { cache: "no-store" });
+			if (!response.ok) return;
+			const data = await response.json();
+			const articles = Array.isArray(data?.articles) ? data.articles : [];
+			renderPopularArticles(articles);
+		} catch {
+			renderPopularArticles([]);
+		}
+	}
+
+	loadPopularArticles();
+</script>
+

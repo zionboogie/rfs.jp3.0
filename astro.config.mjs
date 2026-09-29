@@ -1,6 +1,8 @@
 // @ts-check
+import { writeFile } from "node:fs/promises";
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
+import { loadEnv } from "vite";
 
 // https://astro.build/config
 export default defineConfig({
@@ -34,4 +36,23 @@ export default defineConfig({
 			noExternal: ["@lucide/astro"],
 		},
 	},
+	integrations: [
+		{
+			name: "learn-article-redirects-nginx",
+			hooks: {
+				"astro:build:done": async ({ dir }) => {
+					const env = loadEnv("production", process.cwd(), "");
+					for (const [key, value] of Object.entries(env)) {
+						if (process.env[key] === undefined) process.env[key] = value;
+					}
+					const { formatLearnRedirectsNginx, getLearnArticleRedirects } = await import(
+						"./src/lib/wordpress.ts"
+					);
+					const redirects = await getLearnArticleRedirects();
+					const out = new URL("learn-article-redirects.nginx", dir);
+					await writeFile(out, formatLearnRedirectsNginx(redirects), "utf8");
+				},
+			},
+		},
+	],
 });

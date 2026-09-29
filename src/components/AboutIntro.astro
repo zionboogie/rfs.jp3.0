@@ -18,6 +18,8 @@ const slides = aboutSlides;
 					charCount === 0 ? 0 : (charCount - 1) * 0.1 + 0.85 + 0.5;
 				const catchLines = parseCatchLines(slide.catchCopy);
 				const totalCatchChars = catchCharCount(slide.catchCopy);
+				const titlePlain = slide.title ? plainTitle(slide.title) : "";
+				const TitleTag = titlePlain === "AIと一緒なら、もっと自由に" ? "h1" : "h2";
 				return (
 					<div
 						class:list={["about-intro__slide absolute inset-0", { "is-active": index === 0 }]}
@@ -50,9 +52,9 @@ const slides = aboutSlides;
 											/>
 										)}
 										{slide.title && (
-											<h2
+											<TitleTag
 												class="about-intro__title m-0 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.45] tracking-[0.06em] text-white"
-												aria-label={plainTitle(slide.title)}
+												aria-label={titlePlain}
 											>
 												{titleTokens.map((token) =>
 													token.type === "br" ? (
@@ -66,7 +68,7 @@ const slides = aboutSlides;
 														</span>
 													),
 												)}
-											</h2>
+											</TitleTag>
 										)}
 										{slide.catchCopy.length > 0 && (
 											<p class="about-intro__catch m-0 text-[clamp(1.125rem,2.2vw,1.5rem)] font-medium leading-normal tracking-[0.04em]">

@@ -16,9 +16,10 @@ interface Props {
 	noindex?: boolean;
 	skipIntro?: boolean;
 	jsonLd?: string;
+	codePrettify?: boolean;
 }
 
-const { title, description, type, noindex, skipIntro = false, jsonLd } = Astro.props;
+const { title, description, type, noindex, skipIntro = false, jsonLd, codePrettify = false } = Astro.props;
 ---
 
 <html lang="ja" transition:name="root" transition:animate="none">
@@ -41,19 +42,10 @@ const { title, description, type, noindex, skipIntro = false, jsonLd } = Astro.p
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-		<Seo
-			title={title}
-			description={description}
-			type={type}
-			noindex={noindex}
-			jsonLd={jsonLd}
-		/>
+		<Seo title={title} description={description} type={type} noindex={noindex} jsonLd={jsonLd} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&family=Marcellus&family=Zen+Kaku+Gothic+Antique&display=swap"
-			rel="stylesheet"
-		/>
+		<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&family=Marcellus&family=Zen+Kaku+Gothic+Antique&display=swap" rel="stylesheet" />
 		<ClientRouter />
 		<script is:inline>
 			(() => {
@@ -70,17 +62,18 @@ const { title, description, type, noindex, skipIntro = false, jsonLd } = Astro.p
 	<body class:list={{ "is-intro": !skipIntro }} transition:animate={pageFade}>
 		<!-- Google Tag Manager (noscript) -->
 		<noscript>
-			<iframe
-				src="https://www.googletagmanager.com/ns.html?id=GTM-FG5C9"
-				height="0"
-				width="0"
-				style="display:none;visibility:hidden"></iframe>
+			<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-FG5C9" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 		</noscript>
 		<!-- End Google Tag Manager (noscript) -->
 		<Header skipIntro={skipIntro} />
 		{Astro.url.pathname !== "/" && <Breadcrumb />}
 		<slot />
 		<Footer />
+		{
+			codePrettify ? (
+				<script is:inline src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=css&skin=sunburst&lang=sql&lang=css" />
+			) : null
+		}
 	</body>
 </html>
 

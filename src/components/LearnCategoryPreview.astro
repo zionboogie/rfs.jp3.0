@@ -1,0 +1,48 @@
+---
+import ChevronRight from "@lucide/astro/icons/chevron-right";
+import type { CategoryArticle } from "../lib/wordpress";
+
+interface Props {
+	title: string;
+	href: string;
+	articles: CategoryArticle[];
+	headingLevel?: 2 | 3;
+	headingId?: string;
+}
+
+const { title, href, articles, headingLevel = 3, headingId } = Astro.props;
+const HeadingTag = headingLevel === 2 ? "h2" : "h3";
+const listLabel = `${title}一覧`;
+---
+
+<section class="learn-category-preview pb-xl" aria-labelledby={headingId}>
+	<HeadingTag class="learn-category-preview__name m-0" id={headingId}>
+		<a
+			href={href}
+			class="learn-category-preview__title block w-full border-y border-[rgb(33_5_5_/_18%)] py-[clamp(1.25rem,3vw,2rem)] text-[clamp(1.75rem,3.6vw,2.75rem)] font-bold leading-[1.35] tracking-[0.02em] text-inherit no-underline"
+		>
+			<span class="learn-category-preview__title-text">{title}</span>
+		</a>
+	</HeadingTag>
+	{
+		articles.length > 0 ? (
+			<ul class="m-0 mt-md list-none p-0">
+				{articles.map((article) => (
+					<li>
+						<a href={article.href} class="learn-category-preview__article">
+							<span class="learn-category-preview__article-text">{article.title}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		) : null
+	}
+	<p class="mb-0 mt-md flex justify-end">
+		<a href={href} class="learn-category-preview__more text-inherit no-underline">
+			{listLabel}
+			<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">
+				<ChevronRight size={20} />
+			</span>
+		</a>
+	</p>
+</section>

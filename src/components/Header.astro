@@ -75,7 +75,7 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 			</span>
 		</button>
 	</div>
-	<nav class="mobile-nav" id="mobile-nav" aria-label="カテゴリ" inert>
+		<nav class="mobile-nav" id="mobile-nav" aria-label="カテゴリ" inert>
 		<ul class="mobile-nav__list">
 			{
 				navMenus.map((menu) => (
@@ -87,6 +87,23 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 				))
 			}
 		</ul>
+		<form class="header-search mobile-nav__search" action="/search/" method="get" role="search">
+			<label class="visually-hidden" for="mobile-header-search-input">サイト内検索</label>
+			<input
+				id="mobile-header-search-input"
+				class="min-w-0 flex-1 rounded-sm border border-white/60 bg-white px-3 py-2"
+				type="search"
+				name="q"
+				value={searchQuery}
+				placeholder="キーワードで検索"
+			/>
+			<button
+				type="submit"
+				class="shrink-0 cursor-pointer rounded-sm border-0 bg-text px-4 py-2 font-bold text-white"
+			>
+				検索
+			</button>
+		</form>
 	</nav>
 </header>
 
