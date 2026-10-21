@@ -4,6 +4,13 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import { loadEnv } from "vite";
 
+// getStaticPaths は astro:build:done より前に実行される。
+// .env をここで process.env に載せておく（未設定のキーだけ）。
+const loadedEnv = loadEnv(process.env.NODE_ENV || "production", process.cwd(), "");
+for (const [key, value] of Object.entries(loadedEnv)) {
+	if (process.env[key] === undefined) process.env[key] = value;
+}
+
 // https://astro.build/config
 export default defineConfig({
 	site: "https://rfs.jp",
