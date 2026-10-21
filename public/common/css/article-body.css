@@ -90,7 +90,7 @@
 	}
 	ol:not(.prettyprint, .prettyprint *) {
 		list-style: none;
-		padding-left: 2.75em;
+		padding-left: 3em;
 		counter-reset: article-ol;
 	}
 
@@ -101,10 +101,10 @@
 	ul:not(.prettyprint, .prettyprint *) > li::before {
 		content: "●";
 		position: absolute;
-		left: -1.55em;
-		top: 0.15em;
+		left: -1em;
+		top: 0.25em;
 		color: #ee0979;
-		font-size: 20px;
+		font-size: 22px;
 		line-height: 1;
 	}
 
@@ -116,7 +116,7 @@
 	ol:not(.prettyprint, .prettyprint *) > li::before {
 		content: counter(article-ol);
 		position: absolute;
-		left: -2.35em;
+		left: -2.8em;
 		top: 0.4em;
 		display: flex;
 		align-items: center;
@@ -564,6 +564,8 @@
 		ホバー演出は「つづけて読む」（.article-continue__link）と同系統
 	*/
 	.article-site-link {
+		/* overlay-link::after の基準。無いと疑似要素が画面全体を覆い、SNSや右カラムのクリックを奪う */
+		position: relative;
 		display: flex;
 		width: 100%; 
 		flex-direction: column;
@@ -613,6 +615,19 @@
 	.article-site-link:focus-visible .article-site-link__category {
 		color: inherit;
 	}
+
+	.article-site-link .overlay-link {
+		color: inherit;
+		transition: color 0.25s ease;
+	}
+
+	.article-site-link:hover .overlay-link,
+	.article-site-link:focus-visible .overlay-link,
+	.article-site-link .overlay-link:hover,
+	.article-site-link .overlay-link:focus-visible {
+		color: #fff;
+	}
+
 	/* リンクの擬似要素をカラム全体に広げる */
 	.article-site-link .overlay-link::after {
 		content: "";
@@ -704,7 +719,8 @@
 			transition: none;
 		}
 
-		.article-site-link {
+		.article-site-link,
+		.article-site-link .overlay-link {
 			transition: none;
 		}
 	}
