@@ -80,7 +80,7 @@
 
 	ul:not(.prettyprint, .prettyprint *),
 	ol:not(.prettyprint, .prettyprint *) {
-		margin: 0 0 var(--spacing-md, 24px);
+		margin: 0 auto var(--spacing-md, 24px);
 		padding-left: 1.5em;
 	}
 
@@ -409,12 +409,12 @@
 		margin: var(--spacing-xs, 8px);
 		pointer-events: none;
 		border-radius: var(--radius-sm, 4px);
-		background-color: var(--color-background, rgb(255 255 255));
+		background-color: var(--color-logo, rgb(217 30 24));
 		background-image: url("/common/img/common/external-link.svg");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 2rem;
-		box-shadow: 0 0 8px rgb(33 5 5 / 12%);
+		box-shadow: 0 0 8px rgb(33 5 5 / 18%);
 	}
 
 	.lightbox figcaption {
@@ -568,7 +568,7 @@
 		width: 100%; 
 		flex-direction: column;
 		gap: var(--spacing-xs, 8px);
-		margin: var(--spacing-md, 24px) 0;
+		margin: var(--spacing-md, 24px) auto;
 		padding: var(--spacing-md, 24px);
 		border: 1px solid var(--color-border, rgb(230 220 220));
 		border-radius: var(--radius-md, 8px);
