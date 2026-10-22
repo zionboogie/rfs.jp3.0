@@ -142,6 +142,8 @@
 		background-size: 100% 20%;
 		background-repeat: no-repeat;
 		background-position: bottom;
+		/* 斜めのシマシマ（結構良い） */
+		/* background: repeating-linear-gradient(-45deg, #fcf69f, #fcf69f 2px, transparent 2px, transparent 4px) no-repeat 0.75em; */
 	}
 	.mark {
 		background: #FDF0A5;
