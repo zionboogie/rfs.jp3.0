@@ -4,6 +4,7 @@ import ChevronRight from "@lucide/astro/icons/chevron-right";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import ArticleSidebar from "./ArticleSidebar.astro";
 import { hiddenArchiveTitles, navMenus } from "../data/courses";
+import { resolveSiteOrigin } from "../lib/seo";
 import {
 	formatDateJa,
 	getRelatedArticles,
@@ -45,10 +46,15 @@ const authorName = "あおいパスタ"; // article.authorName
 const authorAvatar = "/common/img/common/profile_aoipasta.jpg"; // article.authorAvatar
 const authorAvatarHover = "/common/img/common/profile_aoipasta02.jpg";
 const toc = article.toc;
-const shareUrl = new URL(article.path, Astro.url.origin).href;
+const articleUrl = new URL(article.path, resolveSiteOrigin(Astro.site, Astro.url.origin));
+if ((articleUrl.protocol !== "https:" && articleUrl.protocol !== "http:") || !articleUrl.hostname) {
+	throw new Error(`記事のシェアURLを組み立てられません: ${article.path}`);
+}
+const shareUrl = articleUrl.href;
 const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
 const xHref = `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(articleTitle)}`;
-const hatenaHref = `https://b.hatena.ne.jp/entry/${shareUrl}`;
+// はてブの https ページは entry/s/ホスト/パス。URL をそのまま連結すると href に https: が二重になる。
+const hatenaHref = `https://b.hatena.ne.jp/entry/${articleUrl.protocol === "https:" ? "s/" : ""}${articleUrl.host}${articleUrl.pathname}${articleUrl.search}`;
 const shareTarget = "_blank";
 const shareRel = "noopener noreferrer";
 ---

@@ -80,7 +80,7 @@
 
 	ul:not(.prettyprint, .prettyprint *),
 	ol:not(.prettyprint, .prettyprint *) {
-		margin: 0 0 var(--spacing-md, 24px);
+		margin: 0 auto var(--spacing-md, 24px);
 		padding-left: 1.5em;
 	}
 
@@ -90,7 +90,7 @@
 	}
 	ol:not(.prettyprint, .prettyprint *) {
 		list-style: none;
-		padding-left: 2.75em;
+		padding-left: 3em;
 		counter-reset: article-ol;
 	}
 
@@ -101,10 +101,10 @@
 	ul:not(.prettyprint, .prettyprint *) > li::before {
 		content: "●";
 		position: absolute;
-		left: -1.55em;
-		top: 0.15em;
+		left: -1em;
+		top: 0.25em;
 		color: #ee0979;
-		font-size: 20px;
+		font-size: 22px;
 		line-height: 1;
 	}
 
@@ -116,7 +116,7 @@
 	ol:not(.prettyprint, .prettyprint *) > li::before {
 		content: counter(article-ol);
 		position: absolute;
-		left: -2.35em;
+		left: -2.8em;
 		top: 0.4em;
 		display: flex;
 		align-items: center;
@@ -411,12 +411,12 @@
 		margin: var(--spacing-xs, 8px);
 		pointer-events: none;
 		border-radius: var(--radius-sm, 4px);
-		background-color: var(--color-background, rgb(255 255 255));
+		background-color: var(--color-logo, rgb(217 30 24));
 		background-image: url("/common/img/common/external-link.svg");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 2rem;
-		box-shadow: 0 0 8px rgb(33 5 5 / 12%);
+		box-shadow: 0 0 8px rgb(33 5 5 / 18%);
 	}
 
 	.lightbox figcaption {
@@ -566,11 +566,13 @@
 		ホバー演出は「つづけて読む」（.article-continue__link）と同系統
 	*/
 	.article-site-link {
+		/* overlay-link::after の基準。無いと疑似要素が画面全体を覆い、SNSや右カラムのクリックを奪う */
+		position: relative;
 		display: flex;
 		width: 100%; 
 		flex-direction: column;
 		gap: var(--spacing-xs, 8px);
-		margin: var(--spacing-md, 24px) 0;
+		margin: var(--spacing-md, 24px) auto;
 		padding: var(--spacing-md, 24px);
 		border: 1px solid var(--color-border, rgb(230 220 220));
 		border-radius: var(--radius-md, 8px);
@@ -615,6 +617,19 @@
 	.article-site-link:focus-visible .article-site-link__category {
 		color: inherit;
 	}
+
+	.article-site-link .overlay-link {
+		color: inherit;
+		transition: color 0.25s ease;
+	}
+
+	.article-site-link:hover .overlay-link,
+	.article-site-link:focus-visible .overlay-link,
+	.article-site-link .overlay-link:hover,
+	.article-site-link .overlay-link:focus-visible {
+		color: #fff;
+	}
+
 	/* リンクの擬似要素をカラム全体に広げる */
 	.article-site-link .overlay-link::after {
 		content: "";
@@ -706,7 +721,8 @@
 			transition: none;
 		}
 
-		.article-site-link {
+		.article-site-link,
+		.article-site-link .overlay-link {
 			transition: none;
 		}
 	}
