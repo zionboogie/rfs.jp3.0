@@ -7,7 +7,7 @@ export type NavMenu = {
 export const navMenus: NavMenu[] = [
 	{
 		id: "ai-web-development",
-		label: "AIと学ぶWeb言語",
+		label: "プログラミング言語",
 		href: "/learn/ai-web-development/",
 	},
 	{

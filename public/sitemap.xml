@@ -298,7 +298,10 @@
     <loc>https://rfs.jp/learn/css_basic/</loc>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/lerning-cursor/</loc>
+    <loc>https://rfs.jp/learn/learning-cursor/</loc>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/google-antigravity/</loc>
   </url>
   <url>
     <loc>https://rfs.jp/learn/html_basic/</loc>
@@ -310,7 +313,7 @@
     <loc>https://rfs.jp/learn/learning-tip/</loc>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/guidline/</loc>
+    <loc>https://rfs.jp/learn/guideline/</loc>
   </url>
   <url>
     <loc>https://rfs.jp/learn/commandline/</loc>
@@ -911,7 +914,7 @@
   </url>
   <url>
     <loc>https://rfs.jp/sb/sql/s03/select_sql/</loc>
-    <lastmod>2018-11-08</lastmod>
+    <lastmod>2026-09-30</lastmod>
   </url>
   <url>
     <loc>https://rfs.jp/sb/sql/s03/04-13/</loc>
@@ -2262,14 +2265,6 @@
     <lastmod>2020-05-19</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/sb/html-css/html-css-guide/html5_guidelines/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/sb/html-css/html-css-guide/css_guidelines/</loc>
-    <lastmod>2020-06-01</lastmod>
-  </url>
-  <url>
     <loc>https://rfs.jp/sb/atom-github/atom01_install/</loc>
     <lastmod>2018-11-13</lastmod>
   </url>
@@ -2550,20 +2545,8 @@
     <lastmod>2020-03-04</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/sb/html-css/html-css-guide/css-architecture/</loc>
-    <lastmod>2020-10-30</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/sb/html-css/html-css-guide/css-architecture2/</loc>
-    <lastmod>2020-05-27</lastmod>
-  </url>
-  <url>
     <loc>https://rfs.jp/sb/html-css/css_bk/install-compass/</loc>
     <lastmod>2020-05-25</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/sb/html-css/html-css-guide/rscss/</loc>
-    <lastmod>2022-05-19</lastmod>
   </url>
   <url>
     <loc>https://rfs.jp/sb/wordpress/wp-lab/allow-unfiltered-uploads/</loc>
@@ -2616,14 +2599,6 @@
   <url>
     <loc>https://rfs.jp/sb/javascript/js-lab/radio-access/</loc>
     <lastmod>2020-07-30</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/sb/learning/studyhours/</loc>
-    <lastmod>2020-11-27</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/sb/learning/effective-learning-methods/</loc>
-    <lastmod>2020-11-09</lastmod>
   </url>
   <url>
     <loc>https://rfs.jp/sb/html-css/html-css-lab/ipad-viewport-css/</loc>
@@ -2778,60 +2753,88 @@
     <lastmod>2025-04-20</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/sb/ai-editor/antigravity-editor/google-antigravity-ja/</loc>
-    <lastmod>2026-07-10</lastmod>
+    <loc>https://rfs.jp/learn/guideline/css-guidelines/</loc>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/useful-learning/</loc>
-    <lastmod>2026-09-03</lastmod>
+    <loc>https://rfs.jp/learn/guideline/css-architecture/</loc>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/studyhours/</loc>
-    <lastmod>2026-09-03</lastmod>
+    <loc>https://rfs.jp/learn/guideline/css-architecture2/</loc>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/web-basics/</loc>
+    <loc>https://rfs.jp/learn/guideline/rscss/</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/learning-tip/useful-learning/</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/learning-tip/studyhours/</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/guideline/html5-guidelines/</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/ai-web-basic/web-basics/</loc>
     <lastmod>2026-09-02</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/web-development-tools/</loc>
+    <loc>https://rfs.jp/learn/ai-web-basic/web-development-tools/</loc>
     <lastmod>2026-09-04</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/html-css-javascript/</loc>
+    <loc>https://rfs.jp/learn/ai-web-basic/html-css-javascript/</loc>
     <lastmod>2026-09-05</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/html5-guidelines/</loc>
-    <lastmod>2026-09-05</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/learn/css-guidelines/</loc>
-    <lastmod>2026-09-05</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/learn/css-architecture/</loc>
-    <lastmod>2026-09-05</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/learn/css-architecture2/</loc>
-    <lastmod>2026-09-05</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/learn/rscss/</loc>
-    <lastmod>2026-09-05</lastmod>
-  </url>
-  <url>
-    <loc>https://rfs.jp/learn/introduction-cursor/</loc>
+    <loc>https://rfs.jp/learn/learning-cursor/introduction-cursor/</loc>
     <lastmod>2026-09-19</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/cursor-2window/</loc>
-    <lastmod>2026-09-19</lastmod>
+    <loc>https://rfs.jp/learn/learning-cursor/cursor-2window/</loc>
+    <lastmod>2026-09-24</lastmod>
   </url>
   <url>
-    <loc>https://rfs.jp/learn/cursor-jp-language/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <loc>https://rfs.jp/learn/learning-cursor/cursor-jp-language/</loc>
+    <lastmod>2026-10-03</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/learning-cursor/cursor-settings/</loc>
+    <lastmod>2026-09-21</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/google-antigravity/intro-google-antigravity/</loc>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/google-antigravity/google-antigravity-ja/</loc>
+    <lastmod>2026-09-27</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/html_basic/start-html/</loc>
+    <lastmod>2026-09-25</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/html_basic/html-tag/</loc>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/html_basic/html-syntax/</loc>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/learning-cursor/cursor-context-used/</loc>
+    <lastmod>2026-09-27</lastmod>
+  </url>
+  <url>
+    <loc>https://rfs.jp/learn/learning-cursor/cursor-rules/</loc>
+    <lastmod>2026-10-23</lastmod>
   </url>
   <url>
     <loc>https://rfs.jp/tag/a-successful-git-branching-model/</loc>
@@ -2889,6 +2892,9 @@
   </url>
   <url>
     <loc>https://rfs.jp/tag/bind/</loc>
+  </url>
+  <url>
+    <loc>https://rfs.jp/tag/body/</loc>
   </url>
   <url>
     <loc>https://rfs.jp/tag/chomp/</loc>
@@ -3047,6 +3053,9 @@
     <loc>https://rfs.jp/tag/grep/</loc>
   </url>
   <url>
+    <loc>https://rfs.jp/tag/head/</loc>
+  </url>
+  <url>
     <loc>https://rfs.jp/tag/hotfix/</loc>
   </url>
   <url>
@@ -3161,6 +3170,9 @@
     <loc>https://rfs.jp/tag/order/</loc>
   </url>
   <url>
+    <loc>https://rfs.jp/tag/paragraph/</loc>
+  </url>
+  <url>
     <loc>https://rfs.jp/tag/perl/</loc>
   </url>
   <url>
@@ -3183,6 +3195,9 @@
   </url>
   <url>
     <loc>https://rfs.jp/tag/pre_get_posts/</loc>
+  </url>
+  <url>
+    <loc>https://rfs.jp/tag/privacy-mode/</loc>
   </url>
   <url>
     <loc>https://rfs.jp/tag/programming/</loc>
@@ -3296,7 +3311,13 @@
     <loc>https://rfs.jp/tag/table/</loc>
   </url>
   <url>
+    <loc>https://rfs.jp/tag/tag/</loc>
+  </url>
+  <url>
     <loc>https://rfs.jp/tag/text/</loc>
+  </url>
+  <url>
+    <loc>https://rfs.jp/tag/title/</loc>
   </url>
   <url>
     <loc>https://rfs.jp/tag/track/</loc>
@@ -3401,6 +3422,9 @@
     <loc>https://rfs.jp/tag/%E3%82%A4%E3%83%B3%E3%83%99%E3%83%B3%E3%83%88%E3%83%8F%E3%83%B3%E3%83%89%E3%83%A9/</loc>
   </url>
   <url>
+    <loc>https://rfs.jp/tag/%E3%82%A4%E3%83%B3%E3%83%A9%E3%82%A4%E3%83%B3/</loc>
+  </url>
+  <url>
     <loc>https://rfs.jp/tag/%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF/</loc>
   </url>
   <url>
@@ -3500,6 +3524,9 @@
     <loc>https://rfs.jp/tag/%E3%83%88%E3%83%94%E3%83%83%E3%82%AF%E3%83%91%E3%82%B9/</loc>
   </url>
   <url>
+    <loc>https://rfs.jp/tag/%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3/</loc>
+  </url>
+  <url>
     <loc>https://rfs.jp/tag/%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3/</loc>
   </url>
   <url>
@@ -3522,6 +3549,9 @@
   </url>
   <url>
     <loc>https://rfs.jp/tag/%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88%E3%82%A8%E3%83%B3%E3%83%89/</loc>
+  </url>
+  <url>
+    <loc>https://rfs.jp/tag/%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF/</loc>
   </url>
   <url>
     <loc>https://rfs.jp/tag/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3/</loc>
@@ -3575,7 +3605,13 @@
     <loc>https://rfs.jp/tag/%E4%BB%A3%E5%85%A5%E6%BC%94%E7%AE%97%E5%AD%90/</loc>
   </url>
   <url>
+    <loc>https://rfs.jp/tag/%E4%BD%BF%E7%94%A8%E9%87%8F/</loc>
+  </url>
+  <url>
     <loc>https://rfs.jp/tag/%E5%84%AA%E5%85%88%E9%A0%86%E4%BD%8D/</loc>
+  </url>
+  <url>
+    <loc>https://rfs.jp/tag/%E5%85%A5%E3%82%8C%E5%AD%90/</loc>
   </url>
   <url>
     <loc>https://rfs.jp/tag/%E5%85%A5%E9%96%80/</loc>

@@ -6,11 +6,14 @@ interface Props {
 	title: string;
 	href: string;
 	articles: CategoryArticle[];
+	/** カテゴリ内の全記事数。指定時は一覧リンクの上に件数を出す */
+	articleCount?: number;
 	headingLevel?: 2 | 3;
 	headingId?: string;
 }
 
-const { title, href, articles, headingLevel = 3, headingId } = Astro.props;
+const { title, href, articles, articleCount, headingLevel = 3, headingId } = Astro.props;
+const showArticleCount = typeof articleCount === "number";
 const HeadingTag = headingLevel === 2 ? "h2" : "h3";
 const listLabel = `${title}一覧`;
 ---
@@ -37,7 +40,14 @@ const listLabel = `${title}一覧`;
 			</ul>
 		) : null
 	}
-	<p class="mb-0 mt-md flex justify-end">
+	{
+		showArticleCount ? (
+			<p class="learn-category-preview__count m-0 mt-md text-muted">
+				{title}の記事は全{articleCount}件
+			</p>
+		) : null
+	}
+	<p class:list={["mb-0 flex justify-end", showArticleCount ? "mt-sm" : "mt-md"]}>
 		<a href={href} class="learn-category-preview__more text-inherit no-underline">
 			{listLabel}
 			<span class="article-pager__arrow grid size-8 shrink-0 place-items-center rounded-md border border-border">

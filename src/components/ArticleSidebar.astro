@@ -13,6 +13,7 @@ interface Props {
 	archiveHref?: string;
 	tags: ArticleTag[];
 	categoryName?: string;
+	categoryHref?: string;
 	categoryArticles?: CategoryArticle[];
 	currentArticleHref?: string;
 }
@@ -24,6 +25,7 @@ const {
 	archiveHref = "/archive/",
 	tags,
 	categoryName = "",
+	categoryHref = "",
 	categoryArticles = [],
 	currentArticleHref = "",
 } = Astro.props;
@@ -39,7 +41,15 @@ function isCurrentArticle(href: string): boolean {
 		categoryName && categoryArticles.length > 0 ? (
 			<section aria-labelledby="article-side-category-heading">
 				<h2 class="article-side__heading" id="article-side-category-heading">
-					{categoryName}
+					{
+						categoryHref ? (
+							<a class="text-inherit no-underline" href={categoryHref}>
+								{categoryName}
+							</a>
+						) : (
+							categoryName
+						)
+					}
 				</h2>
 				<ol class="m-0 flex list-none flex-col gap-xs p-0">
 					{categoryArticles.map((item, index) => {

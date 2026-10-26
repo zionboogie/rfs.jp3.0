@@ -15,7 +15,7 @@
 ## AIと学ぶWeb言語
 
 - [AIと学ぶWeb言語](https://rfs.jp/learn/ai-web-development/): 「書いてみる」から始める、AI時代のWeb言語入門。
-- [ガイドライン集](https://rfs.jp/learn/guidline/): Web制作をスムーズに進めるための、ルールと知識。
+- [ガイドライン集](https://rfs.jp/learn/guideline/): Web制作をスムーズに進めるための、ルールと知識。
 
 ## 学習方法と便利なツール
 

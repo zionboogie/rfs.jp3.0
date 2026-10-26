@@ -170,6 +170,10 @@ learn-category-preview（ホバー・疑似要素）
 	transform: translate3d(0, 0, 0);
 }
 
+.learn-category-preview__count {
+	padding-left: var(--learn-preview-indent);
+}
+
 .learn-category-preview__article {
 	display: block;
 	padding-block: var(--spacing-xs);
@@ -651,7 +655,8 @@ body.is-menu-open {
 	overflow: hidden;
 }
 
-@media (min-width: 768px) {
+/* 970px以下はSPヘッダ。デスクトップのナビは971px以上 */
+@media (min-width: 971px) {
 	.mobile-nav {
 		display: none;
 	}

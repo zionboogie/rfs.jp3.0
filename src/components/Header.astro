@@ -31,7 +31,7 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 	<div class="site-header__chrome pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 	<div class="site-header__inner container relative z-[2] flex items-center gap-md py-sm">
 		<a href="/" class="site-logo">smart</a>
-		<nav class="global-nav hidden md:block" aria-label="グローバルナビ">
+		<nav class="global-nav hidden min-[971px]:block" aria-label="グローバルナビ">
 			<ul class="flex list-none flex-wrap gap-y-sm gap-x-md p-0">
 				{
 					navMenus.map((menu) => (
@@ -44,7 +44,7 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 				}
 			</ul>
 		</nav>
-		<form class="header-search ml-auto hidden shrink-0 gap-2 md:flex" action="/search/" method="get" role="search">
+		<form class="header-search ml-auto hidden shrink-0 gap-2 min-[971px]:flex" action="/search/" method="get" role="search">
 			<label class="visually-hidden" for="header-search-input">サイト内検索</label>
 			<input
 				id="header-search-input"
@@ -63,7 +63,7 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 		</form>
 		<button
 			type="button"
-			class="menu-toggle ml-auto flex size-11 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 md:hidden"
+			class="menu-toggle ml-auto flex size-11 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 min-[971px]:hidden"
 			aria-expanded="false"
 			aria-controls="mobile-nav"
 			aria-label="メニューを開く"
@@ -276,7 +276,7 @@ const searchQuery = Astro.url.searchParams.get("q") ?? "";
 		mobileNavAbort?.abort();
 		mobileNavAbort = new AbortController();
 		const { signal } = mobileNavAbort;
-		const desktopQuery = window.matchMedia("(min-width: 768px)");
+		const desktopQuery = window.matchMedia("(min-width: 971px)");
 
 		const setMenuOrigin = () => {
 			const rect = toggle.getBoundingClientRect();
