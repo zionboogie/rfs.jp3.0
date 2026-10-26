@@ -39,17 +39,18 @@ const jsonLd = websiteJsonLd({
 
 <Layout title={pageTitle} description={pageDescription} jsonLd={jsonLd}>
 	<main>
+		<div class="flex h-svh min-h-0 flex-col">
 		<AboutIntro />
 
 		{
 			latestLearnArticles.length > 0 ? (
-				<section class="top-latest text-center" aria-label="最新の記事">
+				<section class="top-latest shrink-0 text-center" aria-label="最新の記事">
 					<div class="container">
 						<ul class="top-latest__viewport m-0 list-none p-0">
 							{latestLearnArticles.map((article, index) => (
 								<li
 									class:list={[
-										"top-latest__item m-0 flex flex-wrap items-baseline justify-center gap-x-md gap-y-xs py-xl font-bold tracking-[0.02em]",
+										"top-latest__item m-0 flex flex-wrap items-baseline justify-center gap-x-md gap-y-xs py-[calc(var(--spacing-xl)/2)] font-bold tracking-[0.02em]",
 										{ "is-active": index === 0 },
 									]}
 									inert={index !== 0}
@@ -74,6 +75,7 @@ const jsonLd = websiteJsonLd({
 				</section>
 			) : null
 		}
+		</div>
 
 		<section class="top-rhythm overflow-hidden py-md md:py-xl" aria-label="rhythmfactory">
 			<div class="top-rhythm__inner container flex items-center justify-center">
@@ -451,6 +453,7 @@ const jsonLd = websiteJsonLd({
 
 <script>
 	const LATEST_HOLD_MS = 5000;
+	const LATEST_FADE_MS = 1000;
 
 	/** @type {null | (() => void)} */
 	let disposeLatest = null;
@@ -468,41 +471,44 @@ const jsonLd = websiteJsonLd({
 
 		let index = items.findIndex((item) => item.classList.contains("is-active"));
 		if (index < 0) index = 0;
-		let timer = 0;
+		let holdTimer = 0;
+		let fadeTimer = 0;
 		let paused = false;
+		let fading = false;
 
-		const show = (nextIndex) => {
-			items.forEach((item, itemIndex) => {
-				const active = itemIndex === nextIndex;
-				item.classList.toggle("is-active", active);
-				item.toggleAttribute("inert", !active);
-				if (active) item.removeAttribute("aria-hidden");
-				else item.setAttribute("aria-hidden", "true");
-			});
-			index = nextIndex;
+		const setActive = (item, active) => {
+			item.classList.toggle("is-active", active);
+			item.toggleAttribute("inert", !active);
+			if (active) item.removeAttribute("aria-hidden");
+			else item.setAttribute("aria-hidden", "true");
 		};
 
-		const stop = () => {
-			window.clearInterval(timer);
-			timer = 0;
+		const queueNext = () => {
+			window.clearTimeout(holdTimer);
+			if (paused || document.hidden || fading) return;
+			holdTimer = window.setTimeout(beginFade, LATEST_HOLD_MS);
 		};
 
-		const start = () => {
-			if (paused || document.hidden) return;
-			stop();
-			timer = window.setInterval(() => {
-				show((index + 1) % items.length);
-			}, LATEST_HOLD_MS);
+		const beginFade = () => {
+			fading = true;
+			setActive(items[index], false);
+			window.clearTimeout(fadeTimer);
+			fadeTimer = window.setTimeout(() => {
+				index = (index + 1) % items.length;
+				setActive(items[index], true);
+				fading = false;
+				queueNext();
+			}, LATEST_FADE_MS);
 		};
 
 		const pause = () => {
 			paused = true;
-			stop();
+			window.clearTimeout(holdTimer);
 		};
 
 		const resume = () => {
 			paused = false;
-			start();
+			queueNext();
 		};
 
 		const onFocusOut = (event) => {
@@ -511,8 +517,8 @@ const jsonLd = websiteJsonLd({
 		};
 
 		const onVisibility = () => {
-			if (document.hidden) stop();
-			else start();
+			if (document.hidden) window.clearTimeout(holdTimer);
+			else queueNext();
 		};
 
 		root.addEventListener("mouseenter", pause);
@@ -520,10 +526,27 @@ const jsonLd = websiteJsonLd({
 		root.addEventListener("focusin", pause);
 		root.addEventListener("focusout", onFocusOut);
 		document.addEventListener("visibilitychange", onVisibility);
-		start();
+
+		const introRunning = () => document.body.classList.contains("is-intro") || document.body.classList.contains("is-intro-leaving");
+		/** @type {MutationObserver | null} */
+		let introObserver = null;
+
+		if (introRunning()) {
+			introObserver = new MutationObserver(() => {
+				if (introRunning()) return;
+				introObserver?.disconnect();
+				introObserver = null;
+				queueNext();
+			});
+			introObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+		} else {
+			queueNext();
+		}
 
 		disposeLatest = () => {
-			stop();
+			introObserver?.disconnect();
+			window.clearTimeout(holdTimer);
+			window.clearTimeout(fadeTimer);
 			root.removeEventListener("mouseenter", pause);
 			root.removeEventListener("mouseleave", resume);
 			root.removeEventListener("focusin", pause);
