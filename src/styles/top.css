@@ -5,6 +5,39 @@
 */
 
 /* ----------------------------------------
+最新記事（1件ずつフェードで切り替え）
+---------------------------------------- */
+.top-latest__viewport {
+	display: grid;
+}
+
+.top-latest__item {
+	grid-area: 1 / 1;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition:
+		opacity 1s ease,
+		visibility 0s linear 1s;
+}
+
+.top-latest__item.is-active {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	z-index: 1;
+	transition:
+		opacity 1s ease,
+		visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.top-latest__item {
+		transition: none;
+	}
+}
+
+/* ----------------------------------------
 top-rhythm
 ---------------------------------------- */
 .top-rhythm__logo {

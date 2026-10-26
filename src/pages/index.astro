@@ -5,7 +5,7 @@ import CourseTile from "../components/CourseTile.astro";
 import LearnCategoryPreview from "../components/LearnCategoryPreview.astro";
 import RhythmFactoryLogo from "../components/RhythmFactoryLogo.astro";
 import { hiddenArchiveTitles, navMenus } from "../data/courses";
-import { getLearnCourseSections, getVisibleArchiveGroups } from "../lib/wordpress";
+import { formatUpdatedAt, getLatestLearnArticles, getLearnCourseSections, getVisibleArchiveGroups, toDateTimeValue } from "../lib/wordpress";
 import { websiteJsonLd } from "../lib/structured-data";
 import "../styles/top.css";
 
@@ -17,9 +17,10 @@ const pageDescription =
 const gettingStartedHref = navMenus.find((menu) => menu.id === "getting-started")?.href;
 const aiWebHref = navMenus.find((menu) => menu.id === "ai-web-development")?.href;
 
-const [learnSections, archiveGroups] = await Promise.all([
+const [learnSections, archiveGroups, latestLearnArticles] = await Promise.all([
 	getLearnCourseSections(),
 	getVisibleArchiveGroups(hiddenArchiveTitles),
+	getLatestLearnArticles(3),
 ]);
 
 const gettingStarted = learnSections.find((section) => section.href === gettingStartedHref);
@@ -39,6 +40,40 @@ const jsonLd = websiteJsonLd({
 <Layout title={pageTitle} description={pageDescription} jsonLd={jsonLd}>
 	<main>
 		<AboutIntro />
+
+		{
+			latestLearnArticles.length > 0 ? (
+				<section class="top-latest text-center" aria-label="最新の記事">
+					<div class="container">
+						<ul class="top-latest__viewport m-0 list-none p-0">
+							{latestLearnArticles.map((article, index) => (
+								<li
+									class:list={[
+										"top-latest__item m-0 flex flex-wrap items-baseline justify-center gap-x-md gap-y-xs py-xl font-bold tracking-[0.02em]",
+										{ "is-active": index === 0 },
+									]}
+									inert={index !== 0}
+									aria-hidden={index === 0 ? undefined : "true"}
+								>
+									<time datetime={toDateTimeValue(article.publishedAt)}>
+										<span class="visually-hidden">公開日</span>
+										{formatUpdatedAt(article.publishedAt)}
+									</time>
+									{article.categoryName && article.categoryHref ? (
+										<a class="text-inherit no-underline hover:underline" href={article.categoryHref}>
+											{article.categoryName}
+										</a>
+									) : null}
+									<a class="text-inherit no-underline hover:underline" href={article.href}>
+										{article.title}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				</section>
+			) : null
+		}
 
 		<section class="top-rhythm overflow-hidden py-md md:py-xl" aria-label="rhythmfactory">
 			<div class="top-rhythm__inner container flex items-center justify-center">
@@ -412,4 +447,95 @@ const jsonLd = websiteJsonLd({
 	}
 
 	document.addEventListener("astro:page-load", initSectionReveal);
+</script>
+
+<script>
+	const LATEST_HOLD_MS = 5000;
+
+	/** @type {null | (() => void)} */
+	let disposeLatest = null;
+
+	function initLatestArticles() {
+		disposeLatest?.();
+		disposeLatest = null;
+
+		const root = document.querySelector(".top-latest");
+		if (!(root instanceof HTMLElement)) return;
+
+		const items = Array.from(root.querySelectorAll(".top-latest__item")).filter((item) => item instanceof HTMLElement);
+		if (items.length < 2) return;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+		let index = items.findIndex((item) => item.classList.contains("is-active"));
+		if (index < 0) index = 0;
+		let timer = 0;
+		let paused = false;
+
+		const show = (nextIndex) => {
+			items.forEach((item, itemIndex) => {
+				const active = itemIndex === nextIndex;
+				item.classList.toggle("is-active", active);
+				item.toggleAttribute("inert", !active);
+				if (active) item.removeAttribute("aria-hidden");
+				else item.setAttribute("aria-hidden", "true");
+			});
+			index = nextIndex;
+		};
+
+		const stop = () => {
+			window.clearInterval(timer);
+			timer = 0;
+		};
+
+		const start = () => {
+			if (paused || document.hidden) return;
+			stop();
+			timer = window.setInterval(() => {
+				show((index + 1) % items.length);
+			}, LATEST_HOLD_MS);
+		};
+
+		const pause = () => {
+			paused = true;
+			stop();
+		};
+
+		const resume = () => {
+			paused = false;
+			start();
+		};
+
+		const onFocusOut = (event) => {
+			if (event.relatedTarget instanceof Node && root.contains(event.relatedTarget)) return;
+			resume();
+		};
+
+		const onVisibility = () => {
+			if (document.hidden) stop();
+			else start();
+		};
+
+		root.addEventListener("mouseenter", pause);
+		root.addEventListener("mouseleave", resume);
+		root.addEventListener("focusin", pause);
+		root.addEventListener("focusout", onFocusOut);
+		document.addEventListener("visibilitychange", onVisibility);
+		start();
+
+		disposeLatest = () => {
+			stop();
+			root.removeEventListener("mouseenter", pause);
+			root.removeEventListener("mouseleave", resume);
+			root.removeEventListener("focusin", pause);
+			root.removeEventListener("focusout", onFocusOut);
+			document.removeEventListener("visibilitychange", onVisibility);
+		};
+	}
+
+	document.addEventListener("astro:before-swap", () => {
+		disposeLatest?.();
+		disposeLatest = null;
+	});
+
+	document.addEventListener("astro:page-load", initLatestArticles);
 </script>
