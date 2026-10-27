@@ -7,6 +7,9 @@
  *   例: https://example.com/wp/?rest_route=（pretty permalink 未設定時）
  */
 
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
 /** アーカイブとして扱うルートカテゴリの slug（親なし） */
 const ARCHIVE_ROOT_SLUGS = ["sb", "server", "learn"] as const;
 
@@ -250,9 +253,38 @@ export type ArchiveGroup = {
 	children: CategorySummary[];
 };
 
+/** プロジェクト直下の .env / .env.example から1キーを読む */
+function readEnvFileValue(name: string): string | undefined {
+	for (const filename of [".env", ".env.example"]) {
+		const filePath = join(process.cwd(), filename);
+		if (!existsSync(filePath)) continue;
+		for (const line of readFileSync(filePath, "utf8").split(/\r?\n/)) {
+			const trimmed = line.trim();
+			if (!trimmed || trimmed.startsWith("#")) continue;
+			const index = trimmed.indexOf("=");
+			if (index <= 0) continue;
+			const key = trimmed.slice(0, index).trim();
+			if (key !== name) continue;
+			let value = trimmed.slice(index + 1).trim();
+			if (
+				(value.startsWith('"') && value.endsWith('"')) ||
+				(value.startsWith("'") && value.endsWith("'"))
+			) {
+				value = value.slice(1, -1);
+			}
+			if (value) return value;
+		}
+	}
+	return undefined;
+}
+
 /** .env の WORDPRESS_API_URL を返す（末尾スラッシュは除去） */
 function getApiUrl(): string {
-	const value = import.meta.env?.WORDPRESS_API_URL ?? process.env.WORDPRESS_API_URL;
+	// ドットアクセスは astro.config の define で文字列へ置換される。
+	// 角括弧とファイル読みは、置換されなかったプリレンダー束でも .env を読む。
+	const fromProcess = process.env.WORDPRESS_API_URL || process.env["WORDPRESS_API_URL"];
+	const fromImportMeta = import.meta.env?.WORDPRESS_API_URL;
+	const value = fromProcess || fromImportMeta || readEnvFileValue("WORDPRESS_API_URL");
 	if (!value) {
 		throw new Error("WORDPRESS_API_URL が設定されていません。.env を確認してください。");
 	}
