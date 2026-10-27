@@ -179,6 +179,11 @@ export type CategoryArticle = {
 	title: string;
 	href: string;
 	updatedAt: string;
+	publishedAt: string;
+	/** 最深の学習カテゴリ名。トップの最新表示でのみ入る */
+	categoryName?: string;
+	/** 学習カテゴリ一覧へのパス */
+	categoryHref?: string;
 };
 
 /** カテゴリページ内の章（子カテゴリ単位） */
@@ -579,6 +584,7 @@ function toCategoryArticle(post: WpPost): CategoryArticle {
 		title: wpText(post.title.rendered),
 		href: toArticlePath(post.link),
 		updatedAt: post.modified || post.date,
+		publishedAt: post.date,
 	};
 }
 
@@ -720,6 +726,22 @@ export async function getCategoryPageData(category: WpCategory): Promise<Categor
 		chapters,
 		latestArticles: latestArticlesFromPosts(postsInSubtree(categories, posts, category.id)),
 	};
+}
+
+/** 学習記事を公開日の新しい順に最大 limit 件返す。カテゴリ名と一覧リンクを付ける */
+export async function getLatestLearnArticles(limit = LATEST_ARTICLE_LIMIT): Promise<CategoryArticle[]> {
+	const [posts, terms] = await Promise.all([getLearnPosts(), getLearnTerms()]);
+	return latestArticlesFromPosts(posts, limit).map((article) => {
+		const post = posts.find((item) => toArticlePath(item.link) === article.href);
+		const category = post ? pickDeepestCategory(post.categories, terms) : undefined;
+		if (!category) return article;
+		const summary = summaryFromCategory(category);
+		return {
+			...article,
+			categoryName: summary.title,
+			categoryHref: summary.href,
+		};
+	});
 }
 
 /** カテゴリ配下の最新記事（公開日の新しい順） */

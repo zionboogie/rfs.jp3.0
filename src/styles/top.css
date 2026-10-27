@@ -5,6 +5,51 @@
 */
 
 /* ----------------------------------------
+最新記事（1件ずつフェードで切り替え）
+---------------------------------------- */
+.top-latest__viewport {
+	display: grid;
+}
+
+.top-latest__item {
+	grid-area: 1 / 1;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition:
+		opacity 1s ease,
+		visibility 0s linear 1s;
+}
+
+.top-latest__item.is-active {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	z-index: 1;
+	transition:
+		opacity 1s ease,
+		visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.top-latest__item {
+		transition: none;
+	}
+}
+
+/* 表示中の記事は visibility:visible のため、ローディング中はここでも隠す */
+body.is-intro .top-latest__item,
+body.is-intro-leaving .top-latest__item {
+	visibility: hidden;
+	pointer-events: none;
+}
+
+html[data-intro-seen] body.is-intro .top-latest__item.is-active {
+	visibility: visible;
+	pointer-events: auto;
+}
+
+/* ----------------------------------------
 top-rhythm
 ---------------------------------------- */
 .top-rhythm__logo {
